@@ -1,530 +1,542 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🦞 Lobster代币购买</title>
+    <title>🦞 Lobster Exchange | Trade LOBSTER/USDC.e</title>
     <style>
+        :root {
+            --primary: #00d4aa;
+            --secondary: #0088cc;
+            --dark: #0a0e17;
+            --darker: #050811;
+            --light: #1a2236;
+            --text: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background: var(--dark);
+            color: var(--text);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            color: #fff;
+            overflow-x: hidden;
         }
         
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            max-width: 500px;
-            width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
+        /* Header */
         .header {
-            text-align: center;
-            margin-bottom: 30px;
+            background: var(--darker);
+            border-bottom: 1px solid rgba(0, 212, 170, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .logo {
-            font-size: 64px;
-            margin-bottom: 15px;
-            animation: float 3s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
         }
         
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .network-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
         
-        h1 {
-            color: #fff;
-            margin-bottom: 10px;
-            font-size: 32px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .network-badge {
+            background: rgba(0, 212, 170, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
         }
         
-        .subtitle {
-            color: #a0a0c0;
-            font-size: 16px;
-            opacity: 0.8;
+        /* Main Layout */
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 400px 350px;
+            gap: 1rem;
+            padding: 1rem;
+            max-width: 1600px;
+            margin: 0 auto;
         }
         
-        .status-card {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr 350px;
+            }
         }
         
-        .status-row {
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Chart Panel */
+        .chart-panel {
+            background: var(--darker);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+        }
+        
+        .chart-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 12px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            align-items: center;
+            margin-bottom: 1.5rem;
         }
         
-        .status-row:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
+        .pair-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
         
-        .label {
-            color: #a0a0c0;
+        .pair-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .pair-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .price-change {
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+        
+        .positive { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .negative { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        
+        /* Chart Container */
+        .chart-container {
+            height: 400px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Trade Panel */
+        .trade-panel {
+            background: var(--darker);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+        }
+        
+        .trade-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 0.75rem;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        
+        .input-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem;
+        }
+        
+        .input-wrapper input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 1.125rem;
+            outline: none;
+        }
+        
+        .token-symbol {
+            color: var(--primary);
             font-weight: 500;
         }
         
-        .value {
-            color: #fff;
-            font-weight: 600;
+        .balance {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
         }
         
-        .contract-address {
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px;
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
             border-radius: 8px;
-            word-break: break-all;
-            margin-top: 8px;
-            color: #4ecdc4;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 1rem;
         }
         
-        .purchase-section {
-            margin-top: 30px;
+        .btn-primary {
+            background: var(--primary);
+            color: white;
         }
         
-        .price-display {
-            text-align: center;
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        .btn-primary:hover {
+            background: #00b894;
         }
         
-        .price-amount {
-            font-size: 42px;
-            font-weight: bold;
-            margin-bottom: 5px;
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
         
-        .price-label {
-            font-size: 16px;
-            opacity: 0.9;
+        /* Info Panel */
+        .info-panel {
+            background: var(--darker);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
         }
         
         .wallet-section {
-            margin-bottom: 25px;
-        }
-        
-        .wallet-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 2rem;
         }
         
         .wallet-address {
-            font-family: monospace;
-            font-size: 14px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            padding: 0.75rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+            word-break: break-all;
+            margin: 0.5rem 0 1rem;
         }
         
-        .button {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 15px;
+        .balance-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         
-        .button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(78, 205, 196, 0.4);
+        .balance-item:last-child {
+            border-bottom: none;
         }
         
-        .button:active {
-            transform: translateY(0);
+        .contract-info {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
         
-        .button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
+        .contract-address {
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            word-break: break-all;
+            margin-top: 0.5rem;
         }
         
-        .button-danger {
-            background: linear-gradient(135deg, #ff6b6b 0%, #c44569 100%);
-        }
-        
-        .button-danger:hover {
-            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
-        }
-        
-        .network-warning {
-            background: rgba(255, 193, 7, 0.2);
-            border: 1px solid rgba(255, 193, 7, 0.5);
-            color: #ffd166;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            color: #a0a0c0;
-            font-size: 14px;
-        }
-        
-        .link {
-            color: #4ecdc4;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .link:hover {
-            color: #ff6b6b;
-            text-decoration: underline;
-        }
-        
-        .success-message {
-            background: rgba(46, 204, 113, 0.2);
-            border: 1px solid rgba(46, 204, 113, 0.5);
-            color: #2ecc71;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            display: none;
-        }
-        
-        .error-message {
-            background: rgba(231, 76, 60, 0.2);
-            border: 1px solid rgba(231, 76, 60, 0.5);
-            color: #e74c3c;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            display: none;
-        }
-        
+        /* Loading */
         .loading {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
+            border: 3px solid rgba(255, 255, 255, 0.1);
             border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
         }
         
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
+        /* Mobile */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
             }
             
-            .logo {
-                font-size: 48px;
+            .main-container {
+                padding: 0.5rem;
             }
             
-            h1 {
-                font-size: 24px;
-            }
-            
-            .price-amount {
-                font-size: 32px;
+            .chart-container {
+                height: 300px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">🦞</div>
-            <h1>Lobster代币购买</h1>
-            <p class="subtitle">使用USDC.e购买LOBSTER代币 • Tempo主网</p>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <span>🦞</span>
+            <span>Lobster Exchange</span>
         </div>
         
-        <div class="status-card">
-            <div class="status-row">
-                <span class="label">代币名称</span>
-                <span class="value">Lobster (LOBSTER)</span>
+        <div class="network-info">
+            <div class="network-badge" id="networkBadge">
+                🔗 Connecting...
             </div>
-            <div class="status-row">
-                <span class="label">合约地址</span>
-                <span class="value">0xb301...e92b</span>
-            </div>
-            <div class="contract-address" id="contractAddress">0xb30139594b85aa0cfad2b4abe2328886fdbfe92b</div>
-            <div class="status-row">
-                <span class="label">合约余额</span>
-                <span class="value" id="contractBalance">800,000,000 LOBSTER</span>
-            </div>
-            <div class="status-row">
-                <span class="label">可购买次数</span>
-                <span class="value" id="availablePurchases">80,000 次</span>
-            </div>
-            <div class="status-row">
-                <span class="label">网络</span>
-                <span class="value">Tempo Mainnet (Chain ID: 4217)</span>
-            </div>
+            <button class="btn btn-primary" id="connectButton" style="padding: 0.5rem 1rem;">
+                Connect Wallet
+            </button>
         </div>
-        
-        <div class="purchase-section">
-            <div class="price-display">
-                <div class="price-amount">0.01 USDC.e</div>
-                <div class="price-label">= 10,000 LOBSTER</div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Left: Chart Panel -->
+        <section class="chart-panel">
+            <div class="chart-header">
+                <div class="pair-info">
+                    <div class="pair-name">LOBSTER/USDC.e</div>
+                    <div class="pair-price" id="currentPrice">$0.0010</div>
+                    <div class="price-change positive" id="priceChange">+2.5%</div>
+                </div>
+                <div class="chart-controls">
+                    <select id="timeframe" style="background: var(--dark); color: var(--text); border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem; border-radius: 6px;">
+                        <option>1H</option>
+                        <option>4H</option>
+                        <option selected>1D</option>
+                        <option>1W</option>
+                    </select>
+                </div>
             </div>
             
+            <div class="chart-container" id="chartContainer">
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">📈</div>
+                    <div>Chart Loading...</div>
+                    <div style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                        Real-time chart integration coming soon
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                <div style="text-align: center;">
+                    <div style="color: var(--text-secondary); font-size: 0.875rem;">24h High</div>
+                    <div style="font-weight: bold;" id="high24h">$0.0012</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="color: var(--text-secondary); font-size: 0.875rem;">24h Low</div>
+                    <div style="font-weight: bold;" id="low24h">$0.0008</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="color: var(--text-secondary); font-size: 0.875rem;">24h Volume</div>
+                    <div style="font-weight: bold;" id="volume24h">$1,234.56</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="color: var(--text-secondary); font-size: 0.875rem;">Market Cap</div>
+                    <div style="font-weight: bold;" id="marketCap">$800,000</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Middle: Trade Panel -->
+        <section class="trade-panel">
+            <div class="trade-tabs">
+                <button class="tab active" id="buyTab">Buy</button>
+                <button class="tab" id="sellTab" disabled>Sell</button>
+                <button class="tab" id="swapTab" disabled>Swap</button>
+            </div>
+            
+            <div class="input-group">
+                <div class="input-label">
+                    <span>Pay</span>
+                    <span class="balance">Balance: <span id="usdcBalance">0.00</span> USDC.e</span>
+                </div>
+                <div class="input-wrapper">
+                    <input type="number" id="usdcAmount" placeholder="0.01" step="0.01" min="0.01" value="0.01">
+                    <span class="token-symbol">USDC.e</span>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin: 1rem 0; color: var(--text-secondary);">
+                ↓
+            </div>
+            
+            <div class="input-group">
+                <div class="input-label">
+                    <span>Receive</span>
+                    <span class="balance">Balance: <span id="lobsterBalance">0</span> LOBSTER</span>
+                </div>
+                <div class="input-wrapper">
+                    <input type="text" id="lobsterAmount" placeholder="10,000" readonly>
+                    <span class="token-symbol">LOBSTER</span>
+                </div>
+            </div>
+            
+            <div style="background: rgba(0, 212, 170, 0.1); border-radius: 8px; padding: 1rem; margin: 1rem 0;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.875rem;">
+                    <span style="color: var(--text-secondary);">Price</span>
+                    <span>1 USDC.e = 1,000,000 LOBSTER</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-top: 0.5rem;">
+                    <span style="color: var(--text-secondary);">Fee</span>
+                    <span>0.3%</span>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" id="approveButton" disabled>
+                Approve USDC.e
+            </button>
+            
+            <button class="btn btn-primary" id="buyButton" disabled>
+                Buy LOBSTER
+            </button>
+            
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div style="font-size: 0.875rem; color: var(--text-secondary);">
+                    ⚠️ Fixed price: 0.01 USDC.e = 10,000 LOBSTER
+                </div>
+            </div>
+        </section>
+
+        <!-- Right: Info Panel -->
+        <section class="info-panel">
             <div class="wallet-section">
-                <div class="wallet-info">
-                    <span class="label">钱包状态:</span>
-                    <span class="value" id="walletStatus">未连接</span>
+                <h3 style="margin-bottom: 1rem;">Wallet</h3>
+                <div class="wallet-address" id="walletAddress">
+                    Not connected
                 </div>
-                <div class="wallet-info">
-                    <span class="label">钱包地址:</span>
-                    <span class="wallet-address" id="walletAddress">请连接钱包</span>
+                
+                <div class="balance-item">
+                    <span>USDC.e Balance</span>
+                    <span id="walletUsdcBalance">0.00</span>
                 </div>
-                <div class="wallet-info">
-                    <span class="label">USDC.e余额:</span>
-                    <span class="value" id="usdcBalance">0.00</span>
+                <div class="balance-item">
+                    <span>LOBSTER Balance</span>
+                    <span id="walletLobsterBalance">0</span>
                 </div>
-                <div class="wallet-info">
-                    <span class="label">LOBSTER余额:</span>
-                    <span class="value" id="lobsterBalance">0</span>
+                <div class="balance-item">
+                    <span>pathUSD (Gas)</span>
+                    <span id="gasBalance">0.00</span>
                 </div>
             </div>
             
-            <button class="button" id="connectButton">连接钱包</button>
-            <button class="button" id="approveButton" disabled>授权USDC.e</button>
-            <button class="button" id="buyButton" disabled>购买LOBSTER</button>
-            
-            <div class="success-message" id="successMessage">
-                ✅ 购买成功！已收到10,000 LOBSTER
+            <div class="contract-info">
+                <h3 style="margin-bottom: 1rem;">Contract Info</h3>
+                <div style="font-size: 0.875rem; color: var(--text-secondary);">
+                    LOBSTER Token
+                </div>
+                <div class="contract-address" id="contractAddress">
+                    0xb30139594b85aa0cfad2b4abe2328886fdbfe92b
+                </div>
+                
+                <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-secondary);">
+                    Available: <span id="availableSupply">800,000,000</span> LOBSTER
+                </div>
+                <div style="font-size: 0.875rem; color: var(--text-secondary);">
+                    Total Supply: 1,000,000,000 LOBSTER
+                </div>
             </div>
             
-            <div class="error-message" id="errorMessage">
-                ❌ 购买失败
+            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div style="font-size: 0.875rem; color: var(--text-secondary); text-align: center;">
+                    Network: Tempo Mainnet (Chain ID: 4217)
+                </div>
             </div>
-            
-            <div class="network-warning">
-                ⚠️ 请确保：
-                <br>• 连接到Tempo主网 (Chain ID: 4217)
-                <br>• 有USDC.e余额 (至少0.01)
-                <br>• 有少量pathUSD支付gas
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>
-                <a href="https://explore.tempo.xyz/address/0xb30139594b85aa0cfad2b4abe2328886fdbfe92b" 
-                   target="_blank" class="link">查看合约</a> • 
-                <a href="https://explore.tempo.xyz/address/0x20c000000000000000000000b9537d11c60e8b50" 
-                   target="_blank" class="link">查看USDC.e</a> • 
-                <a href="https://app.uniswap.org" 
-                   target="_blank" class="link">添加流动性</a>
-            </p>
-            <p style="margin-top: 10px;">Lobster代币 • 实时购买 • 自动转账</p>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <script>
-        // 配置
+        // Configuration
         const CONFIG = {
             LOBSTER_ADDRESS: '0xb30139594b85aa0cfad2b4abe2328886fdbfe92b',
             USDC_ADDRESS: '0x20c000000000000000000000b9537d11c60e8b50',
-            TREASURY_ADDRESS: '0x2015800fd076abc424b8ed446483bcf674cde629',
-            PRICE: '10000', // 0.01 USDC.e (6 decimals)
-            REWARD: '10000000000000000000000', // 10,000 LOBSTER (18 decimals)
-            CHAIN_ID: '0x1079', // 4217 decimal
-            RPC_URL: 'https://rpc.tempo.xyz'
+            PRICE: '10000', // 0.01 USDC.e
+            REWARD: '10000000000000000000000', // 10,000 LOBSTER
+            CHAIN_ID: '0x1079' // 4217
         };
 
-        // 状态
+        // State
         let userAddress = null;
         let web3 = null;
         let lobsterContract = null;
         let usdcContract = null;
         let isApproved = false;
 
-        // 元素
+        // Elements
         const connectButton = document.getElementById('connectButton');
         const approveButton = document.getElementById('approveButton');
         const buyButton = document.getElementById('buyButton');
-        const walletStatus = document.getElementById('walletStatus');
-        const walletAddress = document.getElementById('walletAddress');
-        const usdcBalance = document.getElementById('usdcBalance');
-        const lobsterBalance = document.getElementById('lobsterBalance');
-        const successMessage = document.getElementById('successMessage');
-        const errorMessage = document.getElementById('errorMessage');
+        const usdcAmountInput = document.getElementById('usdcAmount');
+        const lobsterAmountInput = document.getElementById('lobsterAmount');
+        const walletAddressEl = document.getElementById('walletAddress');
+        const networkBadge = document.getElementById('networkBadge');
 
-        // 合约ABI（完整JSON格式）
+        // Contract ABI (simplified)
         const LOBSTER_ABI = [
-            {
-                "inputs": [],
-                "name": "buy",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "address",
-                        "name": "account",
-                        "type": "address"
-                    }
-                ],
-                "name": "balanceOf",
-                "outputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [],
-                "name": "getInfo",
-                "outputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            }
+            { "inputs": [], "name": "buy", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+            { "inputs": [{ "internalType": "address", "name": "account", "type": "address" }], "name": "balanceOf", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }
         ];
 
         const USDC_ABI = [
-            {
-                "inputs": [
-                    {
-                        "internalType": "address",
-                        "name": "spender",
-                        "type": "address"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "amount",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "approve",
-                "outputs": [
-                    {
-                        "internalType": "bool",
-                        "name": "",
-                        "type": "bool"
-                    }
-                ],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "address",
-                        "name": "account",
-                        "type": "address"
-                    }
-                ],
-                "name": "balanceOf",
-                "outputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "address",
-                        "name": "owner",
-                        "type": "address"
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "spender",
-                        "type": "address"
-                    }
-                ],
-                "name": "allowance",
-                "outputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            }
+            { "inputs": [{ "internalType": "address", "name": "spender", "type": "address" }, { "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "approve", "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }], "stateMutability": "nonpayable", "type": "function" },
+            { "inputs": [{ "internalType": "address", "name": "account", "type": "address" }], "name": "balanceOf", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" },
+            { "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }, { "internalType": "address", "name": "spender", "type": "address" }], "name": "allowance", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }
         ];
 
-        // 连接钱包
+        // Connect Wallet
         connectButton.addEventListener('click', async () => {
             try {
                 if (typeof window.ethereum === 'undefined') {
-                    showError('请安装MetaMask钱包');
+                    alert('Please install MetaMask');
                     return;
                 }
 
-                // 请求账户连接
                 const accounts = await window.ethereum.request({ 
                     method: 'eth_requestAccounts' 
                 });
@@ -532,28 +544,22 @@
                 userAddress = accounts[0];
                 web3 = new Web3(window.ethereum);
 
-                // 检查网络
+                // Check network
                 const chainId = await web3.eth.getChainId();
                 if (chainId.toString() !== '4217') {
-                    showError('请切换到Tempo主网 (Chain ID: 4217)');
                     try {
                         await window.ethereum.request({
                             method: 'wallet_switchEthereumChain',
                             params: [{ chainId: CONFIG.CHAIN_ID }],
                         });
                     } catch (switchError) {
-                        // 如果网络不存在，添加网络
                         await window.ethereum.request({
                             method: 'wallet_addEthereumChain',
                             params: [{
                                 chainId: CONFIG.CHAIN_ID,
                                 chainName: 'Tempo Mainnet',
-                                nativeCurrency: {
-                                    name: 'pathUSD',
-                                    symbol: 'pathUSD',
-                                    decimals: 18
-                                },
-                                rpcUrls: [CONFIG.RPC_URL],
+                                nativeCurrency: { name: 'pathUSD', symbol: 'pathUSD', decimals: 18 },
+                                rpcUrls: ['https://rpc.tempo.xyz'],
                                 blockExplorerUrls: ['https://explore.tempo.xyz']
                             }]
                         });
@@ -561,44 +567,50 @@
                     return;
                 }
 
-                // 初始化合约
+                // Initialize contracts
                 lobsterContract = new web3.eth.Contract(LOBSTER_ABI, CONFIG.LOBSTER_ADDRESS);
                 usdcContract = new web3.eth.Contract(USDC_ABI, CONFIG.USDC_ADDRESS);
 
-                // 更新UI
+                // Update UI
                 updateWalletInfo();
                 checkApproval();
 
-                walletStatus.textContent = '已连接';
-                walletAddress.textContent = userAddress;
+                walletAddressEl.textContent = userAddress;
+                networkBadge.textContent = '✅ Tempo Mainnet';
+                connectButton.textContent = 'Connected';
                 connectButton.disabled = true;
-                approveButton.disabled = false;
 
             } catch (error) {
-                console.error('连接钱包失败:', error);
-                showError('连接钱包失败: ' + error.message);
+                console.error('Connection failed:', error);
+                alert('Connection failed: ' + error.message);
             }
         });
 
-        // 更新钱包信息
+        // Update wallet info
         async function updateWalletInfo() {
             if (!userAddress || !web3) return;
 
             try {
-                // 获取USDC.e余额
+                // USDC.e balance
                 const usdcBal = await usdcContract.methods.balanceOf(userAddress).call();
-                usdcBalance.textContent = (usdcBal / 1e6).toFixed(6) + ' USDC.e';
+                document.getElementById('usdcBalance').textContent = (usdcBal / 1e6).toFixed(2);
+                document.getElementById('walletUsdcBalance').textContent = (usdcBal / 1e6).toFixed(2);
 
-                // 获取LOBSTER余额
+                // LOBSTER balance
                 const lobsterBal = await lobsterContract.methods.balanceOf(userAddress).call();
-                lobsterBalance.textContent = (lobsterBal / 1e18).toLocaleString() + ' LOBSTER';
+                document.getElementById('lobsterBalance').textContent = (lobsterBal / 1e18).toLocaleString();
+                document.getElementById('walletLobsterBalance').textContent = (lobsterBal / 1e18).toLocaleString();
+
+                // Gas balance (simplified)
+                const gasBal = await web3.eth.getBalance(userAddress);
+                document.getElementById('gasBalance').textContent = (gasBal / 1e18).toFixed(4);
 
             } catch (error) {
-                console.error('获取余额失败:', error);
+                console.error('Balance update failed:', error);
             }
         }
 
-        // 检查授权
+        // Check approval
         async function checkApproval() {
             if (!userAddress || !usdcContract) return;
 
@@ -610,108 +622,93 @@
                 isApproved = parseInt(allowance) >= parseInt(CONFIG.PRICE);
                 
                 if (isApproved) {
-                    approveButton.textContent = '已授权';
+                    approveButton.textContent = 'Approved';
                     approveButton.disabled = true;
                     buyButton.disabled = false;
                 } else {
-                    approveButton.textContent = '授权USDC.e';
+                    approveButton.textContent = 'Approve USDC.e';
                     approveButton.disabled = false;
                     buyButton.disabled = true;
                 }
             } catch (error) {
-                console.error('检查授权失败:', error);
+                console.error('Approval check failed:', error);
             }
         }
 
-        // 授权USDC.e
+        // Approve USDC.e
         approveButton.addEventListener('click', async () => {
             try {
                 approveButton.disabled = true;
-                approveButton.innerHTML = '<span class="loading"></span>授权中...';
+                approveButton.innerHTML = '<span class="loading"></span> Approving...';
 
                 const tx = await usdcContract.methods
                     .approve(CONFIG.LOBSTER_ADDRESS, CONFIG.PRICE)
                     .send({ from: userAddress });
 
-                console.log('授权成功:', tx);
-                showSuccess('USDC.e授权成功！');
+                console.log('Approval successful:', tx);
                 
-                // 更新状态
                 isApproved = true;
-                approveButton.textContent = '已授权';
+                approveButton.textContent = 'Approved';
                 approveButton.disabled = true;
                 buyButton.disabled = false;
 
+                alert('USDC.e approved successfully!');
+
             } catch (error) {
-                console.error('授权失败:', error);
-                showError('授权失败: ' + error.message);
+                console.error('Approval failed:', error);
+                alert('Approval failed: ' + error.message);
                 approveButton.disabled = false;
-                approveButton.textContent = '授权USDC.e';
+                approveButton.textContent = 'Approve USDC.e';
             }
         });
 
-        // 购买LOBSTER
+        // Buy LOBSTER
         buyButton.addEventListener('click', async () => {
             try {
                 buyButton.disabled = true;
-                buyButton.innerHTML = '<span class="loading"></span>购买中...';
+                buyButton.innerHTML = '<span class="loading"></span> Buying...';
 
                 const tx = await lobsterContract.methods
                     .buy()
                     .send({ from: userAddress });
 
-                console.log('购买成功:', tx);
-                showSuccess('购买成功！已收到10,000 LOBSTER');
+                console.log('Purchase successful:', tx);
+                alert('Purchase successful! Received 10,000 LOBSTER');
                 
-                // 更新余额
+                // Update balances
                 setTimeout(updateWalletInfo, 3000);
 
             } catch (error) {
-                console.error('购买失败:', error);
-                showError('购买失败: ' + error.message);
+                console.error('Purchase failed:', error);
+                alert('Purchase failed: ' + error.message);
             } finally {
                 buyButton.disabled = false;
-                buyButton.textContent = '购买LOBSTER';
+                buyButton.textContent = 'Buy LOBSTER';
             }
         });
 
-        // 显示成功消息
-        function showSuccess(message) {
-            successMessage.textContent = '✅ ' + message;
-            successMessage.style.display = 'block';
-            errorMessage.style.display = 'none';
-            
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-            }, 5000);
-        }
+        // Calculate LOBSTER amount
+        usdcAmountInput.addEventListener('input', () => {
+            const usdcAmount = parseFloat(usdcAmountInput.value) || 0;
+            if (usdcAmount === 0.01) {
+                lobsterAmountInput.value = '10,000';
+            } else {
+                lobsterAmountInput.value = 'Must be exactly 0.01 USDC.e';
+            }
+        });
 
-        // 显示错误消息
-        function showError(message) {
-            errorMessage.textContent = '❌ ' + message;
-            errorMessage.style.display = 'block';
-            successMessage.style.display = 'none';
-            
-            setTimeout(() => {
-                errorMessage.style.display = 'none';
-            }, 5000);
-        }
-
-        // 监听账户变化
+        // Account change listener
         if (window.ethereum) {
             window.ethereum.on('accountsChanged', (accounts) => {
                 if (accounts.length === 0) {
-                    // 用户断开连接
                     userAddress = null;
-                    walletStatus.textContent = '未连接';
-                    walletAddress.textContent = '请连接钱包';
+                    walletAddressEl.textContent = 'Not connected';
+                    connectButton.textContent = 'Connect Wallet';
                     connectButton.disabled = false;
-                    approveButton.disabled = true;
-                    buyButton.disabled = true;
+                    networkBadge.textContent = '🔗 Connecting...';
                 } else {
-                    // 切换账户
                     userAddress = accounts[0];
-                    walletAddress.textContent = userAddress;
+                    walletAddressEl.textContent = userAddress;
                     updateWalletInfo();
                     checkApproval();
                 }
@@ -722,14 +719,14 @@
             });
         }
 
-        // 复制合约地址
+        // Copy contract address
         document.getElementById('contractAddress').addEventListener('click', function() {
             navigator.clipboard.writeText(this.textContent);
-            showSuccess('合约地址已复制到剪贴板');
+            alert('Contract address copied to clipboard');
         });
     </script>
     
-    <!-- 引入Web3.js -->
+    <!-- Web3.js -->
     <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
 </body>
 </html>
