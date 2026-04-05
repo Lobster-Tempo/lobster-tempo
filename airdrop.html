@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦞 Lobster Token | Airdrop</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span>🦞</span>
+            <span>Lobster Token</span>
+        </a>
+        
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="mint.html" class="nav-link">Mint</a>
+            <a href="trade.html" class="nav-link">Trade</a>
+            <a href="airdrop.html" class="nav-link active">Airdrop</a>
+            <a href="about.html" class="nav-link">About</a>
+            <button class="connect-wallet" id="connectButton">Connect Wallet</button>
+        </div>
+    </nav>
+
+    <!-- 主内容 -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>🪂 Lobster Airdrop</h1>
+            <p class="hero-subtitle">
+                Complete tasks, earn points, and get ready for the 100M LOBSTER community airdrop!
+            </p>
+        </section>
+
+        <!-- 空投信息 -->
+        <section class="info-card" style="margin-bottom: 2rem;">
+            <h2 style="color: var(--primary); margin-bottom: 1rem;">Airdrop Details</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div>
+                    <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">100M</div>
+                    <div style="color: var(--text-secondary);">Total Airdrop</div>
+                </div>
+                
+                <div>
+                    <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">1,000</div>
+                    <div style="color: var(--text-secondary);">Points per Task</div>
+                </div>
+                
+                <div>
+                    <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">10%</div>
+                    <div style="color: var(--text-secondary);">of Total Supply</div>
+                </div>
+                
+                <div>
+                    <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">Q2 2024</div>
+                    <div style="color: var(--text-secondary);">Distribution Date</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                <p style="color: var(--text-secondary); line-height: 1.6;">
+                    <strong>100 million LOBSTER tokens</strong> (10% of total supply) are reserved for community airdrop. 
+                    Complete tasks below to earn points. More points = larger airdrop allocation!
+                </p>
+            </div>
+        </section>
+
+        <!-- 用户积分 -->
+        <section class="info-card" style="margin-bottom: 2rem;">
+            <h2 style="color: var(--primary); margin-bottom: 1rem;">Your Points</h2>
+            
+            <div style="text-align: center; padding: 2rem;">
+                <div style="font-size: 4rem; font-weight: bold; color: var(--primary);" id="userPoints">0</div>
+                <div style="color: var(--text-secondary); font-size: 1.25rem;">Total Points</div>
+                
+                <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 2rem;">
+                    <div>
+                        <div style="font-size: 1.5rem; font-weight: bold;" id="completedTasks">0</div>
+                        <div style="color: var(--text-secondary);">Tasks Completed</div>
+                    </div>
+                    
+                    <div>
+                        <div style="font-size: 1.5rem; font-weight: bold;" id="estimatedAirdrop">0</div>
+                        <div style="color: var(--text-secondary);">Estimated LOBSTER</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: rgba(0, 212, 170, 0.1); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                    <div style="color: var(--primary); font-size: 1.5rem;">📊</div>
+                    <div>
+                        <div style="font-weight: bold;">Points Calculation</div>
+                        <div style="color: var(--text-secondary); font-size: 0.875rem;">
+                            1,000 points per task • More points = larger airdrop share
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 任务列表 -->
+        <section class="info-card" style="margin-bottom: 2rem;">
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Complete Tasks</h2>
+            
+            <!-- X连接 -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1rem; color: var(--text);">Step 1: Connect X Account</h3>
+                
+                <div id="xConnectSection" style="
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 12px;
+                    padding: 1.5rem;
+                    text-align: center;
+                ">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; color: #1DA1F2;">🐦</div>
+                    <div style="font-size: 1.25rem; margin-bottom: 0.5rem;">Connect your X (Twitter) account</div>
+                    <div style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                        Connect to verify task completion and track your progress
+                    </div>
+                    
+                    <button id="connectXButton" style="
+                        background: #1DA1F2;
+                        color: white;
+                        border: none;
+                        padding: 1rem 2rem;
+                        border-radius: 8px;
+                        font-size: 1rem;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 25px rgba(29, 161, 242, 0.3)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <i class="fab fa-twitter"></i> Connect X Account
+                    </button>
+                </div>
+            </div>
+
+            <!-- 任务1：关注 -->
+            <div class="task-card" style="
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 12px;
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            ">
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                        <div style="
+                            width: 40px;
+                            height: 40px;
+                            background: rgba(0, 212, 170, 0.1);
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: var(--primary);
+                            font-size: 1.25rem;
+                        ">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: bold; font-size: 1.125rem;">Follow @Lobster_Tempo</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem;">
+                                Follow our official X account for updates
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1rem;">
+                        <a href="https://x.com/Lobster_Tempo" target="_blank" style="
+                            color: #1DA1F2;
+                            text-decoration: none;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                        ">
+                            <i class="fab fa-twitter"></i>
+                            <span>https://x.com/Lobster_Tempo</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <div style="text-align: center; margin-bottom: 0.5rem;">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">1,000</div>
+                        <div style="color: var(--text-secondary); font-size: 0.875rem;">points</div>
+                    </div>
+                    
+                    <button class="task-button" data-task="follow" style="
+                        background: var(--primary);
+                        color: white;
+                        border: none;
+                        padding: 0.75rem 1.5rem;
+                        border-radius: 8px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                    " onmouseover="this.style.transform='translateY(-2px)';"
+                    onmouseout="this.style.transform='translateY(0)';">
+                        <span class="task-text">Verify</span>
+                        <span class="task-loading" style="display: none;">
+                            <span class="loading" style="width: 16px; height: 16px;"></span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 任务2：点赞推文 -->
+            <div class="task-card" style="
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 12px;
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            ">
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                        <div style="
+                            width: 40px;
+                            height: 40px;
+                            background: rgba(239, 68, 68, 0.1);
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: #ef4444;
+                            font-size: 1.25rem;
+                        ">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: bold; font-size: 1.125rem;">Like Announcement Tweet</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem;">
+                                Like our official announcement tweet
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1rem;">
+                        <a href="https://x.com/Lobster_Tempo/status/2040564694776479999" target="_blank" style="
+                            color: #1DA1F2;
+                            text-decoration: none;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                        ">
+                            <i class="fab fa-twitter"></i>
+                            <span>https://x.com/Lobster_Tempo/status/2040564694776479999</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <div style="text-align: center; margin-bottom: 0.5rem;">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">1,000</div>
+                        <div style="color: var(--text-secondary); font-size: 0.875rem;">points</div>
+                    </div>
+                    
+                    <button class="task-button" data-task="like" style="
+                        background: var(--primary);
+                        color: white;
+                        border: none;
+                        padding: 0.75rem 1.5rem;
+                        border-radius: 8px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                    " onmouseover="this.style.transform='translateY(-2px)';"
+                    onmouseout="this.style.transform='translateY(0)';">
+                        <span class="task-text">Verify</span>
+                        <span class="task-loading" style="display: none;">
+                            <span class="loading" style="width: 16px; height: 16px;"></span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 任务3：引用推文 -->
+            <div class="task-card" style="
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 12px;
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            ">
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                        <div style="
+                            width: 40px;
+                            height: 40px;
+                            background: rgba(245, 158, 11, 0.1);
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: #f59e0b;
+                            font-size: 1.25rem;
+                        ">
+                            <i class="fas fa-retweet"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: bold; font-size: 1.125rem;">Quote Announcement Tweet</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem;">
+                                Quote our announcement tweet with #LobsterToken
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1rem;">
+                        <a href="https://x.com/Lobster_Tempo/status/2040564694776479999" target="_blank" style="
+                            color: #1DA1F2;
+                            text-decoration: none;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                        ">
+                            <i class="fab fa-twitter"></i>
+                            <span>https://x.com/Lobster_Tempo/status/2040564694776479999</span>
+                        </a>
+                        <div style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 0.5rem;">
+                            Use hashtag: <strong>#LobsterToken</strong>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div style="text-align: center; margin-bottom: 0.5rem;">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">1,000</div>
+                        <div style="color: var(--text-secondary); font-size: 0.875rem;">points</div>
+                    </div>
+                    
+                    <button class="task-button" data-task="quote" style="
+                        background: var(--primary);
+                        color: white;
+                        border: none;
+                        padding: 0.75rem 1.5rem;
+                        border-radius: 8px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                    " onmouseover="this.style.transform='translateY(-2px)';"
+                    onmouseout="this.style.transform='translateY(0)';">
+                        <span class="task-text">Verify</span>
+                        <span class="task-loading" style="display: none;">
+                            <span class="loading" style="width: 16px; height: 16px;"></span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 邀请系统 -->
+        <section class="info-card" style="margin-bottom: 2rem;">
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Invite Friends</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <h3 style="margin-bottom: 1rem; color: var(--text);">Your Referral Stats</h3>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <div>
+                                <div style="font-size: 0.875rem; color: var(--text-secondary);">Total Referrals</div>
+                                <div style="font-size: 2rem; font-weight: bold;" id="totalReferrals">0</div>
+                            </div>
+                            
+                            <div>
+                                <div style="font-size: 0.875rem; color: var(--text-secondary);">Points Earned</div>
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--primary);" id="referralPoints">0</div>
+                            </div>
+                        </div>
+                        
+                        <div style="color: var(--text-secondary); font-size: 0.875rem;">
+                            <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
+                            Earn 500 points for each friend who completes at least 1 task
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 style="margin-bottom: 1rem; color: var(--text);">Your Referral Link</h3>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 1.5rem;">
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Share this link:</div>
+                            <div style="
+                                background: rgba(0, 0, 0, 0.3);
+                                padding: 1rem;
+                                border-radius: 8px;
+                                font-family: monospace;
+                                font-size: 0.875rem;
+                                word-break: break-all;
+                                color: var(--primary);
+                                cursor: pointer;
+                            " id="referralLink" onclick="copyReferralLink()">
+                                https://lobster-tempo.com/airdrop?ref=USER123
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button onclick="copyReferralLink()" style="
+                                flex: 1;
+                                background: var(--primary);
+                                color: white;
+                                border: none;
+                                padding: 0.75rem;
+                                border-radius: 8px;
+                                font-weight: bold;
+                                cursor: pointer;
+                                transition: all 0.3s;
+                            " onmouseover="this.style.transform='translateY(-2px)';"
+                            onmouseout="this.style.transform='translateY(0)';">
+                                <i class="fas fa-copy"></i> Copy Link
+                            </button>
+                            
+                            <button onclick="shareReferralLink()" style="
+                                flex: 1;
+                                background: #1DA1F2;
+                                color: white;
+                                border: none;
+                                padding: 0.75rem;
+                                border-radius: 8px;
+                                font-weight: bold;
+                                cursor: pointer;
+                                transition: all 0.3s;
+                            " onmouseover="this.style.transform='translateY(-2px)';"
+                            onmouseout="this.style.transform='translateY(0)';">
+                                <i class="fab fa-twitter"></i> Share on X
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 排行榜 -->
+        <section class="info-card">
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Leaderboard</h2>
+            
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <th style="text-align: left; padding: 1rem; color: var(--text-secondary);">Rank</th>
+                            <th style="text-align: left; padding: 1rem; color: var(--text-secondary);">User</th>
+                            <th style="text-align: left; padding: 1rem; color: var(--text-secondary);">Points</th>
+                            <th style="text-align: left; padding: 1rem; color: var(--text-secondary);">Tasks</th>
+                            <th style="text-align: left; padding: 1rem; color: var(--text-secondary);">Referrals</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        <!-- 动态生成 -->
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 1rem; font-weight: bold; color: var(--primary);">1</td>
+                            <td style="padding: 1rem;">@crypto_whale</td>
+                            <td style="padding: 1rem; font-weight: bold;">5,000</td>
+                            <td style="padding: 1rem;">3/3</td>
+                            <td style="padding: 1rem;">4</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 1rem; font-weight: bold; color: var(--primary);">2</td>
+                            <td style="padding: 1rem;">@defi_king</td>
+                            <td style="padding: 1rem; font-weight: bold;">4,500</td>
+                            <td style="padding: 1rem;">3/3</td>
+                            <td style="padding: 1rem;">3</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 1rem; font-weight: bold; color: var(--primary);">3</td>
+                            <td style="padding: 1rem;">@web3_explorer</td>
+                            <td style="padding: 1rem; font-weight: bold;">4,000</td>
+                            <td style="padding: 1rem;">3/3</td>
+                            <td style="padding: 1rem;">2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.875rem;">
+                Top 100 users will receive bonus LOBSTER tokens in the airdrop!
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer style="
+        background: var(--darker);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 2rem;
+        margin-top: 4rem;
+        text-align: center;
+        color: var(--text-secondary);
+    ">
+        <p>© 2024 Lobster Token. All rights reserved.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.875rem;">
+            Built on Tempo Network • Contract Verified • Community Driven
+        </p>
+    </footer>
+
+    <script>
+        // 用户数据
+        let userData = {
+            points: 0,
+            completedTasks: 0,
+            referrals: 0,
+            tasks: {
+                follow: false,
+                like: false,
+                quote: false
+            },
+            xConnected: false
+        };
+
+        // 更新显示
+        function updateDisplay() {
+            // 更新积分
+            document.getElementById('userPoints').textContent = userData.points;
+            document.getElementById('completedTasks').textContent = userData.completedTasks;
+            
+            // 估算空投数量（每1000点 ≈ 1000 LOBSTER）
+            const estimatedAirdrop = Math.floor(userData.points * 100);
+            document.getElementById('estimatedAirdrop').textContent = estimatedAirdrop.toLocaleString();
+            
+            // 更新推荐数据
+            document.getElementById('totalReferrals').textContent = userData.referrals;
+            document.getElementById('referralPoints').textContent = userData.referrals * 500;
+            
+            // 更新任务按钮状态
+            updateTaskButtons();
+        }
+
+        // 更新任务按钮
+        function updateTaskButtons() {
+            document.querySelectorAll('.task-button').forEach(button => {
+                const task = button.getAttribute('data-task');
+                const taskText = button.querySelector('.task-text');
+                const taskLoading = button.querySelector('.task-loading');
+                
+                if (userData.tasks[task]) {
+                    button.disabled = true;
+                    button.style.background = '#10b981';
+                    taskText.textContent = 'Completed ✓';
+                    button.onmouseover = null;
+                    button.onmouseout = null;
+                    button.style.transform = 'none';
+                } else if (!userData.xConnected) {
+                    button.disabled = true;
+                    button.style.background = 'var(--text-secondary)';
+                    taskText.textContent = 'Connect X First';
+                } else {
+                    button.disabled = false;
+                    button.style.background = 'var(--primary)';
+                    taskText.textContent = 'Verify';
+                }
+            });
+        }
+
+        // 连接X账号
+        document.getElementById('connectXButton').addEventListener('click', function() {
+            const button = this;
+            const originalText = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<span class="loading" style="width: 20px; height: 20px;"></span> Connecting...';
+            
+            // 模拟连接过程
+            setTimeout(() => {
+                userData.xConnected = true;
+                
+                // 更新UI
+                document.getElementById('xConnectSection').innerHTML = `
+                    <div style="font-size: 3rem; margin-bottom: 1rem; color: #10b981;">✅</div>
+                    <div style="font-size: 1.25rem; margin-bottom: 0.5rem;">X Account Connected</div>
+                    <div style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                        Your X account is now connected. You can start completing tasks!
+                    </div>
+                    <div style="
+                        background: rgba(16, 185, 129, 0.1);
+                        border: 1px solid rgba(16, 185, 129, 0.3);
+                        border-radius: 8px;
+                        padding: 1rem;
+                        display: inline-block;
+                    ">
+                        <div style="font-weight: bold; color: #10b981;">+500 Points</div>
+                        <div style="color: var(--text-secondary); font-size: 0.875rem;">For connecting X account</div>
+                    </div>
+                `;
+                
+                // 添加积分
+                userData.points += 500;
+                updateDisplay();
+                
+                // 显示成功消息
+                showSuccess('X account connected successfully! +500 points');
+                
+            }, 1500);
+        });
+
+        // 完成任务
+        document.querySelectorAll('.task-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const task = this.getAttribute('data-task');
+                const taskText = this.querySelector('.task-text');
+                const taskLoading = this.querySelector('.task-loading');
+                
+                if (userData.tasks[task] || !userData.xConnected) return;
+                
+                // 显示加载
+                taskText.style.display = 'none';
+                taskLoading.style.display = 'inline-block';
+                this.disabled = true;
+                
+                // 模拟验证过程
+                setTimeout(() => {
+                    // 完成任务
+                    userData.tasks[task] = true;
+                    userData.completedTasks++;
+                    userData.points += 1000;
+                    
+                    // 更新显示
+                    updateDisplay();
+                    
+                    // 恢复按钮状态
+                    taskText.style.display = 'inline';
+                    taskLoading.style.display = 'none';
+                    taskText.textContent = 'Completed ✓';
+                    this.style.background = '#10b981';
+                    this.disabled = true;
+                    
+                    // 显示成功消息
+                    showSuccess(`Task completed! +1,000 points`);
+                    
+                }, 2000);
+            });
+        });
+
+        // 复制推荐链接
+        function copyReferralLink() {
+            const link = document.getElementById('referralLink');
+            const text = link.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = link.textContent;
+                link.textContent = 'Copied to clipboard!';
+                link.style.color = '#10b981';
+                
+                setTimeout(() => {
+                    link.textContent = originalText;
+                    link.style.color = 'var(--primary)';
+                }, 2000);
+                
+                showSuccess('Referral link copied to clipboard!');
+            });
+        }
+
+        // 分享到X
+        function shareReferralLink() {
+            const text = encodeURIComponent('Join the Lobster Token airdrop and earn free LOBSTER tokens! Complete simple tasks and invite friends. 🦞 #LobsterToken');
+            const url = encodeURIComponent('https://lobster-tempo.com/airdrop?ref=USER123');
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+            
+            window.open(twitterUrl, '_blank', 'width=600,height=400');
+        }
+
+        // 显示成功消息
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #10b981;
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            successDiv.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span>✅</span>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+                successDiv.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(successDiv);
+                }, 300);
+            }, 3000);
+        }
+
+        // 钱包连接
+        const connectButton = document.getElementById('connectButton');
+        
+        connectButton.addEventListener('click', async () => {
+            try {
+                if (typeof window.ethereum === 'undefined') {
+                    alert('Please install MetaMask to connect your wallet');
+                    return;
+                }
+                
+                connectButton.disabled = true;
+                connectButton.innerHTML = '<span class="loading"></span> Connecting...';
+                
+                const accounts = await window.ethereum.request({ 
+                    method: 'eth_requestAccounts' 
+                });
+                
+                if (accounts.length > 0) {
+                    const address = accounts[0];
+                    const shortAddress = address.substring(0, 6) + '...' + address.substring(address.length - 4);
+                    connectButton.textContent = `Connected: ${shortAddress}`;
+                    connectButton.disabled = true;
+                    
+                    // 生成个性化推荐链接
+                    const referralCode = 'USER' + address.substring(2, 8).toUpperCase();
+                    document.getElementById('referralLink').textContent = 
+                        `https://lobster-tempo.com/airdrop?ref=${referralCode}`;
+                    
+                    showSuccess('Wallet connected! Your referral link has been generated.');
+                }
+                
+            } catch (error) {
+                console.error('Connection failed:', error);
+                alert('Failed to connect wallet: ' + error.message);
+                connectButton.disabled = false;
+                connectButton.textContent = 'Connect Wallet';
+            }
+        });
+
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 初始化显示
+        updateDisplay();
+        
+        // 监听账户变化
+        if (window.ethereum) {
+            window.ethereum.on('accountsChanged', (accounts) => {
+                if (accounts.length === 0) {
+                    connectButton.disabled = false;
+                    connectButton.textContent = 'Connect Wallet';
+                } else {
+                    const address = accounts[0];
+                    const shortAddress = address.substring(0, 6) + '...' + address.substring(address.length - 4);
+                    connectButton.textContent = `Connected: ${shortAddress}`;
+                    connectButton.disabled = true;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
