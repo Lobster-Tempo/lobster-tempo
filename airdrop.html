@@ -215,40 +215,94 @@
             margin-bottom: 1.5rem;
         }
         
-        /* 历史记录 */
-        .history-section {
+        /* 邀请功能 */
+        .referral-section {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
             padding: 1.5rem;
             margin-top: 2rem;
         }
         
-        .history-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        .referral-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
         
-        .history-item:last-child {
-            border-bottom: none;
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
         }
         
-        .history-task {
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00d4aa;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
             color: #94a3b8;
             font-size: 0.875rem;
         }
         
-        .history-points {
-            color: #00d4aa;
-            font-weight: bold;
+        .referral-link-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .referral-link {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .referral-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: white;
             font-size: 0.875rem;
         }
         
-        .history-date {
-            color: #64748b;
+        .copy-btn {
+            background: #00d4aa;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .share-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
             font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .share-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
         }
         
         /* X任务特殊样式 */
@@ -259,6 +313,40 @@
         .x-icon {
             color: #1DA1F2;
             margin-right: 0.5rem;
+        }
+        
+        /* 邀请记录 */
+        .referral-list {
+            margin-top: 1.5rem;
+        }
+        
+        .referral-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .referral-item:last-child {
+            border-bottom: none;
+        }
+        
+        .referral-address {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            font-family: monospace;
+        }
+        
+        .referral-date {
+            color: #64748b;
+            font-size: 0.75rem;
+        }
+        
+        .referral-earned {
+            color: #00d4aa;
+            font-weight: bold;
+            font-size: 0.875rem;
         }
     </style>
 </head>
@@ -413,36 +501,76 @@
             Ready for airdrop tasks...
         </div>
 
-        <!-- 历史记录 -->
-        <section class="history-section">
-            <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Task History</h3>
-            <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.875rem;">
-                Your completed tasks and earned points (permanently saved)
+        <!-- 邀请功能 -->
+        <section class="referral-section">
+            <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Referral Program</h3>
+            <p style="color: #94a3b8; margin-bottom: 1.5rem; font-size: 0.875rem;">
+                Invite friends to earn bonus points! Your referral data is permanently saved.
             </p>
-            <div id="taskHistory">
-                <!-- 历史记录会动态添加 -->
-                <div style="color: #64748b; text-align: center; padding: 2rem; font-size: 0.875rem;">
-                    No task history yet. Connect wallet to see your history.
+            
+            <!-- 邀请统计 -->
+            <div class="referral-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalReferrals">0</div>
+                    <div class="stat-label">Total Referrals</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="referralPoints">0</div>
+                    <div class="stat-label">Referral Points</div>
                 </div>
             </div>
-        </section>
-
-        <!-- 积分系统说明 -->
-        <section style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 1.5rem; margin-top: 2rem;">
-            <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Points System</h3>
-            <div style="color: #94a3b8; font-size: 0.875rem;">
-                <div style="margin-bottom: 0.5rem;">✅ <strong>Permanent Points:</strong> Points are saved forever</div>
-                <div style="margin-bottom: 0.5rem;">✅ <strong>One-time Tasks:</strong> Each task can only be completed once per wallet</div>
-                <div style="margin-bottom: 0.5rem;">✅ <strong>Wallet-based:</strong> Points are tied to your wallet address</div>
-                <div style="margin-bottom: 0.5rem;">✅ <strong>Auto-save:</strong> Points are automatically saved when you complete tasks</div>
-                <div style="margin-bottom: 0.5rem;">✅ <strong>Persistent:</strong> Reconnect wallet to see your points history</div>
+            
+            <!-- 邀请链接 -->
+            <div class="referral-link-container">
+                <h4 style="color: #00d4aa; margin-bottom: 0.75rem; font-size: 1rem;">Your Referral Link</h4>
+                <div class="referral-link">
+                    <input type="text" id="referralLink" class="referral-input" readonly>
+                    <button class="copy-btn" onclick="copyReferralLink()" id="copyBtn">
+                        Copy
+                    </button>
+                </div>
+                
+                <div class="share-buttons">
+                    <button class="share-btn" onclick="shareOnTwitter()">
+                        <span>𝕏</span> Share on X
+                    </button>
+                    <button class="share-btn" onclick="shareOnTelegram()">
+                        <span>📱</span> Share on Telegram
+                    </button>
+                    <button class="share-btn" onclick="shareOnWhatsApp()">
+                        <span>💬</span> Share on WhatsApp
+                    </button>
+                    <button class="share-btn" onclick="shareViaEmail()">
+                        <span>📧</span> Share via Email
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 邀请说明 -->
+            <div style="background: rgba(0, 212, 170, 0.1); border-radius: 8px; padding: 1rem; margin-top: 1rem;">
+                <h4 style="color: #00d4aa; margin-bottom: 0.5rem; font-size: 0.875rem;">How it works:</h4>
+                <ul style="color: #94a3b8; font-size: 0.75rem; padding-left: 1rem;">
+                    <li>Share your unique referral link with friends</li>
+                    <li>When they connect wallet using your link, you earn +50 points</li>
+                    <li>Your friends also get +25 bonus points</li>
+                    <li>No limit on how many friends you can refer</li>
+                    <li>Referral data is permanently saved to your wallet</li>
+                </ul>
+            </div>
+            
+            <!-- 邀请记录 -->
+            <div class="referral-list" id="referralList" style="display: none;">
+                <h4 style="color: #00d4aa; margin-bottom: 0.75rem; font-size: 1rem;">Referral History</h4>
+                <div id="referralHistory">
+                    <!-- 邀请记录会动态添加 -->
+                </div>
             </div>
         </section>
     </main>
 
     <!-- JavaScript -->
     <script>
-        // 配置 - 更新为正确的X链接
+        // 配置
         const CONFIG = {
             TASKS: {
                 follow: { 
@@ -466,7 +594,11 @@
                     url: 'mint.html' 
                 }
             },
-            STORAGE_KEY: 'lobster_airdrop_points'
+            STORAGE_KEY: 'lobster_airdrop_points',
+            REFERRAL_STORAGE_KEY: 'lobster_referral_data',
+            BASE_URL: window.location.origin + window.location.pathname,
+            REFERRAL_POINTS: 50, // 邀请人获得的积分
+            REFERRAL_BONUS: 25   // 被邀请人获得的额外积分
         };
 
         // 状态
@@ -475,6 +607,12 @@
         let isConnected = false;
         let userPoints = 0;
         let userHistory = {};
+        let referralData = {
+            totalReferrals: 0,
+            referralPoints: 0,
+            referrals: [],
+            referralCode: null
+        };
 
         // 元素
         const connectButton = document.getElementById('connectButton');
@@ -483,13 +621,20 @@
         const walletAddress = document.getElementById('walletAddress');
         const walletAddressShort = document.getElementById('walletAddressShort');
         const totalPoints = document.getElementById('totalPoints');
-        const taskHistory = document.getElementById('taskHistory');
+        const totalReferrals = document.getElementById('totalReferrals');
+        const referralPoints = document.getElementById('referralPoints');
+        const referralLink = document.getElementById('referralLink');
+        const referralList = document.getElementById('referralList');
+        const referralHistory = document.getElementById('referralHistory');
         const statusIndicator = document.getElementById('statusIndicator');
 
         // 初始化
         async function init() {
             await checkExistingConnection();
             updateConnectButton();
+            
+            // 检查URL中是否有邀请码
+            checkReferralFromURL();
         }
 
         // 检查现有连接
@@ -506,6 +651,7 @@
                         
                         updateWalletStatus();
                         loadUserData();
+                        loadReferralData();
                     }
                 } catch (error) {
                     console.log('No existing connection');
@@ -529,7 +675,6 @@
                     
                     updatePointsDisplay();
                     updateTaskStatus();
-                    updateHistoryDisplay();
                     
                     showStatus(`Loaded ${userPoints} points from history`, 'success');
                 } catch (error) {
@@ -544,20 +689,64 @@
             }
         }
 
-        // 保存用户数据
-        function saveUserData() {
+        // 加载邀请数据
+        function loadReferralData() {
             if (!userAddress) return;
             
-            const storageKey = `${CONFIG.STORAGE_KEY}_${userAddress.toLowerCase()}`;
-            const data = {
-                address: userAddress,
-                points: userPoints,
-                history: userHistory,
-                lastUpdated: new Date().toISOString()
+            // 从localStorage加载邀请数据
+            const storageKey = `${CONFIG.REFERRAL_STORAGE_KEY}_${userAddress.toLowerCase()}`;
+            const savedData = localStorage.getItem(storageKey);
+            
+            if (savedData) {
+                try {
+                    const data = JSON.parse(savedData);
+                    referralData = {
+                        totalReferrals: data.totalReferrals || 0,
+                        referralPoints: data.referralPoints || 0,
+                        referrals: data.referrals || [],
+                        referralCode: data.referralCode || generateReferralCode()
+                    };
+                    
+                    updateReferralDisplay();
+                    updateReferralLink();
+                    
+                    if (referralData.totalReferrals > 0) {
+                        referralList.style.display = 'block';
+                        updateReferralHistory();
+                    }
+                    
+                } catch (error) {
+                    console.error('Error loading referral data:', error);
+                    initReferralData();
+                }
+            } else {
+                initReferralData();
+            }
+        }
+
+        // 初始化邀请数据
+        function initReferralData() {
+            referralData = {
+                totalReferrals: 0,
+                referralPoints: 0,
+                referrals: [],
+                referralCode: generateReferralCode()
             };
             
-            localStorage.setItem(storageKey, JSON.stringify(data));
-            console.log('User data saved:', data);
+            updateReferralDisplay();
+            updateReferralLink();
+            saveReferralData();
+        }
+
+        // 生成邀请码
+        function generateReferralCode() {
+            if (userAddress) {
+                // 使用钱包地址前8位 + 随机数作为邀请码
+                const addressPart = userAddress.substring(2, 10).toLowerCase();
+                const randomPart = Math.random().toString(36).substring(2, 6);
+                return `ref_${addressPart}${randomPart}`;
+            }
+            return `ref_${Math.random().toString(36).substring(2, 10)}`;
         }
 
         // 更新积分显示
@@ -566,6 +755,49 @@
             walletAddressShort.textContent = userAddress ? 
                 `${userAddress.substring(0, 6)}...${userAddress.substring(userAddress.length - 4)}` : 
                 'Not connected';
+        }
+
+        // 更新邀请显示
+        function updateReferralDisplay() {
+            totalReferrals.textContent = referralData.totalReferrals;
+            referralPoints.textContent = referralData.referralPoints;
+        }
+
+        // 更新邀请链接
+        function updateReferralLink() {
+            if (referralData.referralCode) {
+                const link = `${CONFIG.BASE_URL}?ref=${referralData.referralCode}`;
+                referralLink.value = link;
+            }
+        }
+
+        // 更新邀请历史
+        function updateReferralHistory() {
+            if (referralData.referrals.length === 0) {
+                referralHistory.innerHTML = '<div style="color: #64748b; text-align: center; padding: 1rem; font-size: 0.875rem;">No referrals yet.</div>';
+                return;
+            }
+            
+            let historyHTML = '';
+            
+            referralData.referrals.forEach((referral, index) => {
+                const date = new Date(referral.timestamp).toLocaleDateString();
+                const addressShort = referral.address ? 
+                    `${referral.address.substring(0, 6)}...${referral.address.substring(referral.address.length - 4)}` : 
+                    'Unknown';
+                
+                historyHTML += `
+                    <div class="referral-item">
+                        <div>
+                            <div class="referral-address">${addressShort}</div>
+                            <div class="referral-date">${date}</div>
+                        </div>
+                        <div class="referral-earned">+${CONFIG.REFERRAL_POINTS} Points</div>
+                    </div>
+                `;
+            });
+            
+            referralHistory.innerHTML = historyHTML;
         }
 
         // 更新任务状态
@@ -595,50 +827,27 @@
             }
         }
 
-        // 更新历史记录显示
-        function updateHistoryDisplay() {
-            if (!userAddress) {
-                taskHistory.innerHTML = '<div style="color: #64748b; text-align: center; padding: 2rem; font-size: 0.875rem;">Connect wallet to see your history.</div>';
-                return;
-            }
+        // 保存用户数据
+        function saveUserData() {
+            if (!userAddress) return;
             
-            if (Object.keys(userHistory).length === 0) {
-                taskHistory.innerHTML = '<div style="color: #64748b; text-align: center; padding: 2rem; font-size: 0.875rem;">No tasks completed yet. Start earning points!</div>';
-                return;
-            }
+            const storageKey = `${CONFIG.STORAGE_KEY}_${userAddress.toLowerCase()}`;
+            const data = {
+                address: userAddress,
+                points: userPoints,
+                history: userHistory,
+                lastUpdated: new Date().toISOString()
+            };
             
-            let historyHTML = '';
-            let total = 0;
+            localStorage.setItem(storageKey, JSON.stringify(data));
+        }
+
+        // 保存邀请数据
+        function saveReferralData() {
+            if (!userAddress) return;
             
-            for (const taskId in userHistory) {
-                const task = CONFIG.TASKS[taskId];
-                const history = userHistory[taskId];
-                
-                if (task && history) {
-                    total += task.points;
-                    
-                    const date = new Date(history.timestamp).toLocaleDateString();
-                    historyHTML += `
-                        <div class="history-item">
-                            <div class="history-task">${task.name}</div>
-                            <div style="display: flex; align-items: center; gap: 1rem;">
-                                <div class="history-date">${date}</div>
-                                <div class="history-points">+${task.points} Points</div>
-                            </div>
-                        </div>
-                    `;
-                }
-            }
-            
-            // 添加总计
-            historyHTML += `
-                <div class="history-item" style="border-top: 2px solid rgba(0, 212, 170, 0.3); padding-top: 1rem;">
-                    <div class="history-task" style="font-weight: bold; color: #00d4aa;">Total Points</div>
-                    <div class="history-points" style="font-size: 1rem;">${total} Points</div>
-                </div>
-            `;
-            
-            taskHistory.innerHTML = historyHTML;
+            const storageKey = `${CONFIG.REFERRAL_STORAGE_KEY}_${userAddress.toLowerCase()}`;
+            localStorage.setItem(storageKey, JSON.stringify(referralData));
         }
 
         // 更新连接按钮
@@ -705,8 +914,9 @@
                     updateConnectButton();
                     updateWalletStatus();
                     loadUserData();
+                    loadReferralData();
                     
-                    showStatus('Wallet connected! Loading your points...', 'success');
+                    showStatus('Wallet connected! Loading your data...', 'success');
                 }
                 
             } catch (error) {
@@ -717,98 +927,83 @@
             }
         }
 
-        // 打开任务
-        function openTask(taskId) {
-            const task = CONFIG.TASKS[taskId];
-            if (task && task.url) {
-                window.open(task.url, '_blank');
-                showStatus(`Opened ${task.name}`, 'success');
+        // 检查URL中的邀请码
+        function checkReferralFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref');
+            
+            if (refCode && userAddress) {
+                // 处理邀请码
+                processReferral(refCode);
             }
         }
 
-        // 验证任务
-        function verifyTask(taskId) {
-            if (!userAddress) {
-                showStatus('Please connect wallet first!', 'error');
-                return;
+        // 处理邀请
+        function processReferral(refCode) {
+            if (!userAddress) return;
+            
+            // 检查是否已经处理过这个邀请
+            const storageKey = `processed_ref_${userAddress.toLowerCase()}`;
+            if (localStorage.getItem(storageKey)) {
+                return; // 已经处理过
             }
             
-            if (userHistory[taskId]) {
-                showStatus('Task already completed!', 'error');
-                return;
+            // 标记为已处理
+            localStorage.setItem(storageKey, 'true');
+            
+            // 查找邀请人
+            const allKeys = Object.keys(localStorage);
+            let referrerAddress = null;
+            let referrerData = null;
+            
+            for (const key of allKeys) {
+                if (key.startsWith(CONFIG.REFERRAL_STORAGE_KEY)) {
+                    try {
+                        const data = JSON.parse(localStorage.getItem(key));
+                        if (data.referralCode === refCode) {
+                            referrerAddress = data.address;
+                            referrerData = data;
+                            break;
+                        }
+                    } catch (error) {
+                        console.error('Error parsing referral data:', error);
+                    }
+                }
             }
             
-            const task = CONFIG.TASKS[taskId];
-            
-            // 模拟验证过程
-            showStatus(`Verifying ${task.name}...`, 'pending');
-            
-            setTimeout(() => {
-                // 标记任务为完成
-                userHistory[taskId] = {
-                    completed: true,
-                    timestamp: new Date().toISOString(),
-                    points: task.points
-                };
+            if (referrerAddress && referrerData) {
+                // 更新邀请人的数据
+                referrerData.referrals.push({
+                    address: userAddress,
+                    timestamp: new Date().toISOString()
+                });
                 
-                // 更新积分
-                userPoints += task.points;
+                referrerData.totalReferrals += 1;
+                referrerData.referralPoints += CONFIG.REFERRAL_POINTS;
                 
-                // 保存数据
-                saveUserData();
+                // 保存邀请人数据
+                const referrerKey = `${CONFIG.REFERRAL_STORAGE_KEY}_${referrerAddress.toLowerCase()}`;
+                localStorage.setItem(referrerKey, JSON.stringify(referrerData));
                 
-                // 更新显示
-                updatePointsDisplay();
-                updateTaskStatus();
-                updateHistoryDisplay();
+                // 给被邀请人奖励积分
+                const userKey = `${CONFIG.STORAGE_KEY}_${userAddress.toLowerCase()}`;
+                let userData = { points: CONFIG.REFERRAL_BONUS, history: {} };
                 
-                showStatus(`✅ ${task.name} verified! +${task.points} points`, 'success');
-            }, 1500);
-        }
-
-        // 查看任务
-        function reviewTask(taskId) {
-            const task = CONFIG.TASKS[taskId];
-            if (!task) return;
-            
-            if (userHistory[taskId]) {
-                const history = userHistory[taskId];
-                const date = new Date(history.timestamp).toLocaleString();
-                showStatus(`Task completed on ${date} for ${task.points} points`, 'success');
-            } else {
-                showStatus(`Task not completed yet. Complete to earn ${task.points} points.`, 'pending');
-            }
-        }
-
-        // 导出数据（可选功能）
-        function exportData() {
-            if (!userAddress) {
-                showStatus('Please connect wallet first!', 'error');
-                return;
-            }
-            
-            const data = {
-                address: userAddress,
-                totalPoints: userPoints,
-                tasks: userHistory,
-                exportDate: new Date().toISOString()
-            };
-            
-            const dataStr = JSON.stringify(data, null, 2);
-            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            
-            const exportFileDefaultName = `lobster_airdrop_${userAddress.substring(0, 10)}.json`;
-            
-            const linkElement = document.createElement('a');
-            linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
-            linkElement.click();
-            
-            showStatus('Data exported successfully!', 'success');
-        }
-
-        // 页面加载时初始化
-        window.onload = init;
-    </script>
-</body>
-</html>
+                try {
+                    const saved = localStorage.getItem(userKey);
+                    if (saved) {
+                        const existingData = JSON.parse(saved);
+                        userData.points = (existingData.points || 0) + CONFIG.REFERRAL_BONUS;
+                        userData.history = existingData.history || {};
+                    }
+                } catch (error) {
+                    console.error('Error loading user data for bonus:', error);
+                }
+                
+                // 保存被邀请人数据
+                userData.address = userAddress;
+                userData.lastUpdated = new Date().toISOString();
+                localStorage.setItem(userKey, JSON.stringify(userData));
+                
+                // 显示成功消息
+                showStatus(`🎉 You received ${CONFIG.REFERRAL_BONUS} bonus
