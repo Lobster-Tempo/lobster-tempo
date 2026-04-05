@@ -20,6 +20,7 @@
         
         <div class="nav-links">
             <a href="index.html" class="nav-link">Home</a>
+            <a href="mint.html" class="nav-link active">Mint</a>
             <a href="trade.html" class="nav-link">Trade</a>
             <a href="airdrop.html" class="nav-link">Airdrop</a>
             <a href="about.html" class="nav-link">About</a>
@@ -156,7 +157,7 @@
             { "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }, { "internalType": "address", "name": "spender", "type": "address" }], "name": "allowance", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }
         ];
 
-        // 连接钱包（与index.html完全相同）
+        // 连接钱包功能（与index.html完全相同）
         connectButton.addEventListener('click', async function() {
             if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
                 try {
@@ -169,29 +170,6 @@
                     if (accounts.length > 0) {
                         userAddress = accounts[0];
                         web3 = new Web3(provider);
-                        
-                        // 检查网络
-                        const chainId = await web3.eth.getChainId();
-                        if (chainId.toString() !== '4217') {
-                            try {
-                                await window.ethereum.request({
-                                    method: 'wallet_switchEthereumChain',
-                                    params: [{ chainId: CONFIG.CHAIN_ID }],
-                                });
-                            } catch (switchError) {
-                                await window.ethereum.request({
-                                    method: 'wallet_addEthereumChain',
-                                    params: [{
-                                        chainId: CONFIG.CHAIN_ID,
-                                        chainName: 'Tempo Mainnet',
-                                        nativeCurrency: { name: 'pathUSD', symbol: 'pathUSD', decimals: 18 },
-                                        rpcUrls: ['https://rpc.tempo.xyz'],
-                                        blockExplorerUrls: ['https://explore.tempo.xyz']
-                                    }]
-                                });
-                            }
-                            return;
-                        }
                         
                         // 初始化合约
                         lobsterContract = new web3.eth.Contract(LOBSTER_ABI, CONFIG.LOBSTER_ADDRESS);
