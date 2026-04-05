@@ -664,26 +664,45 @@
         }
         
         function verifyTask(taskId, points) {
-            console.log('Verifying task:', taskId, 'points:', points);
+            console.log('=== VERIFY TASK START ===');
+            console.log('Task ID:', taskId);
+            console.log('Points:', points);
+            console.log('User address:', userAddress);
             
-            // 如果没有连接钱包，先连接钱包
+            // 如果没有连接钱包，显示错误并返回
             if (!userAddress) {
-                console.log('No wallet connected, connecting...');
-                connectWallet();
+                console.log('No wallet connected');
                 showStatus('Please connect wallet first!', 'error');
+                alert('Please connect your wallet first!');
                 return;
             }
 
+            console.log('Showing pending status...');
             showStatus(`Verifying ${taskId} task...`, 'pending');
             
-            // 立即更新按钮状态，给用户反馈
-            const verifyBtn = document.querySelector(`[onclick*="verifyTask('${taskId}'"], [onclick*='verifyTask(\"${taskId}\"']`);
-            if (verifyBtn) {
-                verifyBtn.disabled = true;
-                verifyBtn.textContent = 'Verifying...';
+            // 简单的方法找到按钮
+            console.log('Finding button...');
+            let verifyBtn = null;
+            const allButtons = document.querySelectorAll('button');
+            for (let btn of allButtons) {
+                if (btn.textContent.includes('Verify') && btn.onclick && btn.onclick.toString().includes(taskId)) {
+                    verifyBtn = btn;
+                    break;
+                }
             }
             
+            if (verifyBtn) {
+                console.log('Button found, disabling...');
+                verifyBtn.disabled = true;
+                verifyBtn.textContent = 'Verifying...';
+            } else {
+                console.log('Button not found');
+            }
+            
+            console.log('Starting verification timeout...');
             setTimeout(() => {
+                console.log('Timeout executed');
+                
                 // 标记任务为完成
                 userHistory[taskId] = {
                     completed: true,
@@ -693,25 +712,29 @@
                 
                 // 增加积分
                 totalPoints += points;
+                console.log('Total points after add:', totalPoints);
                 
                 // 保存数据
                 saveUserData();
+                console.log('Data saved');
                 
                 // 更新显示
                 updatePointsDisplay();
                 updateTaskStatus();
+                console.log('Display updated');
                 
                 // 恢复按钮状态
                 if (verifyBtn) {
                     verifyBtn.disabled = false;
-                    verifyBtn.textContent = taskId === 'follow' ? 'Verify Follow' : 
-                                          taskId === 'quote' ? 'Verify Quote' :
-                                          taskId === 'like' ? 'Verify Like' :
-                                          'Verify Mint';
+                    if (taskId === 'follow') verifyBtn.textContent = 'Verify Follow';
+                    else if (taskId === 'quote') verifyBtn.textContent = 'Verify Quote';
+                    else if (taskId === 'like') verifyBtn.textContent = 'Verify Like';
+                    else verifyBtn.textContent = 'Verify Mint';
+                    console.log('Button restored');
                 }
                 
                 showStatus(`✅ Task verified! +${points} points`, 'success');
-                console.log('Task verified:', taskId, 'Total points:', totalPoints);
+                console.log('=== VERIFY TASK END ===');
             }, 1500);
         }
         
@@ -766,6 +789,17 @@
         }
         
         console.log('Airdrop page with points loaded successfully!');
+        
+        // 添加一个简单的测试函数
+        window.testVerify = function() {
+            console.log('TEST: verifyTask function exists?', typeof verifyTask);
+            console.log('TEST: Calling verifyTask directly...');
+            if (typeof verifyTask === 'function') {
+                verifyTask('follow', 100);
+                return true;
+            }
+            return false;
+        };
     </script>
 </body>
 </html>
