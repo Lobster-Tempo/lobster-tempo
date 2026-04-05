@@ -249,14 +249,33 @@
             }
         });
 
-        // 更新进度条
+        // 更新进度条（从合约读取真实数据）
         async function updateProgress() {
             try {
-                // 获取已Mint数量（从合约）
-                // 这里模拟数据，实际应该从合约读取
-                const minted = 120000000; // 模拟已Mint 1.2亿
-                mintedCount = minted;
+                if (!lobsterContract) {
+                    // 未连接钱包，显示0%
+                    progressBar.style.width = '0%';
+                    progressPercentage.textContent = '0%';
+                    mintedCountEl.textContent = '0';
+                    remainingCountEl.textContent = CONFIG.TOTAL_SUPPLY.toLocaleString();
+                    return;
+                }
+
+                // 从合约获取真实数据
+                // 注意：需要合约有getInfo方法返回已Mint数量
+                let minted = 0;
+                try {
+                    // 尝试从合约获取数据
+                    const info = await lobsterContract.methods.getInfo().call();
+                    // info[0] 应该是已Mint数量（根据合约结构）
+                    minted = parseInt(info[0]) / 1e18; // 转换为整数
+                } catch (error) {
+                    // 如果合约没有getInfo方法，使用默认值
+                    console.log('Contract getInfo not available, using default');
+                    minted = 0; // 初始为0
+                }
                 
+                mintedCount = minted;
                 const percentage = (minted / CONFIG.TOTAL_SUPPLY) * 100;
                 const remaining = CONFIG.TOTAL_SUPPLY - minted;
                 
@@ -266,8 +285,15 @@
                 mintedCountEl.textContent = minted.toLocaleString();
                 remainingCountEl.textContent = remaining.toLocaleString();
                 
+                console.log('Progress updated:', { minted, percentage, remaining });
+                
             } catch (error) {
                 console.error('Failed to update progress:', error);
+                // 出错时显示0%
+                progressBar.style.width = '0%';
+                progressPercentage.textContent = '0%';
+                mintedCountEl.textContent = '0';
+                remainingCountEl.textContent = CONFIG.TOTAL_SUPPLY.toLocaleString();
             }
         }
 
