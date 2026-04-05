@@ -30,23 +30,52 @@
     <!-- 主内容 -->
     <main class="container mint-container">
         <!-- Mint Header -->
-        <header class="mint-header">
-            <h1 class="mint-title">Mint LOBSTER Tokens</h1>
-            <p class="mint-subtitle">
-                Get your LOBSTER tokens at a fixed price of 0.01 USDC.e per 10,000 LOBSTER
-            </p>
-        </header>
+        <section class="mint-header">
+            <h1>Mint LOBSTER Tokens</h1>
+            <p class="mint-price">Fixed Price: 0.01 USDC.e = 10,000 LOBSTER</p>
+        </section>
+
+        <!-- 高级进度条 -->
+        <section class="progress-section">
+            <div class="progress-header">
+                <div class="progress-title">Minting Progress</div>
+                <div class="progress-percentage" id="progressPercentage">0%</div>
+            </div>
+            
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <div class="progress-stats">
+                <div>Minted: <span id="mintedCount">0</span> LOBSTER</div>
+                <div>Remaining: <span id="remainingCount">1,000,000,000</span> LOBSTER</div>
+            </div>
+        </section>
 
         <!-- Mint卡片 -->
         <section class="mint-card">
-            <div class="mint-info">
-                <div class="info-row">
-                    <div class="info-label">Token Price</div>
-                    <div class="info-value">0.01 USDC.e = 10,000 LOBSTER</div>
+            <div class="mint-amount">10,000</div>
+            <div class="mint-label">LOBSTER per Mint</div>
+            
+            <div class="mint-details">
+                <div class="detail-item">
+                    <div class="detail-label">Price per Mint</div>
+                    <div class="detail-value">0.01 USDC.e</div>
                 </div>
-                <div class="info-row">
-                    <div class="info-label">Network</div>
-                    <div class="info-value">Tempo</div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Your USDC.e Balance</div>
+                    <div class="detail-value" id="userUsdcBalance">0.00</div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Available Mints</div>
+                    <div class="detail-value" id="availableMints">0</div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Network</div>
+                    <div class="detail-value">Tempo</div>
                 </div>
             </div>
             
@@ -54,34 +83,30 @@
                 Connect Wallet to Mint
             </button>
             
-            <div style="color: var(--text-secondary); font-size: 0.875rem;">
+            <div style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 1rem;">
                 ⚡ Each mint gives you exactly 10,000 LOBSTER tokens
             </div>
         </section>
 
-        <!-- 进度条 -->
-        <section class="progress-section">
-            <div class="progress-header">
-                <div class="progress-title">Minting Progress</div>
-                <div class="progress-percentage" id="progressPercentage">0%</div>
-            </div>
-            
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressBar" style="width: 0%;"></div>
-            </div>
-            
-            <div class="progress-stats">
-                <div class="stat">
-                    <div class="stat-label">Minted</div>
-                    <div class="stat-value" id="mintedCount">0</div>
+        <!-- 用户信息 -->
+        <section class="user-info-section">
+            <h3>Your Minting Stats</h3>
+            <div class="user-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Your LOBSTER Balance</div>
+                    <div class="stat-value" id="userLobsterBalance">0</div>
                 </div>
-                <div class="stat">
-                    <div class="stat-label">Remaining</div>
-                    <div class="stat-value" id="remainingCount">1,000,000,000</div>
+                <div class="stat-item">
+                    <div class="stat-label">Total Minted by You</div>
+                    <div class="stat-value" id="userMinted">0</div>
                 </div>
-                <div class="stat">
-                    <div class="stat-label">Total Supply</div>
-                    <div class="stat-value">1,000,000,000</div>
+                <div class="stat-item">
+                    <div class="stat-label">Number of Mints</div>
+                    <div class="stat-value" id="userMintCount">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">USDC.e Spent</div>
+                    <div class="stat-value" id="userUsdcSpent">0.00</div>
                 </div>
             </div>
         </section>
@@ -202,14 +227,37 @@
 
         // 更新用户信息
         async function updateUserInfo() {
-            if (!userAddress || !lobsterContract) return;
-            
+            if (!userAddress || !web3) return;
+
             try {
-                const balance = await lobsterContract.methods.balanceOf(userAddress).call();
-                const userBalance = parseInt(balance) / 1e18;
-                console.log('User balance:', userBalance);
+                // USDC.e余额
+                const usdcBal = await usdcContract.methods.balanceOf(userAddress).call();
+                const usdcBalance = (usdcBal / 1e6).toFixed(2);
+                document.getElementById('userUsdcBalance').textContent = usdcBalance;
+                
+                // 可用Mint次数
+                const availableMints = Math.floor(usdcBal / CONFIG.PRICE);
+                document.getElementById('availableMints').textContent = availableMints;
+                
+                // LOBSTER余额
+                const lobsterBal = await lobsterContract.methods.balanceOf(userAddress).call();
+                const lobsterBalance = (lobsterBal / 1e18).toLocaleString();
+                document.getElementById('userLobsterBalance').textContent = lobsterBalance;
+                
+                // 用户已Mint数量（从余额推算）
+                const userMinted = lobsterBal / 1e18;
+                document.getElementById('userMinted').textContent = userMinted.toLocaleString();
+                
+                // Mint次数
+                const mintCount = userMinted / 10000;
+                document.getElementById('userMintCount').textContent = mintCount.toLocaleString();
+                
+                // 花费的USDC.e
+                const usdcSpent = mintCount * 0.01;
+                document.getElementById('userUsdcSpent').textContent = usdcSpent.toFixed(2);
+                
             } catch (error) {
-                console.error('Failed to get user balance:', error);
+                console.error('Failed to update user info:', error);
             }
         }
 
