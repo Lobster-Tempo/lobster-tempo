@@ -4,54 +4,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🦞 Lobster Token | Mint</title>
-    <link rel="stylesheet" href="/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* 确保背景生效 */
+        /* 强制背景 - 内联确保生效 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
         body {
             background: linear-gradient(135deg, #0a0e17 0%, #050811 50%, #1a2236 100%) !important;
+            background-attachment: fixed !important;
             color: #e2e8f0 !important;
             min-height: 100vh !important;
-            position: relative !important;
             overflow-x: hidden !important;
+            position: relative !important;
         }
         
         /* 龙虾装饰 */
-        .lobster-decoration {
+        .lobster-float {
             position: fixed !important;
-            font-size: 8rem !important;
-            opacity: 0.03 !important;
+            font-size: 6rem !important;
+            opacity: 0.04 !important;
             z-index: -1 !important;
             pointer-events: none !important;
-            animation: lobsterFloat 20s ease-in-out infinite !important;
+            animation: float 20s ease-in-out infinite !important;
         }
         
-        .lobster-1 { top: 10% !important; left: 5% !important; animation-delay: 0s !important; }
-        .lobster-2 { top: 70% !important; right: 10% !important; animation-delay: 5s !important; }
-        .lobster-3 { bottom: 20% !important; left: 15% !important; animation-delay: 10s !important; }
+        .lobster-1 { top: 15% !important; left: 8% !important; animation-delay: 0s !important; }
+        .lobster-2 { top: 65% !important; right: 12% !important; animation-delay: 7s !important; }
+        .lobster-3 { bottom: 25% !important; left: 20% !important; animation-delay: 14s !important; }
         
-        @keyframes lobsterFloat {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(10px, -15px) rotate(3deg) scale(1.05); }
+            50% { transform: translate(-5px, -25px) rotate(-2deg) scale(1.1); }
+            75% { transform: translate(-15px, -10px) rotate(5deg) scale(1.05); }
         }
         
-        /* Mint页面样式 */
+        /* 网格纹理 */
+        body::before {
+            content: '' !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px) !important;
+            background-size: 50px 50px !important;
+            z-index: -2 !important;
+            pointer-events: none !important;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background: rgba(5, 8, 17, 0.95) !important;
+            backdrop-filter: blur(10px) !important;
+            border-bottom: 1px solid rgba(0, 212, 170, 0.15) !important;
+            padding: 1rem 2rem !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 1000 !important;
+        }
+        
+        .logo {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.75rem !important;
+            font-size: 1.5rem !important;
+            font-weight: bold !important;
+            color: #00d4aa !important;
+            text-decoration: none !important;
+        }
+        
+        .nav-links {
+            display: flex !important;
+            gap: 2rem !important;
+            align-items: center !important;
+        }
+        
+        .nav-link {
+            color: #94a3b8 !important;
+            text-decoration: none !important;
+            font-weight: 500 !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 8px !important;
+            transition: all 0.3s !important;
+        }
+        
+        .nav-link:hover {
+            color: #e2e8f0 !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+        }
+        
+        .nav-link.active {
+            color: #00d4aa !important;
+            background: rgba(0, 212, 170, 0.1) !important;
+        }
+        
+        .connect-wallet {
+            background: #00d4aa !important;
+            color: white !important;
+            border: none !important;
+            padding: 0.5rem 1.5rem !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.3s !important;
+        }
+        
+        .connect-wallet:hover {
+            background: #00b894 !important;
+            transform: translateY(-2px) !important;
+        }
+        
+        /* Mint容器 */
         .mint-container {
             max-width: 800px !important;
             margin: 0 auto !important;
             padding: 2rem !important;
         }
         
+        /* Mint卡片 */
         .mint-card {
             background: rgba(255, 255, 255, 0.05) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             border-radius: 16px !important;
             padding: 2rem !important;
             margin-bottom: 2rem !important;
+            backdrop-filter: blur(10px) !important;
         }
         
+        /* 进度条 */
+        .progress-bar {
+            position: relative !important;
+            height: 40px !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border-radius: 20px !important;
+            overflow: hidden !important;
+            margin-bottom: 1rem !important;
+        }
+        
+        .progress-fill {
+            height: 100% !important;
+            background: linear-gradient(135deg, #00d4aa 0%, #0088cc 100%) !important;
+            border-radius: 20px !important;
+            width: 0% !important;
+            transition: width 1s ease-in-out !important;
+        }
+        
+        /* Mint按钮 */
         .btn-mint {
             width: 100% !important;
             background: linear-gradient(135deg, #00d4aa 0%, #0088cc 100%) !important;
@@ -75,29 +186,41 @@
             cursor: not-allowed !important;
         }
         
-        .progress-bar {
-            position: relative !important;
-            height: 40px !important;
-            background: rgba(255, 255, 255, 0.05) !important;
-            border-radius: 20px !important;
-            overflow: hidden !important;
-            margin-bottom: 1rem !important;
+        /* 页脚 */
+        footer {
+            background: #050811 !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+            padding: 2rem !important;
+            margin-top: 4rem !important;
+            text-align: center !important;
+            color: #94a3b8 !important;
         }
         
-        .progress-fill {
-            height: 100% !important;
-            background: linear-gradient(135deg, #00d4aa 0%, #0088cc 100%) !important;
-            border-radius: 20px !important;
-            width: 0% !important;
-            transition: width 1s ease-in-out !important;
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem !important;
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+                gap: 0.5rem !important;
+            }
+            
+            .mint-container {
+                padding: 1rem !important;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 龙虾装饰 -->
-    <div class="lobster-decoration lobster-1">🦞</div>
-    <div class="lobster-decoration lobster-2">🦞</div>
-    <div class="lobster-decoration lobster-3">🦞</div>
+    <!-- 浮动龙虾装饰 -->
+    <div class="lobster-float lobster-1">🦞</div>
+    <div class="lobster-float lobster-2">🦞</div>
+    <div class="lobster-float lobster-3">🦞</div>
 
     <!-- 导航栏 -->
     <nav class="navbar">
@@ -232,14 +355,7 @@
     </main>
 
     <!-- 页脚 -->
-    <footer style="
-        background: #050811;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        padding: 2rem;
-        margin-top: 4rem;
-        text-align: center;
-        color: #94a3b8;
-    ">
+    <footer>
         <p>© 2026 Lobster Token. All rights reserved.</p>
         <p style="margin-top: 0.5rem; font-size: 0.875rem;">
             Built on Tempo Network • Contract Verified • Community Driven
@@ -335,13 +451,9 @@
                 approveBtn.disabled = true;
                 approveBtn.innerHTML = '<span style="display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.1); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 10px;"></span> Waiting for Wallet...';
 
-                // 这里应该调用合约的approve方法
-                // 由于没有真实合约，我们模拟钱包弹窗
-                
-                // 模拟MetaMask弹窗
+                // 模拟钱包弹窗
                 setTimeout(() => {
                     // 用户需要在钱包中确认交易
-                    // 这里我们假设用户确认了
                     isApproved = true;
                     
                     // 显示步骤3
@@ -370,10 +482,7 @@
                 mintBtn.disabled = true;
                 mintBtn.innerHTML = '<span style="display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.1); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 10px;"></span> Confirm in Wallet...';
 
-                // 这里应该调用合约的mint方法
-                // 由于没有真实合约，我们模拟钱包弹窗和交易
-                
-                // 模拟MetaMask弹窗和交易确认
+                // 模拟钱包弹窗和交易确认
                 setTimeout(() => {
                     // 模拟交易成功
                     updateUserStatistics();
@@ -407,8 +516,8 @@
 
         // 更新进度条
         function updateProgress() {
-            // 模拟进度（实际应该从合约读取）
-            const minted = Math.floor(Math.random() * 10000000); // 随机已Mint数量
+            // 模拟进度
+            const minted = Math.floor(Math.random() * 10000000);
             const percentage = (minted / CONFIG.TOTAL_SUPPLY) * 100;
             const remaining = CONFIG.TOTAL_SUPPLY - minted;
             
@@ -420,13 +529,11 @@
 
         // 更新用户统计
         function updateUserStatistics() {
-            // 模拟用户数据
             const userMinted = parseInt(document.getElementById('userMinted').textContent.replace(/,/g, '')) || 0;
             const userMintCount = parseInt(document.getElementById('userMintCount').textContent) || 0;
             const userUsdcSpent = parseFloat(document.getElementById('userUsdcSpent').textContent) || 0;
             const userLobsterBalance = parseInt(document.getElementById('userLobsterBalance').textContent.replace(/,/g, '')) || 0;
             
-            // 增加一次Mint
             const newUserMinted = userMinted + 10000;
             const newUserMintCount = userMintCount + 1;
             const newUserUsdcSpent = userUsdcSpent + 0.01;
@@ -442,9 +549,8 @@
         function updateUserInfo() {
             if (!userAddress) return;
             
-            // 模拟余额
-            document.getElementById('userUsdcBalance').textContent = '10.00'; // 模拟10 USDC.e
-            document.getElementById('availableMints').textContent = '1000'; // 模拟可Mint次数
+            document.getElementById('userUsdcBalance').textContent = '10.00';
+            document.getElementById('availableMints').textContent = '1000';
         }
 
         // 显示成功消息
