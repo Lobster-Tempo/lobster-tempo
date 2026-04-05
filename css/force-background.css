@@ -101,78 +101,8 @@ body::after {
     pointer-events: none !important;
 }
 
-/* 导航栏 */
-.navbar {
-    background: rgba(5, 8, 17, 0.95) !important;
-    backdrop-filter: blur(10px) !important;
-    border-bottom: 1px solid rgba(0, 212, 170, 0.15) !important;
-    padding: 1rem 2rem !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    z-index: 1000 !important;
-}
-
-.logo {
-    display: flex !important;
-    align-items: center !important;
-    gap: 0.75rem !important;
-    font-size: 1.5rem !important;
-    font-weight: bold !important;
-    color: var(--primary) !important;
-    text-decoration: none !important;
-}
-
-.nav-links {
-    display: flex !important;
-    gap: 2rem !important;
-    align-items: center !important;
-}
-
-.nav-link {
-    color: var(--text-secondary) !important;
-    text-decoration: none !important;
-    font-weight: 500 !important;
-    padding: 0.5rem 1rem !important;
-    border-radius: 8px !important;
-    transition: all 0.3s !important;
-}
-
-.nav-link:hover {
-    color: var(--text) !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-}
-
-.nav-link.active {
-    color: var(--primary) !important;
-    background: rgba(0, 212, 170, 0.1) !important;
-}
-
-.connect-wallet {
-    background: var(--primary) !important;
-    color: white !important;
-    border: none !important;
-    padding: 0.5rem 1.5rem !important;
-    border-radius: 8px !important;
-    font-weight: 600 !important;
-    cursor: pointer !important;
-    transition: all 0.3s !important;
-}
-
-.connect-wallet:hover {
-    background: var(--primary-dark) !important;
-    transform: translateY(-2px) !important;
-}
-
-.connect-wallet:disabled {
-    opacity: 0.5 !important;
-    cursor: not-allowed !important;
-    transform: none !important;
-}
+/* 导航栏样式已移动到 navbar-redesign.css */
+/* 这里只保留背景相关样式 */
 
 /* 主容器 */
 .container {
