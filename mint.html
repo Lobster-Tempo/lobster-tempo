@@ -153,7 +153,7 @@
             <div class="countdown-content">
                 <div class="countdown-icon">⏰</div>
                 <div class="countdown-text">
-                    <div class="countdown-title">Minting Event Ends In</div>
+                    <div class="countdown-title">Minting Event Ends In (北京时间 4月8日 02:00)</div>
                     <div class="countdown-timer" id="countdownTimer">
                         <span class="countdown-unit">
                             <span class="countdown-value" id="countdownHours">48</span>
@@ -261,8 +261,9 @@
         // 配置
         const CONFIG = {
             // 统一的倒计时结束时间（所有用户相同）
+            // 北京时间 2026年4月8日凌晨2:00 = UTC时间 2026-04-07T18:00:00Z
             // 格式：YYYY-MM-DDTHH:mm:ssZ (UTC时间)
-            COUNTDOWN_END_TIME: '2026-04-07T18:00:00Z', // 48小时后的固定时间
+            COUNTDOWN_END_TIME: '2026-04-07T18:00:00Z',
             LOBSTER_ADDRESS: '0xb30139594b85aa0cfad2b4abe2328886fdbfe92b',
             USDC_ADDRESS: '0x20c000000000000000000000b9537d11c60e8b50',
             PRICE: '10000', // 0.01 USDC.e (6 decimals)
@@ -442,9 +443,23 @@
                 
                 // 更新内容
                 title.textContent = '🎉 Minting Event Has Ended!'; // 修改为英文
-                timer.innerHTML = 'Thank you for participating!'; // 修改为英文
                 
-                console.log('Unified countdown ended');
+                // 显示结束时间（北京时间）
+                const endTimeUTC = new Date(CONFIG.COUNTDOWN_END_TIME);
+                const endTimeBeijing = new Date(endTimeUTC.getTime() + 8 * 60 * 60 * 1000); // UTC+8
+                const beijingTimeStr = endTimeBeijing.toLocaleString('zh-CN', {
+                    timeZone: 'Asia/Shanghai',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+                
+                timer.innerHTML = `Ended at: ${beijingTimeStr} (北京时间)`;
+                
+                console.log('Unified countdown ended at Beijing time:', beijingTimeStr);
                 
                 // 倒计时结束后更新Mint按钮状态
                 if (userAddress && usdcContract) {
@@ -522,6 +537,20 @@
             
             console.log('Unified countdown initialized with accurate time');
             console.log('Ends at (UTC):', CONFIG.COUNTDOWN_END_TIME);
+            
+            // 显示北京时间
+            const beijingEndTime = new Date(countdownEndTime + 8 * 60 * 60 * 1000);
+            console.log('Ends at (北京时间):', beijingEndTime.toLocaleString('zh-CN', {
+                timeZone: 'Asia/Shanghai',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            }));
+            
             console.log('Current time:', new Date(now).toLocaleString());
             console.log('Time remaining:', Math.floor((countdownEndTime - now) / 1000), 'seconds');
             
