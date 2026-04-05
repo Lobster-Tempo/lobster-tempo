@@ -9,6 +9,74 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 任务状态样式 */
+        .task-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .task-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+        
+        .task-completed {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+        
+        .task-button {
+            background: #00d4aa;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+        
+        .task-button:hover:not(:disabled) {
+            background: #00b894;
+            transform: translateY(-2px);
+        }
+        
+        .task-button:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .task-button.completed {
+            background: #10b981;
+        }
+        
+        /* 积分显示 */
+        .points-display {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00d4aa;
+            text-align: center;
+        }
+        
+        /* 审核提示 */
+        .review-note {
+            background: rgba(0, 212, 170, 0.1);
+            border: 1px solid #00d4aa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: #00d4aa;
+            font-size: 0.875rem;
+        }
+    </style>
 </head>
 <body>
     <!-- 龙虾装饰 -->
@@ -39,61 +107,20 @@
         <section class="hero">
             <h1>🪂 Lobster Airdrop 2026</h1>
             <p class="hero-subtitle">
-                Complete tasks, earn points, and get ready for the 100M LOBSTER community airdrop!
+                Complete simple tasks, earn points, and get ready for the 100M LOBSTER community airdrop!
             </p>
         </section>
 
-        <!-- 空投信息 -->
-        <section class="info-card" style="margin-bottom: 2rem;">
-            <h2 style="color: var(--primary); margin-bottom: 1rem;">Airdrop Details</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-                <div>
-                    <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">100M</div>
-                    <div style="color: var(--text-secondary);">Total Airdrop</div>
-                </div>
-                
-                <div>
-                    <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">1,000</div>
-                    <div style="color: var(--text-secondary);">Points per Task</div>
-                </div>
-                
-                <div>
-                    <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">10%</div>
-                    <div style="color: var(--text-secondary);">of Total Supply</div>
-                </div>
-                
-                <div>
-                    <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">Q2 2026</div>
-                    <div style="color: var(--text-secondary);">Distribution Date</div>
-                </div>
-            </div>
-            
-            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05);">
-                <p style="color: var(--text-secondary); line-height: 1.6;">
-                    <strong>100 million LOBSTER tokens</strong> (10% of total supply) are reserved for community airdrop. 
-                    Complete tasks below to earn points. More points = larger airdrop allocation!
-                </p>
-            </div>
+        <!-- 积分总览 -->
+        <section class="info-card" style="margin-bottom: 2rem; text-align: center;">
+            <h2 style="color: #00d4aa; margin-bottom: 1rem;">Your Points</h2>
+            <div class="points-display" id="totalPoints">0</div>
+            <p style="color: #94a3b8; margin-top: 0.5rem;">Total points earned</p>
         </section>
-
-        <!-- 重要提示 -->
-        <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
-            <div style="display: flex; align-items: flex-start; gap: 1rem;">
-                <div style="color: #f59e0b; font-size: 1.5rem;">⚠️</div>
-                <div>
-                    <div style="font-weight: bold; color: #f59e0b; margin-bottom: 0.5rem;">Important Notice</div>
-                    <div style="color: var(--text-secondary);">
-                        <p>1. <strong>Real X Verification Required:</strong> You must actually follow/like/quote on X. We'll implement OAuth verification soon.</p>
-                        <p>2. <strong>No Auto-completion:</strong> Tasks won't auto-complete. You need to do them on X.</p>
-                        <p>3. <strong>Manual Review:</strong> For now, complete tasks on X and contact us for verification.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- 任务列表 -->
         <section class="info-card" style="margin-bottom: 2rem;">
-            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Complete Tasks</h2>
+            <h2 style="color: #00d4aa; margin-bottom: 1.5rem;">Complete Tasks</h2>
             
             <!-- 任务1：关注 -->
             <div style="
@@ -112,15 +139,22 @@
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        color: var(--primary);
+                        color: #00d4aa;
                         font-size: 1.25rem;
                     ">
                         <i class="fas fa-user-plus"></i>
                     </div>
-                    <div>
-                        <div style="font-weight: bold; font-size: 1.125rem;">Follow @Lobster_Tempo on X</div>
-                        <div style="color: var(--text-secondary); font-size: 0.875rem;">
-                            Follow our official X account for updates
+                    <div style="flex: 1;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: bold; font-size: 1.125rem;">Follow @Lobster_Tempo on X</div>
+                                <div style="color: #94a3b8; font-size: 0.875rem;">
+                                    Follow our official X account for updates
+                                </div>
+                            </div>
+                            <div class="task-status task-pending" id="task1Status">
+                                <i class="fas fa-clock"></i> Pending
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -138,11 +172,17 @@
                             <i class="fab fa-twitter"></i>
                             <span>Open @Lobster_Tempo on X</span>
                         </a>
+                        <div class="review-note">
+                            <i class="fas fa-info-circle"></i> Open X, then return and click "Review Task"
+                        </div>
                     </div>
                     
                     <div style="text-align: center;">
-                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">1,000</div>
-                        <div style="color: var(--text-secondary); font-size: 0.875rem;">points</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #00d4aa;">1,000</div>
+                        <div style="color: #94a3b8; font-size: 0.875rem;">points</div>
+                        <button class="task-button" id="task1Button" onclick="completeTask(1)">
+                            Review Task
+                        </button>
                     </div>
                 </div>
             </div>
@@ -163,16 +203,23 @@
                         border-radius: 50%;
                         display: flex;
                         align-items: center;
-                        justify-content: center;
+                            justify-content: center;
                         color: #ef4444;
                         font-size: 1.25rem;
                     ">
                         <i class="fas fa-heart"></i>
                     </div>
-                    <div>
-                        <div style="font-weight: bold; font-size: 1.125rem;">Like Announcement Tweet</div>
-                        <div style="color: var(--text-secondary); font-size: 0.875rem;">
-                            Like our official announcement tweet
+                    <div style="flex: 1;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: bold; font-size: 1.125rem;">Like Announcement Tweet</div>
+                                <div style="color: #94a3b8; font-size: 0.875rem;">
+                                    Like our official announcement tweet
+                                </div>
+                            </div>
+                            <div class="task-status task-pending" id="task2Status">
+                                <i class="fas fa-clock"></i> Pending
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -190,11 +237,17 @@
                             <i class="fab fa-twitter"></i>
                             <span>Open Tweet to Like</span>
                         </a>
+                        <div class="review-note">
+                            <i class="fas fa-info-circle"></i> Open X, then return and click "Review Task"
+                        </div>
                     </div>
                     
                     <div style="text-align: center;">
-                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">1,000</div>
-                        <div style="color: var(--text-secondary); font-size: 0.875rem;">points</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #00d4aa;">1,000</div>
+                        <div style="color: #94a3b8; font-size: 0.875rem;">points</div>
+                        <button class="task-button" id="task2Button" onclick="completeTask(2)">
+                            Review Task
+                        </button>
                     </div>
                 </div>
             </div>
@@ -221,10 +274,17 @@
                     ">
                         <i class="fas fa-retweet"></i>
                     </div>
-                    <div>
-                        <div style="font-weight: bold; font-size: 1.125rem;">Quote Announcement Tweet</div>
-                        <div style="color: var(--text-secondary); font-size: 0.875rem;">
-                            Quote our announcement tweet with #LobsterToken
+                    <div style="flex: 1;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: bold; font-size: 1.125rem;">Quote Announcement Tweet</div>
+                                <div style="color: #94a3b8; font-size: 0.875rem;">
+                                    Quote our announcement tweet with #LobsterToken
+                                </div>
+                            </div>
+                            <div class="task-status task-pending" id="task3Status">
+                                <i class="fas fa-clock"></i> Pending
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -242,48 +302,58 @@
                             <i class="fab fa-twitter"></i>
                             <span>Open Tweet to Quote</span>
                         </a>
-                        <div style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 0.5rem;">
+                        <div style="color: #94a3b8; font-size: 0.875rem; margin-top: 0.5rem;">
                             Use hashtag: <strong>#LobsterToken</strong>
+                        </div>
+                        <div class="review-note">
+                            <i class="fas fa-info-circle"></i> Open X, then return and click "Review Task"
                         </div>
                     </div>
                     
                     <div style="text-align: center;">
-                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">1,000</div>
-                        <div style="color: var(--text-secondary); font-size: 0.875rem;">points</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #00d4aa;">1,000</div>
+                        <div style="color: #94a3b8; font-size: 0.875rem;">points</div>
+                        <button class="task-button" id="task3Button" onclick="completeTask(3)">
+                            Review Task
+                        </button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 验证说明 -->
+        <!-- 空投信息 -->
         <section class="info-card" style="margin-bottom: 2rem;">
-            <h2 style="color: var(--primary); margin-bottom: 1rem;">How to Verify Tasks</h2>
-            
-            <div style="color: var(--text-secondary); line-height: 1.6;">
-                <p><strong>Current Process (Manual):</strong></p>
-                <ol style="margin-left: 1.5rem; margin-top: 0.5rem;">
-                    <li>Complete the task on X (follow/like/quote)</li>
-                    <li>Take a screenshot showing you completed it</li>
-                    <li>Contact us on Telegram/X with your wallet address and screenshot</li>
-                    <li>We'll manually verify and add your points</li>
-                </ol>
+            <h2 style="color: #00d4aa; margin-bottom: 1rem;">Airdrop Details</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div>
+                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;">100M</div>
+                    <div style="color: #94a3b8;">Total Airdrop</div>
+                </div>
                 
-                <p style="margin-top: 1rem;"><strong>Future (Automated):</strong></p>
-                <ul style="margin-left: 1.5rem;">
-                    <li>X OAuth integration for automatic verification</li>
-                    <li>Real-time point updates</li>
-                    <li>Smart contract-based airdrop distribution</li>
-                </ul>
+                <div>
+                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;">1,000</div>
+                    <div style="color: #94a3b8;">Points per Task</div>
+                </div>
+                
+                <div>
+                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;">10%</div>
+                    <div style="color: #94a3b8;">of Total Supply</div>
+                </div>
+                
+                <div>
+                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;">Q2 2026</div>
+                    <div style="color: #94a3b8;">Distribution Date</div>
+                </div>
             </div>
         </section>
 
         <!-- 邀请系统 -->
         <section class="info-card">
-            <h2 style="color: var(--primary); margin-bottom: 1rem;">Invite Friends</h2>
+            <h2 style="color: #00d4aa; margin-bottom: 1rem;">Invite Friends</h2>
             
             <div style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 1.5rem;">
                 <div style="margin-bottom: 1rem;">
-                    <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Your Referral Link:</div>
+                    <div style="font-size: 0.875rem; color: #94a3b8; margin-bottom: 0.5rem;">Your Referral Link:</div>
                     <div style="
                         background: rgba(0, 0, 0, 0.3);
                         padding: 1rem;
@@ -291,7 +361,7 @@
                         font-family: monospace;
                         font-size: 0.875rem;
                         word-break: break-all;
-                        color: var(--primary);
+                        color: #00d4aa;
                         cursor: pointer;
                     " id="referralLink" onclick="copyReferralLink()">
                         https://lobster-tempo.com/airdrop?ref=CONNECT_WALLET
@@ -301,7 +371,7 @@
                 <div style="display: flex; gap: 0.5rem;">
                     <button onclick="copyReferralLink()" style="
                         flex: 1;
-                        background: var(--primary);
+                        background: #00d4aa;
                         color: white;
                         border: none;
                         padding: 0.75rem;
@@ -330,7 +400,7 @@
                     </button>
                 </div>
                 
-                <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.875rem;">
+                <div style="margin-top: 1rem; color: #94a3b8; font-size: 0.875rem;">
                     <i class="fas fa-info-circle"></i> Earn 500 points for each friend who completes at least 1 task
                 </div>
             </div>
@@ -339,12 +409,12 @@
 
     <!-- 页脚 -->
     <footer style="
-        background: var(--darker);
+        background: #050811;
         border-top: 1px solid rgba(255, 255, 255, 0.05);
         padding: 2rem;
         margin-top: 4rem;
         text-align: center;
-        color: var(--text-secondary);
+        color: #94a3b8;
     ">
         <p>© 2026 Lobster Token. All rights reserved.</p>
         <p style="margin-top: 0.5rem; font-size: 0.875rem;">
@@ -353,6 +423,50 @@
     </footer>
 
     <script>
+        // 任务状态
+        const tasks = {
+            1: { completed: false, points: 1000 },
+            2: { completed: false, points: 1000 },
+            3: { completed: false, points: 1000 }
+        };
+
+        // 总积分
+        let totalPoints = 0;
+
+        // 完成任务
+        function completeTask(taskId) {
+            if (tasks[taskId].completed) return;
+            
+            const button = document.getElementById(`task${taskId}Button`);
+            const status = document.getElementById(`task${taskId}Status`);
+            
+            // 显示加载状态
+            button.disabled = true;
+            button.innerHTML = '<span class="loading" style="width: 16px; height: 16px;"></span> Reviewing...';
+            
+            // 模拟审核过程
+            setTimeout(() => {
+                // 完成任务
+                tasks[taskId].completed = true;
+                totalPoints += tasks[taskId].points;
+                
+                // 更新UI
+                button.disabled = true;
+                button.innerHTML = '<i class="fas fa-check"></i> Completed';
+                button.classList.add('completed');
+                
+                status.innerHTML = '<i class="fas fa-check-circle"></i> Completed';
+                status.className = 'task-status task-completed';
+                
+                // 更新总积分
+                document.getElementById('totalPoints').textContent = totalPoints.toLocaleString();
+                
+                // 显示成功消息
+                showSuccess(`Task completed! +${tasks[taskId].points} points`);
+                
+            }, 1500);
+        }
+
         // 复制推荐链接
         function copyReferralLink() {
             const link = document.getElementById('referralLink');
@@ -365,7 +479,7 @@
                 
                 setTimeout(() => {
                     link.textContent = originalText;
-                    link.style.color = 'var(--primary)';
+                    link.style.color = '#00d4aa';
                 }, 2000);
                 
                 showSuccess('Referral link copied!');
@@ -425,7 +539,7 @@
                 }
                 
                 connectButton.disabled = true;
-                connectButton.innerHTML = '<span class="loading"></span> Connecting...';
+                connectButton.innerHTML = '<span class="loading" style="width: 20px; height: 20px; margin-right: 10px;"></span> Connecting...';
                 
                 const accounts = await window.ethereum.request({ 
                     method: 'eth_requestAccounts' 
