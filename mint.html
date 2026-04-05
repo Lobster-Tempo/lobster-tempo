@@ -345,8 +345,8 @@
                             updateProgress();
                             updateUserInfo();
                             
-                            // 检查授权状态（函数内部会处理倒计时）
-                            checkApproval();
+                            // 强制更新Mint按钮状态
+                            forceUpdateMintButton();
                             
                             const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
                             this.textContent = shortAddress;
@@ -453,15 +453,9 @@
                 
                 console.log('Unified countdown ended at Beijing time:', beijingTimeStr);
                 
-                // 倒计时结束后更新Mint按钮状态
-                if (userAddress && usdcContract) {
-                    // 已连接钱包，检查授权状态
-                    checkApproval();
-                } else if (mintButton) {
-                    // 未连接钱包
-                    mintButton.textContent = 'Connect Wallet to Mint';
-                    mintButton.disabled = true;
-                }
+                // 倒计时结束后强制更新Mint按钮状态
+                console.log('Countdown ended, forcing button update');
+                forceUpdateMintButton();
             }
         }
         
@@ -551,29 +545,42 @@
             updateCountdown();
         }
         
-        // 根据倒计时状态更新Mint按钮
-        function updateMintButtonForCountdown() {
-            if (!mintButton) return;
+        // 强制更新Mint按钮状态（根据倒计时）
+        function forceUpdateMintButton() {
+            console.log('=== forceUpdateMintButton called ===');
+            console.log('isCountdownActive:', isCountdownActive);
+            console.log('userAddress:', userAddress ? 'yes' : 'no');
+            
+            if (!mintButton) {
+                console.log('forceUpdateMintButton: mintButton not found');
+                return;
+            }
             
             if (isCountdownActive) {
-                // 倒计时未结束，无论其他状态如何，都显示等待
+                // 倒计时未结束，强制显示等待
+                console.log('🔒 FORCING: Waiting for Countdown... (disabled)');
                 mintButton.textContent = 'Waiting for Countdown...';
                 mintButton.disabled = true;
                 mintButton.onclick = null;
-                console.log('updateMintButtonForCountdown: countdown active, button disabled');
             } else {
                 // 倒计时已结束
                 if (userAddress && usdcContract) {
-                    // 已连接钱包，让checkApproval检查具体授权状态
-                    // 不要在这里设置，让checkApproval处理
-                    return;
+                    // 已连接钱包，检查具体状态
+                    console.log('🔓 Countdown ended, checking approval...');
+                    checkApproval();
                 } else {
                     // 未连接钱包
+                    console.log('🔓 Countdown ended, not connected');
                     mintButton.textContent = 'Connect Wallet to Mint';
                     mintButton.disabled = true;
-                    console.log('updateMintButtonForCountdown: countdown ended, not connected');
                 }
             }
+        }
+        
+        // 根据倒计时状态更新Mint按钮
+        function updateMintButtonForCountdown() {
+            console.log('updateMintButtonForCountdown called');
+            forceUpdateMintButton();
         }
 
         // 初始化合约
@@ -622,7 +629,16 @@
 
         // 检查授权和倒计时状态
         async function checkApproval() {
-            if (!userAddress || !usdcContract) return;
+            console.log('=== checkApproval called ===');
+            console.log('userAddress:', userAddress ? 'yes' : 'no');
+            console.log('usdcContract:', usdcContract ? 'yes' : 'no');
+            console.log('isCountdownActive:', isCountdownActive);
+            console.log('countdownEndTime:', countdownEndTime);
+            
+            if (!userAddress || !usdcContract) {
+                console.log('checkApproval: missing userAddress or usdcContract');
+                return;
+            }
 
             try {
                 const allowance = await usdcContract.methods
@@ -630,30 +646,31 @@
                     .call();
                 
                 isApproved = parseInt(allowance) >= parseInt(CONFIG.PRICE);
+                console.log('Allowance:', allowance, 'isApproved:', isApproved);
                 
                 // 首先检查倒计时状态 - 这是最重要的
                 if (isCountdownActive) {
                     // 倒计时未结束，无论授权状态如何，都显示等待
+                    console.log('🚫 Countdown ACTIVE - forcing button to Waiting for Countdown...');
                     mintButton.textContent = 'Waiting for Countdown...';
                     mintButton.disabled = true;
                     mintButton.onclick = null;
-                    console.log('Countdown active, button disabled');
                     return; // 直接返回，不继续检查授权状态
                 }
                 
                 // 倒计时已结束，根据授权状态显示相应按钮
                 if (isApproved) {
                     // 已授权，可以Mint
+                    console.log('✅ Countdown ENDED, approved - enabling Mint button');
                     mintButton.textContent = 'Mint 10,000 LOBSTER';
                     mintButton.disabled = false;
                     mintButton.onclick = mintLobster;
-                    console.log('Countdown ended, approved, mint enabled');
                 } else {
                     // 未授权，可以授权
+                    console.log('✅ Countdown ENDED, not approved - enabling Approve button');
                     mintButton.textContent = 'Approve USDC.e First';
                     mintButton.disabled = false;
                     mintButton.onclick = approveUsdc;
-                    console.log('Countdown ended, not approved, approve enabled');
                 }
                 
             } catch (error) {
@@ -826,8 +843,8 @@
                         updateProgress();
                         updateUserInfo();
                         
-                        // 检查授权状态（函数内部会处理倒计时）
-                        checkApproval();
+                        // 强制更新Mint按钮状态
+                        forceUpdateMintButton();
                     }
                 }
             });
@@ -846,6 +863,19 @@
             
             // 初始设置Mint按钮状态（根据倒计时）
             updateMintButtonForCountdown();
+            
+            // 定期检查按钮状态（每5秒一次）
+            setInterval(() => {
+                if (mintButton && isCountdownActive) {
+                    // 倒计时进行中，确保按钮保持禁用
+                    if (mintButton.textContent !== 'Waiting for Countdown...' || !mintButton.disabled) {
+                        console.log('🔄 Periodic check: forcing button to Waiting for Countdown...');
+                        mintButton.textContent = 'Waiting for Countdown...';
+                        mintButton.disabled = true;
+                        mintButton.onclick = null;
+                    }
+                }
+            }, 5000);
             
             // 检查现有连接
             if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
@@ -871,8 +901,8 @@
                                 updateProgress();
                                 updateUserInfo();
                                 
-                                // 检查授权状态（函数内部会处理倒计时）
-                                checkApproval();
+                                // 强制更新Mint按钮状态
+                                forceUpdateMintButton();
                             });
                         } else {
                             // 没有连接，但需要根据倒计时更新Mint按钮
