@@ -30,8 +30,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             z-index: 1000;
         }
         
@@ -80,6 +82,7 @@
             max-width: 1000px;
             margin: 0 auto;
             padding: 1rem;
+            padding-top: 5rem; /* 给固定导航栏留出空间 */
         }
         
         /* 积分显示 */
