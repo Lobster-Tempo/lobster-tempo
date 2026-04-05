@@ -146,6 +146,63 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
     
     <script>
+        // 连接钱包功能（与index.html完全相同）
+        document.addEventListener('DOMContentLoaded', function() {
+            const connectButton = document.getElementById('connectButton');
+            if (connectButton) {
+                connectButton.addEventListener('click', async function() {
+                    if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
+                        try {
+                            const provider = window.okxwallet || window.ethereum;
+                            this.disabled = true;
+                            this.textContent = 'Connecting...';
+                            
+                            const accounts = await provider.request({ method: 'eth_requestAccounts' });
+                            
+                            if (accounts.length > 0) {
+                                const shortAddress = accounts[0].substring(0, 6) + '...' + accounts[0].substring(accounts[0].length - 4);
+                                this.textContent = shortAddress;
+                                this.disabled = true;
+                                
+                                // 触发Mint页面的连接逻辑
+                                if (window.mintPageConnected) {
+                                    window.mintPageConnected(accounts[0], provider);
+                                }
+                            }
+                        } catch (error) {
+                            console.error('Connection failed:', error);
+                            this.disabled = false;
+                            this.textContent = 'Connect Wallet';
+                            alert('Connection failed: ' + error.message);
+                        }
+                    } else {
+                        alert('Please install MetaMask or OKX Wallet!');
+                    }
+                });
+                
+                // 检查现有连接
+                if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
+                    try {
+                        const provider = window.okxwallet || window.ethereum;
+                        provider.request({ method: 'eth_accounts' }).then(accounts => {
+                            if (accounts.length > 0) {
+                                const shortAddress = accounts[0].substring(0, 6) + '...' + accounts[0].substring(accounts[0].length - 4);
+                                connectButton.textContent = shortAddress;
+                                connectButton.disabled = true;
+                                
+                                // 触发Mint页面的连接逻辑
+                                if (window.mintPageConnected) {
+                                    window.mintPageConnected(accounts[0], provider);
+                                }
+                            }
+                        });
+                    } catch (error) {
+                        console.log('No existing connection:', error);
+                    }
+                }
+            }
+        });
+        
         // 配置
         const CONFIG = {
             LOBSTER_ADDRESS: '0xb30139594b85aa0cfad2b4abe2328886fdbfe92b',
@@ -168,6 +225,62 @@
         let countdownEndTime = null;
         let countdownInterval = null;
         let isCountdownActive = true; // 初始为true，48小时倒计时
+        
+        // 全局函数：当导航栏连接钱包时调用
+        window.mintPageConnected = function(address, provider) {
+            console.log('Mint page connected via navbar:', address);
+            userAddress = address;
+            web3 = new Web3(provider);
+            
+            // 检查网络
+            web3.eth.getChainId().then(chainId => {
+                if (chainId.toString() !== '4217') {
+                    try {
+                        window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: CONFIG.CHAIN_ID }],
+                        }).then(() => {
+                            initContractsAndUpdate();
+                        }).catch(switchError => {
+                            window.ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [{
+                                    chainId: CONFIG.CHAIN_ID,
+                                    chainName: 'Tempo Mainnet',
+                                    nativeCurrency: { name: 'pathUSD', symbol: 'pathUSD', decimals: 18 },
+                                    rpcUrls: ['https://rpc.tempo.xyz'],
+                                    blockExplorerUrls: ['https://explore.tempo.xyz']
+                                }]
+                            }).then(() => {
+                                initContractsAndUpdate();
+                            });
+                        });
+                    } catch (error) {
+                        console.error('Network switch failed:', error);
+                    }
+                } else {
+                    initContractsAndUpdate();
+                }
+            });
+        };
+        
+        // 初始化合约并更新UI
+        async function initContractsAndUpdate() {
+            try {
+                // 初始化合约
+                lobsterContract = new web3.eth.Contract(LOBSTER_ABI, CONFIG.LOBSTER_ADDRESS);
+                usdcContract = new web3.eth.Contract(USDC_ABI, CONFIG.USDC_ADDRESS);
+                
+                // 更新UI
+                updateProgress();
+                updateUserInfo();
+                checkApproval();
+                
+                console.log('Mint page fully initialized after navbar connection');
+            } catch (error) {
+                console.error('Failed to init contracts:', error);
+            }
+        }
         
         // 初始化倒计时
         function initCountdown() {
@@ -565,68 +678,7 @@
             });
         }
         
-        // 连接钱包功能（与其他页面保持一致）
-        if (connectButton) {
-            connectButton.addEventListener('click', async function() {
-                if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
-                    try {
-                        const provider = window.okxwallet || window.ethereum;
-                        this.disabled = true;
-                        this.textContent = 'Connecting...';
-                        
-                        const accounts = await provider.request({ method: 'eth_requestAccounts' });
-                        
-                        if (accounts.length > 0) {
-                            userAddress = accounts[0];
-                            web3 = new Web3(provider);
-                            
-                            // 检查网络
-                            const chainId = await web3.eth.getChainId();
-                            if (chainId.toString() !== '4217') {
-                                try {
-                                    await window.ethereum.request({
-                                        method: 'wallet_switchEthereumChain',
-                                        params: [{ chainId: CONFIG.CHAIN_ID }],
-                                    });
-                                } catch (switchError) {
-                                    await window.ethereum.request({
-                                        method: 'wallet_addEthereumChain',
-                                        params: [{
-                                            chainId: CONFIG.CHAIN_ID,
-                                            chainName: 'Tempo Mainnet',
-                                            nativeCurrency: { name: 'pathUSD', symbol: 'pathUSD', decimals: 18 },
-                                            rpcUrls: ['https://rpc.tempo.xyz'],
-                                            blockExplorerUrls: ['https://explore.tempo.xyz']
-                                        }]
-                                    });
-                                }
-                                return;
-                            }
-                            
-                            // 初始化合约
-                            lobsterContract = new web3.eth.Contract(LOBSTER_ABI, CONFIG.LOBSTER_ADDRESS);
-                            usdcContract = new web3.eth.Contract(USDC_ABI, CONFIG.USDC_ADDRESS);
-                            
-                            // 更新UI
-                            updateProgress();
-                            updateUserInfo();
-                            checkApproval();
-                            
-                            const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
-                            this.textContent = shortAddress;
-                            this.disabled = true;
-                        }
-                    } catch (error) {
-                        console.error('Connection failed:', error);
-                        this.disabled = false;
-                        this.textContent = 'Connect Wallet';
-                        alert('Connection failed: ' + error.message);
-                    }
-                } else {
-                    alert('Please install MetaMask or OKX Wallet!');
-                }
-            });
-        }
+
         
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
@@ -635,30 +687,17 @@
             // 初始化倒计时
             initCountdown();
             
-            // 检查现有连接
+            // 检查现有连接（通过全局函数处理）
             if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
                 try {
                     const provider = window.okxwallet || window.ethereum;
                     const accounts = await provider.request({ method: 'eth_accounts' });
                     
                     if (accounts.length > 0) {
-                        userAddress = accounts[0];
-                        web3 = new Web3(provider);
-                        
-                        // 更新导航栏连接按钮
-                        const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
-                        if (connectButton) {
-                            connectButton.textContent = shortAddress;
-                            connectButton.disabled = true;
+                        // 调用全局函数处理连接
+                        if (window.mintPageConnected) {
+                            window.mintPageConnected(accounts[0], provider);
                         }
-                        
-                        // 初始化合约
-                        await initContracts();
-                        
-                        // 更新数据
-                        updateProgress();
-                        updateUserInfo();
-                        checkApproval();
                     }
                 } catch (error) {
                     console.log('No existing connection:', error);
