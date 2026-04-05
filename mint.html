@@ -9,6 +9,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <script>
+        // 检查Web3是否加载成功
+        window.addEventListener('load', function() {
+            if (typeof Web3 === 'undefined') {
+                console.error('Web3 library failed to load!');
+                alert('Error: Web3 library failed to load. Please refresh the page.');
+            } else {
+                console.log('Web3 library loaded successfully');
+            }
+        });
+    </script>
 </head>
 <body>
     <!-- 导航栏 -->
@@ -203,7 +215,13 @@
                         console.error('Connection error:', error);
                         this.disabled = false;
                         this.textContent = 'Connect Wallet';
-                        alert('Connection failed: ' + error.message);
+                        
+                        // 提供更友好的错误信息
+                        if (error.message.includes('Web3 is not defined')) {
+                            alert('Error: Web3 library not loaded. Please refresh the page.');
+                        } else {
+                            alert('Connection failed: ' + error.message);
+                        }
                     }
                 } else {
                     console.log('No wallet provider found');
