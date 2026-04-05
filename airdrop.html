@@ -1008,4 +1008,9 @@
         // 验证任务
         function verifyTask(taskId) {
             console.log('Verifying task:', taskId);
-            if (!user
+            if (!userAddress) {
+                showStatus('Please connect wallet first!', 'error');
+                return;
+            }
+
+            const task
