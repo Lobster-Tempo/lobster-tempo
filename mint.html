@@ -9,6 +9,112 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* 倒计时横幅样式 */
+        .countdown-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .countdown-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+        
+        .countdown-icon {
+            font-size: 2.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .countdown-text {
+            text-align: center;
+        }
+        
+        .countdown-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+        
+        .countdown-timer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .countdown-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 70px;
+        }
+        
+        .countdown-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem;
+            border-radius: 8px;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .countdown-label {
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .countdown-separator {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 0.25rem;
+            opacity: 0.7;
+        }
+        
+        /* 动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* 倒计时结束样式 */
+        .countdown-ended {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .countdown-ended .countdown-icon {
+            animation: none;
+        }
+        
+        .countdown-ended .countdown-title {
+            font-size: 1.2rem;
+        }
+        
+        .countdown-ended .countdown-timer {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
     <script>
         // 检查Web3是否加载成功
@@ -42,6 +148,32 @@
 
     <!-- 主内容 -->
     <main class="container mint-container">
+        <!-- 48小时倒计时横幅 -->
+        <section class="countdown-banner" id="countdownBanner">
+            <div class="countdown-content">
+                <div class="countdown-icon">⏰</div>
+                <div class="countdown-text">
+                    <div class="countdown-title">Minting Event Ends In</div>
+                    <div class="countdown-timer" id="countdownTimer">
+                        <span class="countdown-unit">
+                            <span class="countdown-value" id="countdownHours">48</span>
+                            <span class="countdown-label">Hours</span>
+                        </span>
+                        <span class="countdown-separator">:</span>
+                        <span class="countdown-unit">
+                            <span class="countdown-value" id="countdownMinutes">00</span>
+                            <span class="countdown-label">Minutes</span>
+                        </span>
+                        <span class="countdown-separator">:</span>
+                        <span class="countdown-unit">
+                            <span class="countdown-value" id="countdownSeconds">00</span>
+                            <span class="countdown-label">Seconds</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Mint Header -->
         <section class="mint-header">
             <h1>Mint LOBSTER Tokens</h1>
@@ -128,6 +260,7 @@
     <script>
         // 配置
         const CONFIG = {
+            COUNTDOWN_DURATION: 48 * 60 * 60 * 1000, // 48小时（毫秒）
             LOBSTER_ADDRESS: '0xb30139594b85aa0cfad2b4abe2328886fdbfe92b',
             USDC_ADDRESS: '0x20c000000000000000000000b9537d11c60e8b50',
             PRICE: '10000', // 0.01 USDC.e (6 decimals)
@@ -143,6 +276,11 @@
         let usdcContract = null;
         let isApproved = false;
         let mintedCount = 0;
+        
+        // 倒计时状态
+        let countdownEndTime = null;
+        let countdownInterval = null;
+        let isCountdownActive = false;
 
         // 元素
         const connectButton = document.getElementById('connectButton');
@@ -232,6 +370,104 @@
             console.log('Event listener added successfully');
         } else {
             console.error('Connect button not found!');
+        }
+
+        // 倒计时功能
+        function initCountdown() {
+            // 设置倒计时结束时间（从现在开始48小时）
+            countdownEndTime = Date.now() + CONFIG.COUNTDOWN_DURATION;
+            isCountdownActive = true;
+            
+            // 保存到localStorage，以便页面刷新后保持倒计时
+            localStorage.setItem('countdownEndTime', countdownEndTime.toString());
+            
+            // 开始倒计时
+            startCountdown();
+            
+            console.log('Countdown initialized, ends at:', new Date(countdownEndTime).toLocaleString());
+        }
+        
+        function startCountdown() {
+            // 清除现有的倒计时
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            
+            // 立即更新一次
+            updateCountdown();
+            
+            // 每秒更新一次
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+        
+        function updateCountdown() {
+            if (!countdownEndTime || !isCountdownActive) return;
+            
+            const now = Date.now();
+            const remaining = countdownEndTime - now;
+            
+            if (remaining <= 0) {
+                // 倒计时结束
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+                isCountdownActive = false;
+                
+                // 显示结束状态
+                showCountdownEnded();
+                return;
+            }
+            
+            // 计算小时、分钟、秒
+            const hours = Math.floor(remaining / (1000 * 60 * 60));
+            const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+            
+            // 更新显示
+            document.getElementById('countdownHours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('countdownMinutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('countdownSeconds').textContent = seconds.toString().padStart(2, '0');
+        }
+        
+        function showCountdownEnded() {
+            const banner = document.getElementById('countdownBanner');
+            const timer = document.getElementById('countdownTimer');
+            const title = document.querySelector('.countdown-title');
+            
+            if (banner && timer && title) {
+                // 添加结束样式
+                banner.classList.add('countdown-ended');
+                
+                // 更新内容
+                title.textContent = '🎉 Minting Event Has Ended!'; // 修改为英文
+                timer.innerHTML = 'Thank you for participating!'; // 修改为英文
+                
+                console.log('Countdown ended');
+            }
+        }
+        
+        function checkSavedCountdown() {
+            const savedEndTime = localStorage.getItem('countdownEndTime');
+            
+            if (savedEndTime) {
+                const endTime = parseInt(savedEndTime);
+                const now = Date.now();
+                
+                if (endTime > now) {
+                    // 倒计时尚未结束，恢复倒计时
+                    countdownEndTime = endTime;
+                    isCountdownActive = true;
+                    startCountdown();
+                    console.log('Countdown restored from localStorage');
+                } else {
+                    // 倒计时已结束
+                    showCountdownEnded();
+                    localStorage.removeItem('countdownEndTime');
+                    console.log('Countdown already ended');
+                }
+            } else {
+                // 没有保存的倒计时，开始新的
+                initCountdown();
+            }
         }
 
         // 初始化合约
@@ -464,6 +700,9 @@
         // 页面加载完成后检查现有连接
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Mint page DOM loaded');
+            
+            // 初始化倒计时
+            checkSavedCountdown();
             
             // 检查现有连接
             if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
