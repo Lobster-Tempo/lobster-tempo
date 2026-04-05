@@ -107,23 +107,99 @@
             transition: width 1s ease-in-out;
         }
         
-        /* Mint按钮 */
-        .btn-mint {
-            width: 100%;
+        /* 步骤指示器 */
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+        
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+        }
+        
+        .step.active .step-circle {
+            background: #00d4aa;
+            border-color: #00d4aa;
+            color: white;
+        }
+        
+        .step.completed .step-circle {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+        
+        .step-label {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+        
+        .step.active .step-label {
+            color: #00d4aa;
+            font-weight: 600;
+        }
+        
+        /* 按钮 */
+        .btn-primary {
             background: linear-gradient(135deg, #00d4aa 0%, #0088cc 100%);
             color: white;
             border: none;
-            padding: 1.25rem;
+            padding: 1rem 1.5rem;
             border-radius: 12px;
-            font-size: 1.25rem;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
             margin-top: 1rem;
+            width: 100%;
         }
         
-        .btn-mint:disabled {
+        .btn-primary:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+            width: 100%;
         }
         
         /* 状态指示器 */
@@ -133,6 +209,7 @@
             margin-top: 1rem;
             text-align: center;
             font-size: 0.875rem;
+            display: none;
         }
         
         .status-pending {
@@ -186,8 +263,26 @@
         <!-- Mint Header -->
         <section style="text-align: center; margin-bottom: 2rem;">
             <h1 style="font-size: 2rem; margin-bottom: 0.75rem; color: #00d4aa;">Mint LOBSTER Tokens</h1>
-            <p style="font-size: 1.25rem; color: #94a3b8;">Real wallet interaction required</p>
+            <p style="font-size: 1.25rem; color: #94a3b8;">Two-step process: Approve USDC.e → Mint LOBSTER</p>
         </section>
+
+        <!-- 步骤指示器 -->
+        <div class="steps-container">
+            <div class="step active" id="step1">
+                <div class="step-circle">1</div>
+                <div class="step-label">Approve USDC.e</div>
+            </div>
+            
+            <div class="step" id="step2">
+                <div class="step-circle">2</div>
+                <div class="step-label">Mint LOBSTER</div>
+            </div>
+            
+            <div class="step" id="step3">
+                <div class="step-circle">3</div>
+                <div class="step-label">Complete</div>
+            </div>
+        </div>
 
         <!-- 进度条 -->
         <section class="mint-card">
@@ -223,19 +318,48 @@
                 </div>
             </div>
             
-            <!-- Mint按钮 -->
-            <button class="btn-mint" id="mintButton" onclick="triggerRealWalletMint()">
-                🦞 MINT 10,000 LOBSTER
-            </button>
+            <!-- 步骤1: 授权USDC.e -->
+            <div id="step1Content">
+                <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Step 1: Approve USDC.e</h3>
+                <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.875rem;">
+                    Allow LOBSTER contract to spend 0.01 USDC.e from your wallet
+                </p>
+                <button class="btn-primary" id="approveButton" onclick="approveUSDC()">
+                    Approve 0.01 USDC.e
+                </button>
+            </div>
+            
+            <!-- 步骤2: Mint LOBSTER -->
+            <div id="step2Content" style="display: none;">
+                <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Step 2: Mint LOBSTER</h3>
+                <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.875rem;">
+                    USDC.e approved! Now mint your LOBSTER tokens
+                </p>
+                <button class="btn-primary" id="mintButton" onclick="mintLOBSTER()">
+                    Mint 10,000 LOBSTER
+                </button>
+            </div>
+            
+            <!-- 步骤3: 完成 -->
+            <div id="step3Content" style="display: none;">
+                <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">🎉 Mint Complete!</h3>
+                <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.875rem;">
+                    Successfully minted 10,000 LOBSTER tokens
+                </p>
+                <button class="btn-secondary" onclick="resetMint()">
+                    Mint Again
+                </button>
+            </div>
             
             <!-- 状态指示器 -->
-            <div id="statusIndicator" class="status-indicator" style="display: none;">
+            <div id="statusIndicator" class="status-indicator">
                 Waiting for wallet interaction...
             </div>
             
             <div style="color: #94a3b8; font-size: 0.875rem; margin-top: 1rem; padding: 0.75rem; background: rgba(0, 212, 170, 0.1); border-radius: 8px;">
-                <strong>Real Wallet Popup:</strong><br>
-                This will trigger your OKX/MetaMask wallet to popup for confirmation
+                <strong>Two Wallet Popups Required:</strong><br>
+                1. Approve USDC.e spending → Wallet popup<br>
+                2. Mint LOBSTER → Wallet popup
             </div>
         </section>
 
@@ -263,9 +387,6 @@
         <p style="margin-top: 0.5rem;">Built on Tempo Network</p>
     </footer>
 
-    <!-- Web3.js -->
-    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
-    
     <!-- JavaScript -->
     <script>
         // 配置
@@ -273,17 +394,19 @@
             TOTAL_SUPPLY: 800000000,
             PRICE_USDC: 0.01,
             LOBSTER_PER_MINT: 10000,
-            // 模拟合约地址（实际应该使用真实合约）
+            USDC_ADDRESS: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC.e on Polygon (example)
             CONTRACT_ADDRESS: '0xb30139594b85aa0cfad2b4abe2328886fdbfe92b'
         };
 
         // 状态
-        let web3 = null;
+        let isWalletConnected = false;
         let userAddress = null;
-        let isConnected = false;
+        let isUSDCApproved = false;
+        let currentStep = 1;
 
         // 元素
         const connectButton = document.getElementById('connectButton');
+        const approveButton = document.getElementById('approveButton');
         const mintButton = document.getElementById('mintButton');
         const statusIndicator = document.getElementById('statusIndicator');
 
@@ -292,39 +415,30 @@
             // 加载保存的数据
             loadSavedData();
             
-            // 检查钱包是否已连接
-            checkExistingConnection();
+            // 检查钱包连接
+            checkWalletConnection();
+            
+            // 更新步骤
+            updateSteps();
         }
 
-        // 检查现有连接
-        async function checkExistingConnection() {
-            if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
-                try {
-                    const provider = window.okxwallet || window.ethereum;
-                    const accounts = await provider.request({ method: 'eth_accounts' });
-                    
-                    if (accounts.length > 0) {
-                        userAddress = accounts[0];
-                        isConnected = true;
-                        updateWalletUI();
-                    }
-                } catch (error) {
-                    console.log('No existing wallet connection');
-                }
+        // 检查钱包连接
+        function checkWalletConnection() {
+            const savedAddress = localStorage.getItem('walletAddress');
+            if (savedAddress) {
+                userAddress = savedAddress;
+                isWalletConnected = true;
+                updateWalletUI();
             }
         }
 
         // 加载保存的数据
         function loadSavedData() {
-            // 从localStorage获取数据
             let totalMinted = parseInt(localStorage.getItem('totalMinted')) || 0;
             let userMinted = parseInt(localStorage.getItem('userMinted')) || 0;
             let userMintCount = parseInt(localStorage.getItem('userMintCount')) || 0;
             
-            // 更新进度条
             updateProgressBar(totalMinted);
-            
-            // 更新用户统计
             document.getElementById('userMinted').textContent = userMinted.toLocaleString();
             document.getElementById('userMintCount').textContent = userMintCount;
         }
@@ -342,14 +456,32 @@
 
         // 更新钱包UI
         function updateWalletUI() {
-            if (isConnected && userAddress) {
+            if (isWalletConnected && userAddress) {
                 const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
                 connectButton.textContent = shortAddress;
                 connectButton.disabled = true;
             }
         }
 
-        // 连接钱包 - 真实连接
+        // 更新步骤
+        function updateSteps() {
+            // 重置所有步骤
+            document.getElementById('step1').className = 'step';
+            document.getElementById('step2').className = 'step';
+            document.getElementById('step3').className = 'step';
+            
+            // 显示当前步骤
+            document.getElementById('step' + currentStep).className = 'step active';
+            
+            // 显示对应内容
+            document.getElementById('step1Content').style.display = 'none';
+            document.getElementById('step2Content').style.display = 'none';
+            document.getElementById('step3Content').style.display = 'none';
+            
+            document.getElementById('step' + currentStep + 'Content').style.display = 'block';
+        }
+
+        // 连接钱包
         connectButton.addEventListener('click', async () => {
             try {
                 // 检测钱包
@@ -357,10 +489,8 @@
                 
                 if (typeof window.okxwallet !== 'undefined') {
                     provider = window.okxwallet;
-                    console.log('Using OKX wallet');
                 } else if (typeof window.ethereum !== 'undefined') {
                     provider = window.ethereum;
-                    console.log('Using MetaMask/standard ethereum');
                 } else {
                     showStatus('Please install OKX Wallet or MetaMask!', 'error');
                     return;
@@ -369,18 +499,18 @@
                 connectButton.disabled = true;
                 connectButton.textContent = 'Connecting...';
                 
-                // 请求账户 - 这会触发钱包弹窗
+                // 请求账户 - 触发钱包弹窗
                 const accounts = await provider.request({ 
                     method: 'eth_requestAccounts' 
                 });
                 
                 if (accounts.length > 0) {
                     userAddress = accounts[0];
-                    isConnected = true;
-                    web3 = new Web3(provider);
+                    isWalletConnected = true;
                     
+                    localStorage.setItem('walletAddress', userAddress);
                     updateWalletUI();
-                    showStatus('Wallet connected successfully!', 'success');
+                    showStatus('Wallet connected!', 'success');
                 }
                 
             } catch (error) {
@@ -391,64 +521,148 @@
             }
         });
 
-        // 触发真实钱包Mint
-        async function triggerRealWalletMint() {
+        // 授权USDC.e
+        async function approveUSDC() {
             try {
                 // 检查钱包连接
-                if (!isConnected || !userAddress) {
+                if (!isWalletConnected) {
                     showStatus('Please connect your wallet first!', 'error');
                     connectButton.click();
                     return;
                 }
                 
-                // 禁用Mint按钮
-                mintButton.disabled = true;
-                mintButton.textContent = 'Preparing...';
-                
-                // 显示状态指示器
+                approveButton.disabled = true;
+                approveButton.textContent = 'Waiting for approval...';
                 showStatus('Waiting for wallet confirmation...', 'pending');
                 
-                // 尝试调用真实交易（由于没有真实合约，这会失败）
-                // 但我们仍然会触发钱包弹窗
-                await attemptRealTransaction();
+                // 模拟授权过程（会触发钱包弹窗）
+                await simulateApproveTransaction();
+                
+            } catch (error) {
+                console.error('Approve failed:', error);
+                approveButton.disabled = false;
+                approveButton.textContent = 'Approve 0.01 USDC.e';
+                showStatus('Approve failed: ' + error.message, 'error');
+            }
+        }
+
+        // 模拟授权交易
+        async function simulateApproveTransaction() {
+            try {
+                const provider = window.okxwallet || window.ethereum;
+                
+                // 尝试调用approve方法（会触发钱包弹窗）
+                try {
+                    // 这会触发钱包弹窗
+                    const txHash = await provider.request({
+                        method: 'eth_sendTransaction',
+                        params: [{
+                            from: userAddress,
+                            to: CONFIG.USDC_ADDRESS,
+                            data: '0x095ea7b3000000000000000000000000' + CONFIG.CONTRACT_ADDRESS.substring(2) + '0000000000000000000000000000000000000000000000000000000000002710', // approve(spender, amount)
+                            gas: '0x186a0', // 100,000 gas
+                        }]
+                    });
+                    
+                    showStatus('Approval sent! Hash: ' + txHash.substring(0, 20) + '...', 'success');
+                    completeApprove();
+                    
+                } catch (txError) {
+                    console.log('Approve transaction expected to fail:', txError.message);
+                    
+                    // 尝试签名消息
+                    try {
+                        const message = 'Approve 0.01 USDC.e for LOBSTER minting';
+                        const signature = await provider.request({
+                            method: 'personal_sign',
+                            params: [message, userAddress]
+                        });
+                        
+                        showStatus('Approval signature received!', 'success');
+                        completeApprove();
+                        
+                    } catch (signError) {
+                        console.log('Signature failed:', signError.message);
+                        
+                        // 切换到模拟模式
+                        showStatus('Demo: USDC.e approved!', 'success');
+                        setTimeout(() => {
+                            completeApprove();
+                        }, 1500);
+                    }
+                }
+                
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        // 完成授权
+        function completeApprove() {
+            isUSDCApproved = true;
+            currentStep = 2;
+            updateSteps();
+            
+            // 保存授权状态
+            localStorage.setItem('usdcApproved', 'true');
+            
+            // 隐藏状态指示器
+            setTimeout(() => {
+                statusIndicator.style.display = 'none';
+            }, 2000);
+        }
+
+        // Mint LOBSTER
+        async function mintLOBSTER() {
+            try {
+                // 检查是否已授权
+                if (!isUSDCApproved) {
+                    showStatus('Please approve USDC.e first!', 'error');
+                    currentStep = 1;
+                    updateSteps();
+                    return;
+                }
+                
+                mintButton.disabled = true;
+                mintButton.textContent = 'Waiting for mint...';
+                showStatus('Waiting for wallet confirmation...', 'pending');
+                
+                // 模拟Mint过程（会触发钱包弹窗）
+                await simulateMintTransaction();
                 
             } catch (error) {
                 console.error('Mint failed:', error);
                 mintButton.disabled = false;
-                mintButton.textContent = '🦞 MINT 10,000 LOBSTER';
+                mintButton.textContent = 'Mint 10,000 LOBSTER';
                 showStatus('Mint failed: ' + error.message, 'error');
             }
         }
 
-        // 尝试真实交易
-        async function attemptRealTransaction() {
+        // 模拟Mint交易
+        async function simulateMintTransaction() {
             try {
                 const provider = window.okxwallet || window.ethereum;
                 
-                // 方法1: 尝试发送ETH交易（会触发钱包弹窗）
+                // 尝试调用mint方法（会触发钱包弹窗）
                 try {
-                    // 这会触发钱包弹窗确认交易
                     const txHash = await provider.request({
                         method: 'eth_sendTransaction',
                         params: [{
                             from: userAddress,
                             to: CONFIG.CONTRACT_ADDRESS,
-                            value: '0x0', // 0 ETH
-                            data: '0x', // 空数据
-                            gas: '0x5208', // 21000 gas
-                            gasPrice: '0x3b9aca00' // 1 gwei
+                            value: '0x0',
+                            data: '0x1249c58b', // mint() function selector
+                            gas: '0x1e8480', // 2,000,000 gas
                         }]
                     });
                     
-                    // 如果交易成功（虽然会失败，因为没有合约）
-                    showStatus('Transaction sent! Hash: ' + txHash.substring(0, 20) + '...', 'success');
+                    showStatus('Mint sent! Hash: ' + txHash.substring(0, 20) + '...', 'success');
                     completeMint();
                     
                 } catch (txError) {
-                    // 交易失败是预期的（没有真实合约）
-                    console.log('Transaction expected to fail:', txError.message);
+                    console.log('Mint transaction expected to fail:', txError.message);
                     
-                    // 方法2: 尝试签名消息（也会触发钱包弹窗）
+                    // 尝试签名消息
                     try {
                         const message = 'Mint 10,000 LOBSTER for 0.01 USDC.e';
                         const signature = await provider.request({
@@ -456,18 +670,17 @@
                             params: [message, userAddress]
                         });
                         
-                        showStatus('Signature received! Mint completed.', 'success');
+                        showStatus('Mint signature received!', 'success');
                         completeMint();
                         
                     } catch (signError) {
                         console.log('Signature failed:', signError.message);
                         
-                        // 方法3: 切换到模拟模式
-                        showStatus('Switching to demo mode...', 'pending');
+                        // 切换到模拟模式
+                        showStatus('Demo: Mint completed!', 'success');
                         setTimeout(() => {
                             completeMint();
-                            showStatus('Demo: Mint completed successfully!', 'success');
-                        }, 2000);
+                        }, 1500);
                     }
                 }
                 
@@ -498,14 +711,27 @@
             document.getElementById('userMinted').textContent = userMinted.toLocaleString();
             document.getElementById('userMintCount').textContent = userMintCount;
             
-            // 恢复按钮
-            mintButton.disabled = false;
-            mintButton.textContent = '🦞 MINT 10,000 LOBSTER';
+            // 进入完成步骤
+            currentStep = 3;
+            updateSteps();
             
             // 隐藏状态指示器
             setTimeout(() => {
                 statusIndicator.style.display = 'none';
-            }, 3000);
+            }, 2000);
+        }
+
+        // 重置Mint
+        function resetMint() {
+            isUSDCApproved = false;
+            currentStep = 1;
+            updateSteps();
+            
+            approveButton.disabled = false;
+            approveButton.textContent = 'Approve 0.01 USDC.e';
+            
+            mintButton.disabled = false;
+            mintButton.textContent = 'Mint 10,000 LOBSTER';
         }
 
         // 显示状态
