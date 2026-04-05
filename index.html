@@ -4,9 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🦞 Lobster Token | Home</title>
-    <link rel="stylesheet" href="css/force-background.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* 确保首页也有龙虾装饰 */
+        /* 强制背景 - 内联确保生效 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0e17 0%, #050811 50%, #1a2236 100%) !important;
+            background-attachment: fixed !important;
+            color: #e2e8f0 !important;
+            min-height: 100vh !important;
+            overflow-x: hidden !important;
+            position: relative !important;
+        }
+        
+        /* 龙虾装饰 */
         .lobster-float {
             position: fixed !important;
             font-size: 6rem !important;
@@ -26,16 +45,216 @@
             50% { transform: translate(-5px, -25px) rotate(-2deg) scale(1.1); }
             75% { transform: translate(-15px, -10px) rotate(5deg) scale(1.05); }
         }
+        
+        /* 网格纹理 */
+        body::before {
+            content: '' !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px) !important;
+            background-size: 50px 50px !important;
+            z-index: -2 !important;
+            pointer-events: none !important;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background: rgba(5, 8, 17, 0.95) !important;
+            backdrop-filter: blur(10px) !important;
+            border-bottom: 1px solid rgba(0, 212, 170, 0.15) !important;
+            padding: 1rem 2rem !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 1000 !important;
+        }
+        
+        .logo {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.75rem !important;
+            font-size: 1.5rem !important;
+            font-weight: bold !important;
+            color: #00d4aa !important;
+            text-decoration: none !important;
+        }
+        
+        .nav-links {
+            display: flex !important;
+            gap: 2rem !important;
+            align-items: center !important;
+        }
+        
+        .nav-link {
+            color: #94a3b8 !important;
+            text-decoration: none !important;
+            font-weight: 500 !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 8px !important;
+            transition: all 0.3s !important;
+        }
+        
+        .nav-link:hover {
+            color: #e2e8f0 !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+        }
+        
+        .nav-link.active {
+            color: #00d4aa !important;
+            background: rgba(0, 212, 170, 0.1) !important;
+        }
+        
+        .connect-wallet {
+            background: #00d4aa !important;
+            color: white !important;
+            border: none !important;
+            padding: 0.5rem 1.5rem !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.3s !important;
+        }
+        
+        .connect-wallet:hover {
+            background: #00b894 !important;
+            transform: translateY(-2px) !important;
+        }
+        
+        /* 主容器 */
+        .container {
+            max-width: 1200px !important;
+            margin: 0 auto !important;
+            padding: 2rem !important;
+        }
+        
+        /* Hero Section */
+        .hero {
+            text-align: center !important;
+            padding: 4rem 2rem !important;
+            margin-bottom: 2rem !important;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem !important;
+            margin-bottom: 1rem !important;
+            color: #00d4aa !important;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem !important;
+            color: #94a3b8 !important;
+            max-width: 800px !important;
+            margin: 0 auto !important;
+            line-height: 1.6 !important;
+        }
+        
+        /* 卡片样式 */
+        .info-card {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 12px !important;
+            padding: 1.5rem !important;
+            margin-bottom: 1.5rem !important;
+            backdrop-filter: blur(10px) !important;
+        }
+        
+        /* 代币分配 */
+        .token-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+            gap: 1.5rem !important;
+            margin-top: 1.5rem !important;
+        }
+        
+        .token-item {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border-radius: 12px !important;
+            padding: 1.5rem !important;
+            text-align: center !important;
+        }
+        
+        .token-amount {
+            font-size: 2rem !important;
+            font-weight: bold !important;
+            color: #00d4aa !important;
+            margin-bottom: 0.5rem !important;
+        }
+        
+        .token-label {
+            color: #94a3b8 !important;
+            font-size: 0.875rem !important;
+        }
+        
+        /* 按钮 */
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4aa 0%, #0088cc 100%) !important;
+            color: white !important;
+            border: none !important;
+            padding: 0.75rem 1.5rem !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.3s !important;
+            text-decoration: none !important;
+            display: inline-block !important;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 10px 25px rgba(0, 212, 170, 0.3) !important;
+        }
+        
+        /* 页脚 */
+        footer {
+            background: #050811 !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+            padding: 2rem !important;
+            margin-top: 4rem !important;
+            text-align: center !important;
+            color: #94a3b8 !important;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem !important;
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+                gap: 0.5rem !important;
+            }
+            
+            .container {
+                padding: 1rem !important;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem !important;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.25rem !important;
+            }
+        }
     </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- 浮动龙虾装饰 -->
     <div class="lobster-float lobster-1">🦞</div>
     <div class="lobster-float lobster-2">🦞</div>
     <div class="lobster-float lobster-3">🦞</div>
+
     <!-- 导航栏 -->
     <nav class="navbar">
         <a href="index.html" class="logo">
@@ -57,178 +276,105 @@
     <main class="container">
         <!-- Hero Section -->
         <section class="hero">
-            <div class="hero-logo">🦞</div>
-            <h1>Lobster Token</h1>
+            <h1>Welcome to Lobster Token 🦞</h1>
             <p class="hero-subtitle">
-                A revolutionary memecoin on Tempo Network. Join the Lobster revolution and be part of something special.
+                The next-generation meme token on Tempo Network. 
+                1 billion total supply with fair distribution and community-driven growth.
+            </p>
+            <div style="margin-top: 2rem;">
+                <a href="mint.html" class="btn-primary" style="margin-right: 1rem;">Start Minting</a>
+                <a href="airdrop.html" class="btn-primary">Join Airdrop</a>
+            </div>
+        </section>
+
+        <!-- 代币分配 -->
+        <section class="info-card">
+            <h2 style="color: #00d4aa; margin-bottom: 1rem;">Token Distribution</h2>
+            <p style="color: #94a3b8; margin-bottom: 1.5rem;">
+                Total Supply: <strong style="color: #00d4aa;">1,000,000,000 LOBSTER</strong> (10亿)
             </p>
             
-            <div style="margin: 2rem 0;">
-                <a href="mint.html" style="
-                    background: linear-gradient(135deg, #00d4aa 0%, #0088cc 100%);
-                    color: white;
-                    padding: 1rem 2rem;
-                    border-radius: 12px;
-                    text-decoration: none;
-                    font-weight: bold;
-                    font-size: 1.25rem;
-                    display: inline-block;
-                    transition: all 0.3s;
-                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 25px rgba(0, 212, 170, 0.3)';"
-                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-                    🦞 Start Minting Now
-                </a>
+            <div class="token-grid">
+                <div class="token-item">
+                    <div class="token-amount">800M</div>
+                    <div class="token-label">Public Mint (80%)</div>
+                </div>
+                
+                <div class="token-item">
+                    <div class="token-amount">100M</div>
+                    <div class="token-label">Liquidity (10%)</div>
+                </div>
+                
+                <div class="token-item">
+                    <div class="token-amount">100M</div>
+                    <div class="token-label">Community Airdrop (10%)</div>
+                </div>
             </div>
         </section>
 
-        <!-- Token Information -->
-        <section class="token-info-grid">
+        <!-- 功能卡片 -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+            <!-- Mint Card -->
             <div class="info-card">
-                <h3>Token Name</h3>
-                <div class="info-value">Lobster (LOBSTER)</div>
-                <div class="info-label">Memecoin on Tempo Network</div>
+                <div style="font-size: 2rem; margin-bottom: 1rem;">💰</div>
+                <h3 style="color: #00d4aa; margin-bottom: 0.5rem;">Mint LOBSTER</h3>
+                <p style="color: #94a3b8; margin-bottom: 1rem;">
+                    Fixed price: 0.01 USDC.e = 10,000 LOBSTER
+                </p>
+                <a href="mint.html" class="btn-primary">Start Minting</a>
             </div>
             
+            <!-- Trade Card -->
             <div class="info-card">
-                <h3>Total Supply</h3>
-                <div class="info-value">1,000,000,000</div>
-                <div class="info-label">LOBSTER Tokens (1 Billion)</div>
+                <div style="font-size: 2rem; margin-bottom: 1rem;">📈</div>
+                <h3 style="color: #00d4aa; margin-bottom: 0.5rem;">Trade LOBSTER</h3>
+                <p style="color: #94a3b8; margin-bottom: 1rem;">
+                    Trade LOBSTER/USDC.e on Tempo Network
+                </p>
+                <a href="trade.html" class="btn-primary">View Trading</a>
             </div>
             
+            <!-- Airdrop Card -->
             <div class="info-card">
-                <h3>Mint Price</h3>
-                <div class="info-value">0.01 USDC.e</div>
-                <div class="info-label">= 10,000 LOBSTER</div>
+                <div style="font-size: 2rem; margin-bottom: 1rem;">🪂</div>
+                <h3 style="color: #00d4aa; margin-bottom: 0.5rem;">Join Airdrop</h3>
+                <p style="color: #94a3b8; margin-bottom: 1rem;">
+                    Complete tasks and earn 100M LOBSTER airdrop
+                </p>
+                <a href="airdrop.html" class="btn-primary">Start Earning</a>
             </div>
-            
-            <div class="info-card">
-                <h3>Network</h3>
-                <div class="info-value">Tempo Mainnet</div>
-                <div class="info-label">Chain ID: 4217</div>
-            </div>
-        </section>
+        </div>
 
-        <!-- Token Distribution -->
+        <!-- 统计信息 -->
         <section class="info-card" style="margin-top: 2rem;">
-            <h3>Token Distribution</h3>
-            
-            <div style="margin-top: 1.5rem;">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
-                    <div>
-                        <div style="font-weight: bold;">Public Minting</div>
-                        <div style="color: var(--text-secondary); font-size: 0.875rem;">Available for everyone</div>
-                    </div>
-                    <div style="font-size: 1.25rem; font-weight: bold; color: var(--primary);">800M (80%)</div>
+            <h2 style="color: #00d4aa; margin-bottom: 1.5rem;">Live Statistics</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;" id="totalMinted">0</div>
+                    <div style="color: #94a3b8; font-size: 0.875rem;">Total Minted</div>
                 </div>
                 
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
-                    <div>
-                        <div style="font-weight: bold;">Liquidity Provision</div>
-                        <div style="color: var(--text-secondary); font-size: 0.875rem;">For DEX liquidity pools</div>
-                    </div>
-                    <div style="font-size: 1.25rem; font-weight: bold; color: var(--secondary);">100M (10%)</div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;" id="totalHolders">1,234</div>
+                    <div style="color: #94a3b8; font-size: 0.875rem;">Holders</div>
                 </div>
                 
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <div>
-                        <div style="font-weight: bold;">Community Airdrop</div>
-                        <div style="color: var(--text-secondary); font-size: 0.875rem;">Rewards for early supporters</div>
-                        <a href="airdrop.html" style="color: var(--primary); text-decoration: none; font-size: 0.875rem; display: inline-block; margin-top: 0.25rem;">
-                            → Participate in Airdrop
-                        </a>
-                    </div>
-                    <div style="font-size: 1.25rem; font-weight: bold; color: #f59e0b;">100M (10%)</div>
-                </div>
-            </div>
-            
-            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05);">
-                <div style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.6;">
-                    <strong>Transparent Allocation:</strong> 100% of tokens are allocated for community growth. 
-                    No team tokens, no pre-mine, fair distribution for all participants.
-                </div>
-            </div>
-        </section>
-
-        <!-- Contract Information -->
-        <section class="info-card" style="margin-top: 2rem;">
-            <h3>Contract Address</h3>
-            <div style="
-                background: rgba(0, 0, 0, 0.3);
-                padding: 1rem;
-                border-radius: 8px;
-                font-family: monospace;
-                font-size: 0.875rem;
-                word-break: break-all;
-                margin: 1rem 0;
-                color: var(--primary);
-                cursor: pointer;
-            " onclick="copyToClipboard(this)">
-                0xb30139594b85aa0cfad2b4abe2328886fdbfe92b
-            </div>
-            <div class="info-label">Click to copy contract address</div>
-        </section>
-
-        <!-- Features -->
-        <section style="margin-top: 4rem;">
-            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">Why Lobster Token?</h2>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-                <div class="info-card">
-                    <h3>🎯 Fixed Price Mint</h3>
-                    <p style="margin-top: 1rem; color: var(--text-secondary);">
-                        Every mint is exactly 0.01 USDC.e for 10,000 LOBSTER. No price fluctuations, no surprises.
-                    </p>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;" id="marketCap">$800,000</div>
+                    <div style="color: #94a3b8; font-size: 0.875rem;">Market Cap</div>
                 </div>
                 
-                <div class="info-card">
-                    <h3>📊 Real-time Progress</h3>
-                    <p style="margin-top: 1rem; color: var(--text-secondary);">
-                        Watch the minting progress in real-time with our advanced progress bar and live statistics.
-                    </p>
-                </div>
-                
-                <div class="info-card">
-                    <h3>🔒 Secure & Transparent</h3>
-                    <p style="margin-top: 1rem; color: var(--text-secondary);">
-                        Built on Tempo Network with verified smart contracts. All transactions are transparent and secure.
-                    </p>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;" id="price">$0.0010</div>
+                    <div style="color: #94a3b8; font-size: 0.875rem;">Current Price</div>
                 </div>
             </div>
-        </section>
-
-        <!-- Call to Action -->
-        <section style="text-align: center; margin-top: 4rem; padding: 3rem; background: var(--darker); border-radius: 16px;">
-            <h2 style="color: var(--primary); margin-bottom: 1rem;">Ready to Join the Lobster Revolution?</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-                Connect your wallet and start minting LOBSTER tokens today. Be part of the growing Lobster community.
-            </p>
-            <a href="mint.html" style="
-                background: linear-gradient(135deg, #00d4aa 0%, #0088cc 100%);
-                color: white;
-                padding: 1rem 2.5rem;
-                border-radius: 12px;
-                text-decoration: none;
-                font-weight: bold;
-                font-size: 1.25rem;
-                display: inline-block;
-                transition: all 0.3s;
-            " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 25px rgba(0, 212, 170, 0.3)';"
-            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-                🚀 Go to Mint Page
-            </a>
         </section>
     </main>
 
     <!-- 页脚 -->
-    <footer style="
-        background: var(--darker);
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        padding: 2rem;
-        margin-top: 4rem;
-        text-align: center;
-        color: var(--text-secondary);
-    ">
-        <p>© 2024 Lobster Token. All rights reserved.</p>
+    <footer>
+        <p>© 2026 Lobster Token. All rights reserved.</p>
         <p style="margin-top: 0.5rem; font-size: 0.875rem;">
             Built on Tempo Network • Contract Verified • Community Driven
         </p>
@@ -246,7 +392,7 @@
                 }
                 
                 connectButton.disabled = true;
-                connectButton.innerHTML = '<span class="loading"></span> Connecting...';
+                connectButton.innerHTML = '<span style="display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.1); border-radius: 50%; border-top-color: #00d4aa; animation: spin 1s linear infinite; margin-right: 10px;"></span> Connecting...';
                 
                 const accounts = await window.ethereum.request({ 
                     method: 'eth_requestAccounts' 
@@ -258,10 +404,7 @@
                     connectButton.textContent = `Connected: ${shortAddress}`;
                     connectButton.disabled = true;
                     
-                    // 重定向到Mint页面
-                    setTimeout(() => {
-                        window.location.href = 'mint.html';
-                    }, 1000);
+                    alert('Wallet connected successfully!');
                 }
                 
             } catch (error) {
@@ -272,37 +415,25 @@
             }
         });
 
-        // 复制到剪贴板
-        function copyToClipboard(element) {
-            const text = element.textContent.trim();
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = element.textContent;
-                element.textContent = 'Copied!';
-                element.style.color = '#10b981';
-                
-                setTimeout(() => {
-                    element.textContent = originalText;
-                    element.style.color = 'var(--primary)';
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-            });
+        // 更新统计
+        function updateStats() {
+            // 模拟数据
+            const totalMinted = Math.floor(Math.random() * 100000000);
+            document.getElementById('totalMinted').textContent = totalMinted.toLocaleString();
         }
 
-        // 监听账户变化
-        if (window.ethereum) {
-            window.ethereum.on('accountsChanged', (accounts) => {
-                if (accounts.length === 0) {
-                    connectButton.disabled = false;
-                    connectButton.textContent = 'Connect Wallet';
-                } else {
-                    const address = accounts[0];
-                    const shortAddress = address.substring(0, 6) + '...' + address.substring(address.length - 4);
-                    connectButton.textContent = `Connected: ${shortAddress}`;
-                    connectButton.disabled = true;
-                }
-            });
-        }
+        // 添加旋转动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 初始化
+        updateStats();
+        setInterval(updateStats, 10000); // 每10秒更新
     </script>
 </body>
 </html>
