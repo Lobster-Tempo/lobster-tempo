@@ -4,598 +4,778 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🦞 Lobster Token | Airdrop</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Web3.js -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
     <style>
-        /* 任务状态样式 */
-        .task-status {
-            display: inline-flex;
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0e17 0%, #050811 50%, #1a2236 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 0;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background: rgba(5, 8, 17, 0.98);
+            border-bottom: 1px solid rgba(0, 212, 170, 0.2);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo {
+            display: flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.875rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #00d4aa;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: #94a3b8;
+            text-decoration: none;
             font-weight: 500;
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
         }
         
-        .task-pending {
-            background: rgba(245, 158, 11, 0.1);
-            color: #f59e0b;
+        .nav-link.active {
+            color: #00d4aa;
+            background: rgba(0, 212, 170, 0.1);
         }
         
-        .task-completed {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10b981;
-        }
-        
-        .task-button {
+        .connect-wallet {
             background: #00d4aa;
             color: white;
             border: none;
-            padding: 0.75rem 1.5rem;
+            padding: 0.5rem 1rem;
             border-radius: 8px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            min-width: 120px;
         }
         
-        .task-button:hover:not(:disabled) {
-            background: #00b894;
-            transform: translateY(-2px);
-        }
-        
-        .task-button:disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
-        
-        .task-button.completed {
-            background: #10b981;
+        /* 主容器 */
+        .airdrop-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1rem;
         }
         
         /* 积分显示 */
         .points-display {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #00d4aa;
+            background: linear-gradient(135deg, #00d4aa 0%, #0088cc 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
             text-align: center;
         }
         
-        /* 审核提示 */
-        .review-note {
-            background: rgba(0, 212, 170, 0.1);
-            border: 1px solid #00d4aa;
+        .points-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        
+        .points-label {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* 任务卡片 */
+        .task-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .task-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #00d4aa;
+        }
+        
+        .task-points {
+            background: rgba(0, 212, 170, 0.2);
+            color: #00d4aa;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: bold;
+        }
+        
+        .task-description {
+            color: #94a3b8;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+        
+        /* 按钮 */
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4aa 0%, #0088cc 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 0.5rem;
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+        
+        .btn-primary:disabled, .btn-secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-success {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: bold;
+            cursor: default;
+        }
+        
+        /* 状态指示器 */
+        .status-indicator {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            display: none;
+        }
+        
+        .status-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .status-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .status-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        /* 钱包状态 */
+        .wallet-status {
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
             padding: 1rem;
-            margin-top: 1rem;
-            color: #00d4aa;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* 历史记录 */
+        .history-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .history-task {
+            color: #94a3b8;
             font-size: 0.875rem;
+        }
+        
+        .history-points {
+            color: #00d4aa;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+        
+        .history-date {
+            color: #64748b;
+            font-size: 0.75rem;
         }
     </style>
 </head>
 <body>
-    <!-- 龙虾装饰 -->
-    <div class="lobster-decoration lobster-1">🦞</div>
-    <div class="lobster-decoration lobster-2">🦞</div>
-    <div class="lobster-decoration lobster-3">🦞</div>
-
     <!-- 导航栏 -->
     <nav class="navbar">
         <a href="index.html" class="logo">
             <span>🦞</span>
-            <span>Lobster Token</span>
+            <span>Lobster Airdrop</span>
         </a>
         
         <div class="nav-links">
             <a href="index.html" class="nav-link">Home</a>
             <a href="mint.html" class="nav-link">Mint</a>
-            <a href="trade.html" class="nav-link">Trade</a>
             <a href="airdrop.html" class="nav-link active">Airdrop</a>
-            <!-- About已删除 -->
             <button class="connect-wallet" id="connectButton">Connect Wallet</button>
         </div>
     </nav>
 
     <!-- 主内容 -->
-    <main class="container">
-        <!-- Hero Section -->
-        <section class="hero">
-            <h1>🪂 Lobster Airdrop 2026</h1>
-            <p class="hero-subtitle">
-                Complete simple tasks, earn points, and get ready for the 100M LOBSTER community airdrop!
-            </p>
+    <main class="airdrop-container">
+        <!-- 积分显示 -->
+        <section class="points-display">
+            <div class="points-value" id="totalPoints">0</div>
+            <div class="points-label">Total Airdrop Points</div>
+            <div style="color: rgba(255, 255, 255, 0.7); font-size: 0.875rem; margin-top: 0.5rem;">
+                Connected: <span id="walletAddressShort">Not connected</span>
+            </div>
         </section>
 
-        <!-- 积分总览 -->
-        <section class="info-card" style="margin-bottom: 2rem; text-align: center;">
-            <h2 style="color: #00d4aa; margin-bottom: 1rem;">Your Points</h2>
-            <div class="points-display" id="totalPoints">0</div>
-            <p style="color: #94a3b8; margin-top: 0.5rem;">Total points earned</p>
+        <!-- 钱包状态 -->
+        <section class="wallet-status">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div style="color: #94a3b8; font-size: 0.875rem;">Wallet: <span id="walletStatusText" style="color: #ef4444;">Not connected</span></div>
+                    <div style="color: #94a3b8; font-size: 0.75rem; margin-top: 0.25rem;" id="walletAddress"></div>
+                </div>
+                <button class="btn-primary" onclick="connectWallet()" id="connectBtn">
+                    Connect Wallet
+                </button>
+            </div>
         </section>
 
         <!-- 任务列表 -->
-        <section class="info-card" style="margin-bottom: 2rem;">
-            <h2 style="color: #00d4aa; margin-bottom: 1.5rem;">Complete Tasks</h2>
-            
-            <!-- 任务1：关注 -->
-            <div style="
-                background: rgba(255, 255, 255, 0.05);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 12px;
-                padding: 1.5rem;
-                margin-bottom: 1rem;
-            ">
-                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                    <div style="
-                        width: 40px;
-                        height: 40px;
-                        background: rgba(0, 212, 170, 0.1);
-                        border-radius: 50%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        color: #00d4aa;
-                        font-size: 1.25rem;
-                    ">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <div style="flex: 1;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <div style="font-weight: bold; font-size: 1.125rem;">Follow @Lobster_Tempo on X</div>
-                                <div style="color: #94a3b8; font-size: 0.875rem;">
-                                    Follow our official X account for updates
-                                </div>
-                            </div>
-                            <div class="task-status task-pending" id="task1Status">
-                                <i class="fas fa-clock"></i> Pending
-                            </div>
-                        </div>
-                    </div>
+        <section>
+            <h2 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.5rem;">Airdrop Tasks</h2>
+            <p style="color: #94a3b8; margin-bottom: 1.5rem; font-size: 0.875rem;">
+                Complete tasks to earn points. Each task can only be completed once per wallet.
+            </p>
+
+            <!-- 任务1: Follow Twitter -->
+            <div class="task-card" id="task1">
+                <div class="task-header">
+                    <div class="task-title">Follow @LobsterTempo on Twitter</div>
+                    <div class="task-points">+100 Points</div>
                 </div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <a href="https://x.com/Lobster_Tempo" target="_blank" style="
-                            color: #1DA1F2;
-                            text-decoration: none;
-                            display: inline-flex;
-                            align-items: center;
-                            gap: 0.5rem;
-                            font-weight: bold;
-                        ">
-                            <i class="fab fa-twitter"></i>
-                            <span>Open @Lobster_Tempo on X</span>
-                        </a>
-                        <div class="review-note">
-                            <i class="fas fa-info-circle"></i> Open X, then return and click "Review Task"
-                        </div>
-                    </div>
-                    
-                    <div style="text-align: center;">
-                        <div style="font-size: 1.5rem; font-weight: bold; color: #00d4aa;">1,000</div>
-                        <div style="color: #94a3b8; font-size: 0.875rem;">points</div>
-                        <button class="task-button" id="task1Button" onclick="completeTask(1)">
-                            Review Task
-                        </button>
-                    </div>
+                <div class="task-description">
+                    Follow our official Twitter account to stay updated with the latest news and announcements.
+                </div>
+                <div>
+                    <button class="btn-primary" onclick="openTask('twitter')" id="twitterOpenBtn">
+                        Open Twitter
+                    </button>
+                    <button class="btn-secondary" onclick="verifyTask('twitter')" id="twitterVerifyBtn">
+                        Verify Task
+                    </button>
+                    <button class="btn-secondary" onclick="reviewTask('twitter')" id="twitterReviewBtn">
+                        Review Task
+                    </button>
+                    <span id="twitterStatus" style="margin-left: 1rem; font-size: 0.875rem;"></span>
                 </div>
             </div>
 
-            <!-- 任务2：点赞 -->
-            <div style="
-                background: rgba(255, 255, 255, 0.05);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 12px;
-                padding: 1.5rem;
-                margin-bottom: 1rem;
-            ">
-                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                    <div style="
-                        width: 40px;
-                        height: 40px;
-                        background: rgba(239, 68, 68, 0.1);
-                        border-radius: 50%;
-                        display: flex;
-                        align-items: center;
-                            justify-content: center;
-                        color: #ef4444;
-                        font-size: 1.25rem;
-                    ">
-                        <i class="fas fa-heart"></i>
-                    </div>
-                    <div style="flex: 1;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <div style="font-weight: bold; font-size: 1.125rem;">Like Announcement Tweet</div>
-                                <div style="color: #94a3b8; font-size: 0.875rem;">
-                                    Like our official announcement tweet
-                                </div>
-                            </div>
-                            <div class="task-status task-pending" id="task2Status">
-                                <i class="fas fa-clock"></i> Pending
-                            </div>
-                        </div>
-                    </div>
+            <!-- 任务2: Join Telegram -->
+            <div class="task-card" id="task2">
+                <div class="task-header">
+                    <div class="task-title">Join Lobster Telegram Group</div>
+                    <div class="task-points">+150 Points</div>
                 </div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <a href="https://x.com/Lobster_Tempo/status/2040564694776479999" target="_blank" style="
-                            color: #1DA1F2;
-                            text-decoration: none;
-                            display: inline-flex;
-                            align-items: center;
-                            gap: 0.5rem;
-                            font-weight: bold;
-                        ">
-                            <i class="fab fa-twitter"></i>
-                            <span>Open Tweet to Like</span>
-                        </a>
-                        <div class="review-note">
-                            <i class="fas fa-info-circle"></i> Open X, then return and click "Review Task"
-                        </div>
-                    </div>
-                    
-                    <div style="text-align: center;">
-                        <div style="font-size: 1.5rem; font-weight: bold; color: #00d4aa;">1,000</div>
-                        <div style="color: #94a3b8; font-size: 0.875rem;">points</div>
-                        <button class="task-button" id="task2Button" onclick="completeTask(2)">
-                            Review Task
-                        </button>
-                    </div>
+                <div class="task-description">
+                    Join our Telegram community to chat with other Lobster holders and get support.
+                </div>
+                <div>
+                    <button class="btn-primary" onclick="openTask('telegram')" id="telegramOpenBtn">
+                        Open Telegram
+                    </button>
+                    <button class="btn-secondary" onclick="verifyTask('telegram')" id="telegramVerifyBtn">
+                        Verify Task
+                    </button>
+                    <button class="btn-secondary" onclick="reviewTask('telegram')" id="telegramReviewBtn">
+                        Review Task
+                    </button>
+                    <span id="telegramStatus" style="margin-left: 1rem; font-size: 0.875rem;"></span>
                 </div>
             </div>
 
-            <!-- 任务3：引用 -->
-            <div style="
-                background: rgba(255, 255, 255, 0.05);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 12px;
-                padding: 1.5rem;
-                margin-bottom: 1rem;
-            ">
-                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                    <div style="
-                        width: 40px;
-                        height: 40px;
-                        background: rgba(245, 158, 11, 0.1);
-                        border-radius: 50%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        color: #f59e0b;
-                        font-size: 1.25rem;
-                    ">
-                        <i class="fas fa-retweet"></i>
-                    </div>
-                    <div style="flex: 1;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <div style="font-weight: bold; font-size: 1.125rem;">Quote Announcement Tweet</div>
-                                <div style="color: #94a3b8; font-size: 0.875rem;">
-                                    Quote our announcement tweet with #LobsterToken
-                                </div>
-                            </div>
-                            <div class="task-status task-pending" id="task3Status">
-                                <i class="fas fa-clock"></i> Pending
-                            </div>
-                        </div>
-                    </div>
+            <!-- 任务3: Mint LOBSTER -->
+            <div class="task-card" id="task3">
+                <div class="task-header">
+                    <div class="task-title">Mint LOBSTER Tokens</div>
+                    <div class="task-points">+500 Points</div>
                 </div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <a href="https://x.com/Lobster_Tempo/status/2040564694776479999" target="_blank" style="
-                            color: #1DA1F2;
-                            text-decoration: none;
-                            display: inline-flex;
-                            align-items: center;
-                            gap: 0.5rem;
-                            font-weight: bold;
-                        ">
-                            <i class="fab fa-twitter"></i>
-                            <span>Open Tweet to Quote</span>
-                        </a>
-                        <div style="color: #94a3b8; font-size: 0.875rem; margin-top: 0.5rem;">
-                            Use hashtag: <strong>#LobsterToken</strong>
-                        </div>
-                        <div class="review-note">
-                            <i class="fas fa-info-circle"></i> Open X, then return and click "Review Task"
-                        </div>
-                    </div>
-                    
-                    <div style="text-align: center;">
-                        <div style="font-size: 1.5rem; font-weight: bold; color: #00d4aa;">1,000</div>
-                        <div style="color: #94a3b8; font-size: 0.875rem;">points</div>
-                        <button class="task-button" id="task3Button" onclick="completeTask(3)">
-                            Review Task
-                        </button>
-                    </div>
+                <div class="task-description">
+                    Mint at least 10,000 LOBSTER tokens to qualify for this task.
+                </div>
+                <div>
+                    <button class="btn-primary" onclick="openTask('mint')" id="mintOpenBtn">
+                        Open Mint Page
+                    </button>
+                    <button class="btn-secondary" onclick="verifyTask('mint')" id="mintVerifyBtn">
+                        Verify Mint
+                    </button>
+                    <button class="btn-secondary" onclick="reviewTask('mint')" id="mintReviewBtn">
+                        Review Task
+                    </button>
+                    <span id="mintStatus" style="margin-left: 1rem; font-size: 0.875rem;"></span>
+                </div>
+            </div>
+
+            <!-- 任务4: Retweet Tweet -->
+            <div class="task-card" id="task4">
+                <div class="task-header">
+                    <div class="task-title">Retweet Announcement</div>
+                    <div class="task-points">+200 Points</div>
+                </div>
+                <div class="task-description">
+                    Retweet our latest announcement tweet with #LobsterToken hashtag.
+                </div>
+                <div>
+                    <button class="btn-primary" onclick="openTask('retweet')" id="retweetOpenBtn">
+                        Open Tweet
+                    </button>
+                    <button class="btn-secondary" onclick="verifyTask('retweet')" id="retweetVerifyBtn">
+                        Verify Retweet
+                    </button>
+                    <button class="btn-secondary" onclick="reviewTask('retweet')" id="retweetReviewBtn">
+                        Review Task
+                    </span>
                 </div>
             </div>
         </section>
 
-        <!-- 空投信息 -->
-        <section class="info-card" style="margin-bottom: 2rem;">
-            <h2 style="color: #00d4aa; margin-bottom: 1rem;">Airdrop Details</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-                <div>
-                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;">100M</div>
-                    <div style="color: #94a3b8;">Total Airdrop</div>
-                </div>
-                
-                <div>
-                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;">1,000</div>
-                    <div style="color: #94a3b8;">Points per Task</div>
-                </div>
-                
-                <div>
-                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;">10%</div>
-                    <div style="color: #94a3b8;">of Total Supply</div>
-                </div>
-                
-                <div>
-                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;">Q2 2026</div>
-                    <div style="color: #94a3b8;">Distribution Date</div>
+        <!-- 状态指示器 -->
+        <div id="statusIndicator" class="status-indicator">
+            Ready for airdrop tasks...
+        </div>
+
+        <!-- 历史记录 -->
+        <section class="history-section">
+            <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Task History</h3>
+            <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.875rem;">
+                Your completed tasks and earned points (permanently saved)
+            </p>
+            <div id="taskHistory">
+                <!-- 历史记录会动态添加 -->
+                <div style="color: #64748b; text-align: center; padding: 2rem; font-size: 0.875rem;">
+                    No task history yet. Connect wallet to see your history.
                 </div>
             </div>
         </section>
 
-        <!-- 邀请系统 -->
-        <section class="info-card">
-            <h2 style="color: #00d4aa; margin-bottom: 1rem;">Invite Friends</h2>
-            
-            <div style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 1.5rem;">
-                <div style="margin-bottom: 1rem;">
-                    <div style="font-size: 0.875rem; color: #94a3b8; margin-bottom: 0.5rem;">Your Referral Link:</div>
-                    <div style="
-                        background: rgba(0, 0, 0, 0.3);
-                        padding: 1rem;
-                        border-radius: 8px;
-                        font-family: monospace;
-                        font-size: 0.875rem;
-                        word-break: break-all;
-                        color: #00d4aa;
-                        cursor: pointer;
-                    " id="referralLink" onclick="copyReferralLink()">
-                        https://lobster-tempo.com/airdrop?ref=CONNECT_WALLET
-                    </div>
-                </div>
-                
-                <div style="display: flex; gap: 0.5rem;">
-                    <button onclick="copyReferralLink()" style="
-                        flex: 1;
-                        background: #00d4aa;
-                        color: white;
-                        border: none;
-                        padding: 0.75rem;
-                        border-radius: 8px;
-                        font-weight: bold;
-                        cursor: pointer;
-                        transition: all 0.3s;
-                    " onmouseover="this.style.transform='translateY(-2px)';"
-                    onmouseout="this.style.transform='translateY(0)';">
-                        <i class="fas fa-copy"></i> Copy Link
-                    </button>
-                    
-                    <button onclick="shareOnX()" style="
-                        flex: 1;
-                        background: #1DA1F2;
-                        color: white;
-                        border: none;
-                        padding: 0.75rem;
-                        border-radius: 8px;
-                        font-weight: bold;
-                        cursor: pointer;
-                        transition: all 0.3s;
-                    " onmouseover="this.style.transform='translateY(-2px)';"
-                    onmouseout="this.style.transform='translateY(0)';">
-                        <i class="fab fa-twitter"></i> Share on X
-                    </button>
-                </div>
-                
-                <div style="margin-top: 1rem; color: #94a3b8; font-size: 0.875rem;">
-                    <i class="fas fa-info-circle"></i> Earn 500 points for each friend who completes at least 1 task
-                </div>
+        <!-- 积分系统说明 -->
+        <section style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 1.5rem; margin-top: 2rem;">
+            <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Points System</h3>
+            <div style="color: #94a3b8; font-size: 0.875rem;">
+                <div style="margin-bottom: 0.5rem;">✅ <strong>Permanent Points:</strong> Points are saved forever</div>
+                <div style="margin-bottom: 0.5rem;">✅ <strong>One-time Tasks:</strong> Each task can only be completed once per wallet</div>
+                <div style="margin-bottom: 0.5rem;">✅ <strong>Wallet-based:</strong> Points are tied to your wallet address</div>
+                <div style="margin-bottom: 0.5rem;">✅ <strong>Auto-save:</strong> Points are automatically saved when you complete tasks</div>
+                <div style="margin-bottom: 0.5rem;">✅ <strong>Persistent:</strong> Reconnect wallet to see your points history</div>
             </div>
         </section>
     </main>
 
-    <!-- 页脚 -->
-    <footer style="
-        background: #050811;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        padding: 2rem;
-        margin-top: 4rem;
-        text-align: center;
-        color: #94a3b8;
-    ">
-        <p>© 2026 Lobster Token. All rights reserved.</p>
-        <p style="margin-top: 0.5rem; font-size: 0.875rem;">
-            Built on Tempo Network • Contract Verified • Community Driven
-        </p>
-    </footer>
-
+    <!-- JavaScript -->
     <script>
-        // 任务状态
-        const tasks = {
-            1: { completed: false, points: 1000 },
-            2: { completed: false, points: 1000 },
-            3: { completed: false, points: 1000 }
+        // 配置
+        const CONFIG = {
+            TASKS: {
+                twitter: { points: 100, name: 'Follow Twitter', url: 'https://twitter.com/LobsterTempo' },
+                telegram: { points: 150, name: 'Join Telegram', url: 'https://t.me/lobstertoken' },
+                mint: { points: 500, name: 'Mint LOBSTER', url: 'mint.html' },
+                retweet: { points: 200, name: 'Retweet', url: 'https://twitter.com/LobsterTempo/status/1234567890' }
+            },
+            STORAGE_KEY: 'lobster_airdrop_points'
         };
 
-        // 总积分
-        let totalPoints = 0;
+        // 状态
+        let web3 = null;
+        let userAddress = null;
+        let isConnected = false;
+        let userPoints = 0;
+        let userHistory = {};
 
-        // 完成任务
-        function completeTask(taskId) {
-            if (tasks[taskId].completed) return;
-            
-            const button = document.getElementById(`task${taskId}Button`);
-            const status = document.getElementById(`task${taskId}Status`);
-            
-            // 显示加载状态
-            button.disabled = true;
-            button.innerHTML = '<span class="loading" style="width: 16px; height: 16px;"></span> Reviewing...';
-            
-            // 模拟审核过程
-            setTimeout(() => {
-                // 完成任务
-                tasks[taskId].completed = true;
-                totalPoints += tasks[taskId].points;
-                
-                // 更新UI
-                button.disabled = true;
-                button.innerHTML = '<i class="fas fa-check"></i> Completed';
-                button.classList.add('completed');
-                
-                status.innerHTML = '<i class="fas fa-check-circle"></i> Completed';
-                status.className = 'task-status task-completed';
-                
-                // 更新总积分
-                document.getElementById('totalPoints').textContent = totalPoints.toLocaleString();
-                
-                // 显示成功消息
-                showSuccess(`Task completed! +${tasks[taskId].points} points`);
-                
-            }, 1500);
+        // 元素
+        const connectButton = document.getElementById('connectButton');
+        const connectBtn = document.getElementById('connectBtn');
+        const walletStatusText = document.getElementById('walletStatusText');
+        const walletAddress = document.getElementById('walletAddress');
+        const walletAddressShort = document.getElementById('walletAddressShort');
+        const totalPoints = document.getElementById('totalPoints');
+        const taskHistory = document.getElementById('taskHistory');
+        const statusIndicator = document.getElementById('statusIndicator');
+
+        // 初始化
+        async function init() {
+            await checkExistingConnection();
+            updateConnectButton();
         }
 
-        // 复制推荐链接
-        function copyReferralLink() {
-            const link = document.getElementById('referralLink');
-            const text = link.textContent;
-            
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = link.textContent;
-                link.textContent = 'Copied to clipboard!';
-                link.style.color = '#10b981';
-                
-                setTimeout(() => {
-                    link.textContent = originalText;
-                    link.style.color = '#00d4aa';
-                }, 2000);
-                
-                showSuccess('Referral link copied!');
-            });
+        // 检查现有连接
+        async function checkExistingConnection() {
+            if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
+                try {
+                    const provider = window.okxwallet || window.ethereum;
+                    const accounts = await provider.request({ method: 'eth_accounts' });
+                    
+                    if (accounts.length > 0) {
+                        userAddress = accounts[0];
+                        web3 = new Web3(provider);
+                        isConnected = true;
+                        
+                        updateWalletStatus();
+                        loadUserData();
+                    }
+                } catch (error) {
+                    console.log('No existing connection');
+                }
+            }
         }
 
-        // 分享到X
-        function shareOnX() {
-            const text = encodeURIComponent('Join the Lobster Token airdrop and earn free LOBSTER tokens! Complete simple tasks and invite friends. 🦞 #LobsterToken');
-            const url = encodeURIComponent('https://lobster-tempo.com/airdrop');
-            const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+        // 加载用户数据
+        function loadUserData() {
+            if (!userAddress) return;
             
-            window.open(twitterUrl, '_blank', 'width=600,height=400');
+            // 从localStorage加载用户数据
+            const storageKey = `${CONFIG.STORAGE_KEY}_${userAddress.toLowerCase()}`;
+            const savedData = localStorage.getItem(storageKey);
+            
+            if (savedData) {
+                try {
+                    const data = JSON.parse(savedData);
+                    userPoints = data.points || 0;
+                    userHistory = data.history || {};
+                    
+                    updatePointsDisplay();
+                    updateTaskStatus();
+                    updateHistoryDisplay();
+                    
+                    showStatus(`Loaded ${userPoints} points from history`, 'success');
+                } catch (error) {
+                    console.error('Error loading user data:', error);
+                    userPoints = 0;
+                    userHistory = {};
+                }
+            } else {
+                userPoints = 0;
+                userHistory = {};
+                showStatus('New wallet - start earning points!', 'pending');
+            }
         }
 
-        // 显示成功消息
-        function showSuccess(message) {
-            const successDiv = document.createElement('div');
-            successDiv.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #10b981;
-                color: white;
-                padding: 1rem 1.5rem;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                z-index: 10000;
-                animation: slideIn 0.3s ease;
-            `;
+        // 保存用户数据
+        function saveUserData() {
+            if (!userAddress) return;
             
-            successDiv.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <span>✅</span>
-                    <span>${message}</span>
+            const storageKey = `${CONFIG.STORAGE_KEY}_${userAddress.toLowerCase()}`;
+            const data = {
+                address: userAddress,
+                points: userPoints,
+                history: userHistory,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            localStorage.setItem(storageKey, JSON.stringify(data));
+            console.log('User data saved:', data);
+        }
+
+        // 更新积分显示
+        function updatePointsDisplay() {
+            totalPoints.textContent = userPoints.toLocaleString();
+            walletAddressShort.textContent = userAddress ? 
+                `${userAddress.substring(0, 6)}...${userAddress.substring(userAddress.length - 4)}` : 
+                'Not connected';
+        }
+
+        // 更新任务状态
+        function updateTaskStatus() {
+            // 更新每个任务的状态
+            for (const taskId in CONFIG.TASKS) {
+                const task = CONFIG.TASKS[taskId];
+                const statusElement = document.getElementById(`${taskId}Status`);
+                const verifyBtn = document.getElementById(`${taskId}VerifyBtn`);
+                const reviewBtn = document.getElementById(`${taskId}ReviewBtn`);
+                
+                if (userHistory[taskId]) {
+                    // 任务已完成
+                    statusElement.textContent = '✅ Completed';
+                    statusElement.style.color = '#10b981';
+                    verifyBtn.disabled = true;
+                    verifyBtn.textContent = 'Verified';
+                    reviewBtn.disabled = false;
+                } else {
+                    // 任务未完成
+                    statusElement.textContent = '⏳ Not completed';
+                    statusElement.style.color = '#f59e0b';
+                    verifyBtn.disabled = false;
+                    verifyBtn.textContent = 'Verify Task';
+                    reviewBtn.disabled = false;
+                }
+            }
+        }
+
+        // 更新历史记录显示
+        function updateHistoryDisplay() {
+            if (!userAddress) {
+                taskHistory.innerHTML = '<div style="color: #64748b; text-align: center; padding: 2rem; font-size: 0.875rem;">Connect wallet to see your history.</div>';
+                return;
+            }
+            
+            if (Object.keys(userHistory).length === 0) {
+                taskHistory.innerHTML = '<div style="color: #64748b; text-align: center; padding: 2rem; font-size: 0.875rem;">No tasks completed yet. Start earning points!</div>';
+                return;
+            }
+            
+            let historyHTML = '';
+            let total = 0;
+            
+            for (const taskId in userHistory) {
+                const task = CONFIG.TASKS[taskId];
+                const history = userHistory[taskId];
+                
+                if (task && history) {
+                    total += task.points;
+                    
+                    const date = new Date(history.timestamp).toLocaleDateString();
+                    historyHTML += `
+                        <div class="history-item">
+                            <div class="history-task">${task.name}</div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div class="history-date">${date}</div>
+                                <div class="history-points">+${task.points} Points</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            // 添加总计
+            historyHTML += `
+                <div class="history-item" style="border-top: 2px solid rgba(0, 212, 170, 0.3); padding-top: 1rem;">
+                    <div class="history-task" style="font-weight: bold; color: #00d4aa;">Total Points</div>
+                    <div class="history-points" style="font-size: 1rem;">${total} Points</div>
                 </div>
             `;
             
-            document.body.appendChild(successDiv);
+            taskHistory.innerHTML = historyHTML;
+        }
+
+        // 更新连接按钮
+        function updateConnectButton() {
+            if (isConnected && userAddress) {
+                const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
+                connectButton.textContent = shortAddress;
+                connectButton.disabled = true;
+                connectBtn.textContent = 'Connected';
+                connectBtn.disabled = true;
+            }
+        }
+
+        // 更新钱包状态
+        function updateWalletStatus() {
+            if (isConnected && userAddress) {
+                walletStatusText.textContent = 'Connected';
+                walletStatusText.style.color = '#00d4aa';
+                walletAddress.textContent = `Address: ${userAddress.substring(0, 10)}...`;
+            }
+        }
+
+        // 显示状态
+        function showStatus(message, type) {
+            statusIndicator.textContent = message;
+            statusIndicator.className = 'status-indicator status-' + type;
+            statusIndicator.style.display = 'block';
             
+            // 3秒后自动隐藏
             setTimeout(() => {
-                successDiv.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => {
-                    document.body.removeChild(successDiv);
-                }, 300);
+                hideStatus();
             }, 3000);
         }
 
-        // 钱包连接
-        const connectButton = document.getElementById('connectButton');
-        
-        connectButton.addEventListener('click', async () => {
+        function hideStatus() {
+            statusIndicator.style.display = 'none';
+        }
+
+        // 连接钱包
+        async function connectWallet() {
             try {
-                if (typeof window.ethereum === 'undefined') {
-                    alert('Please install MetaMask to connect your wallet');
+                let provider = null;
+                
+                if (typeof window.okxwallet !== 'undefined') {
+                    provider = window.okxwallet;
+                } else if (typeof window.ethereum !== 'undefined') {
+                    provider = window.ethereum;
+                } else {
+                    showStatus('Please install OKX Wallet or MetaMask!', 'error');
                     return;
                 }
                 
-                connectButton.disabled = true;
-                connectButton.innerHTML = '<span class="loading" style="width: 20px; height: 20px; margin-right: 10px;"></span> Connecting...';
+                connectBtn.disabled = true;
+                connectBtn.textContent = 'Connecting...';
+                showStatus('Connecting wallet...', 'pending');
                 
-                const accounts = await window.ethereum.request({ 
-                    method: 'eth_requestAccounts' 
-                });
+                const accounts = await provider.request({ method: 'eth_requestAccounts' });
                 
                 if (accounts.length > 0) {
-                    const address = accounts[0];
-                    const shortAddress = address.substring(0, 6) + '...' + address.substring(address.length - 4);
-                    connectButton.textContent = `Connected: ${shortAddress}`;
-                    connectButton.disabled = true;
+                    userAddress = accounts[0];
+                    web3 = new Web3(provider);
+                    isConnected = true;
                     
-                    // 生成个性化推荐链接
-                    const referralCode = 'REF' + address.substring(2, 8).toUpperCase();
-                    document.getElementById('referralLink').textContent = 
-                        `https://lobster-tempo.com/airdrop?ref=${referralCode}`;
+                    updateConnectButton();
+                    updateWalletStatus();
+                    loadUserData();
                     
-                    showSuccess('Wallet connected! Your referral link has been generated.');
+                    showStatus('Wallet connected! Loading your points...', 'success');
                 }
                 
             } catch (error) {
                 console.error('Connection failed:', error);
-                alert('Failed to connect wallet: ' + error.message);
-                connectButton.disabled = false;
-                connectButton.textContent = 'Connect Wallet';
+                connectBtn.disabled = false;
+                connectBtn.textContent = 'Connect Wallet';
+                showStatus('Connection failed: ' + error.message, 'error');
             }
-        });
+        }
 
-        // 添加CSS动画
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
+        // 打开任务
+        function openTask(taskId) {
+            const task = CONFIG.TASKS[taskId];
+            if (task && task.url) {
+                window.open(task.url, '_blank');
+                showStatus(`Opened ${task.name}`, 'success');
+            }
+        }
+
+        // 验证任务
+        function verifyTask(taskId) {
+            if (!userAddress) {
+                showStatus('Please connect wallet first!', 'error');
+                return;
             }
             
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
+            if (userHistory[taskId]) {
+                showStatus('Task already completed!', 'error');
+                return;
             }
-        `;
-        document.head.appendChild(style);
-
-        // 监听账户变化
-        if (window.ethereum) {
-            window.ethereum.on('accountsChanged', (accounts) => {
-                if (accounts.length === 0) {
-                    connectButton.disabled = false;
-                    connectButton.textContent = 'Connect Wallet';
-                } else {
-                    const address = accounts[0];
-                    const shortAddress = address.substring(0, 6) + '...' + address.substring(address.length - 4);
-                    connectButton.textContent = `Connected: ${shortAddress}`;
-                    connectButton.disabled = true;
-                }
-            });
+            
+            const task = CONFIG.TASKS[taskId];
+            
+            // 模拟验证过程
+            showStatus(`Verifying ${task.name}...`, 'pending');
+            
+            setTimeout(() => {
+                // 标记任务为完成
+                userHistory[taskId] = {
+                    completed: true,
+                    timestamp: new Date().toISOString(),
+                    points: task.points
+                };
+                
+                // 更新积分
+                userPoints += task.points;
+                
+                // 保存数据
+                saveUserData();
+                
+                // 更新显示
+                updatePointsDisplay();
+                updateTaskStatus();
+                updateHistoryDisplay();
+                
+                showStatus(`✅ ${task.name} verified! +${task.points} points`, 'success');
+            }, 1500);
         }
+
+        // 查看任务
+        function reviewTask(taskId) {
+            const task = CONFIG.TASKS[taskId];
+            if (!task) return;
+            
+            if (userHistory[taskId]) {
+                const history = userHistory[taskId];
+                const date = new Date(history.timestamp).toLocaleString();
+                showStatus(`Task completed on ${date} for ${task.points} points`, 'success');
+            } else {
+                showStatus(`Task not completed yet. Complete to earn ${task.points} points.`, 'pending');
+            }
+        }
+
+        // 导出数据（可选功能）
+        function exportData() {
+            if (!userAddress) {
+                showStatus('Please connect wallet first!', 'error');
+                return;
+            }
+            
+            const data = {
+                address: userAddress,
+                totalPoints: userPoints,
+                tasks: userHistory,
+                exportDate: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `lobster_airdrop_${userAddress.substring(0, 10)}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showStatus('Data exported successfully!', 'success');
+        }
+
+        // 页面加载时初始化
+        window.onload = init;
     </script>
 </body>
 </html>
