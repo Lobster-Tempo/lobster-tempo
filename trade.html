@@ -4,10 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🦞 Lobster Token | Trade</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* 确保Trade页面有基本样式 */
+        .trade-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .trade-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .trade-header h1 {
+            font-size: 2.5rem;
+            color: #00d4aa;
+            margin-bottom: 1rem;
+        }
+        
+        .coming-soon {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid #f59e0b;
+            color: #f59e0b;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 2rem 0;
+            font-size: 1.25rem;
+        }
+        
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-container {
+            height: 300px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        
+        .trade-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: #00d4aa;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem;
+        }
+        
+        .input-wrapper input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #e2e8f0;
+            font-size: 1.125rem;
+            outline: none;
+        }
+        
+        .token-symbol {
+            color: #00d4aa;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body>
     <!-- 导航栏 -->
@@ -28,11 +136,11 @@
     </nav>
 
     <!-- 主内容 -->
-    <main class="container trade-container">
+    <main class="trade-container">
         <!-- Trade Header -->
         <section class="trade-header">
             <h1>LOBSTER/USDC.e Trading</h1>
-            <p style="color: var(--text-secondary);">View-only trading interface. Trading functionality coming soon.</p>
+            <p style="color: #94a3b8;">Professional trading interface. Trading functionality coming soon.</p>
         </section>
 
         <!-- Coming Soon Banner -->
@@ -41,75 +149,71 @@
         </div>
 
         <!-- 价格信息 -->
-        <section class="info-card" style="margin-bottom: 2rem;">
-            <h3>Current Price</h3>
+        <section class="info-card">
+            <h3 style="color: #00d4aa; margin-bottom: 1rem;">Current Price</h3>
             <div style="display: flex; align-items: baseline; gap: 1rem; margin-top: 1rem;">
-                <div style="font-size: 2.5rem; font-weight: bold; color: var(--primary);">$0.0010</div>
-                <div style="padding: 0.25rem 0.75rem; background: rgba(16, 185, 129, 0.1); color: var(--success); border-radius: 6px; font-weight: bold;">
+                <div style="font-size: 2.5rem; font-weight: bold; color: #00d4aa;">$0.0010</div>
+                <div style="padding: 0.25rem 0.75rem; background: rgba(16, 185, 129, 0.1); color: #10b981; border-radius: 6px; font-weight: bold;">
                     +2.5%
                 </div>
             </div>
-            <div style="color: var(--text-secondary); margin-top: 0.5rem;">
+            <div style="color: #94a3b8; margin-top: 0.5rem;">
                 1 LOBSTER = 0.0000001 USDC.e
             </div>
         </section>
 
         <!-- 图表区域 -->
-        <section class="chart-panel" style="margin-bottom: 2rem;">
-            <div class="chart-header">
-                <div class="pair-info">
-                    <div class="pair-name">LOBSTER/USDC.e</div>
-                    <div class="chart-controls">
-                        <select id="timeframe" style="background: var(--dark); color: var(--text); border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem; border-radius: 6px;">
-                            <option>1H</option>
-                            <option>4H</option>
-                            <option selected>1D</option>
-                            <option>1W</option>
-                        </select>
-                    </div>
-                </div>
+        <section class="chart-panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <div style="font-size: 1.5rem; font-weight: bold;">LOBSTER/USDC.e</div>
+                <select style="background: #0a0e17; color: #e2e8f0; border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem; border-radius: 6px;">
+                    <option>1H</option>
+                    <option>4H</option>
+                    <option selected>1D</option>
+                    <option>1W</option>
+                </select>
             </div>
             
-            <div class="chart-container" id="chartContainer">
+            <div class="chart-container">
                 <div style="text-align: center;">
                     <div style="font-size: 3rem; margin-bottom: 1rem;">📈</div>
-                    <div>Chart Loading...</div>
-                    <div style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 0.5rem;">
-                        Real-time chart integration coming soon
+                    <div>Real-time Chart</div>
+                    <div style="color: #94a3b8; font-size: 0.875rem; margin-top: 0.5rem;">
+                        Chart integration coming with trading functionality
                     </div>
                 </div>
             </div>
             
             <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1.5rem;">
                 <div style="text-align: center;">
-                    <div style="color: var(--text-secondary); font-size: 0.875rem;">24h High</div>
+                    <div style="color: #94a3b8; font-size: 0.875rem;">24h High</div>
                     <div style="font-weight: bold;">$0.0012</div>
                 </div>
                 <div style="text-align: center;">
-                    <div style="color: var(--text-secondary); font-size: 0.875rem;">24h Low</div>
+                    <div style="color: #94a3b8; font-size: 0.875rem;">24h Low</div>
                     <div style="font-weight: bold;">$0.0008</div>
                 </div>
                 <div style="text-align: center;">
-                    <div style="color: var(--text-secondary); font-size: 0.875rem;">24h Volume</div>
+                    <div style="color: #94a3b8; font-size: 0.875rem;">24h Volume</div>
                     <div style="font-weight: bold;">$1,234.56</div>
                 </div>
                 <div style="text-align: center;">
-                    <div style="color: var(--text-secondary); font-size: 0.875rem;">Market Cap</div>
+                    <div style="color: #94a3b8; font-size: 0.875rem;">Market Cap</div>
                     <div style="font-weight: bold;">$800,000</div>
                 </div>
             </div>
         </section>
 
-        <!-- 交易面板（只读） -->
+        <!-- 交易面板 -->
         <section style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
             <!-- Buy Panel -->
             <div class="trade-panel">
-                <h3 style="margin-bottom: 1.5rem; color: var(--success);">Buy LOBSTER</h3>
+                <h3 style="margin-bottom: 1.5rem; color: #10b981;">Buy LOBSTER</h3>
                 
                 <div class="input-group">
-                    <div class="input-label">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.875rem; color: #94a3b8;">
                         <span>Pay</span>
-                        <span class="balance">Balance: 0.00 USDC.e</span>
+                        <span>Balance: 0.00 USDC.e</span>
                     </div>
                     <div class="input-wrapper">
                         <input type="number" placeholder="0.00" value="0.01" readonly>
@@ -117,14 +221,14 @@
                     </div>
                 </div>
                 
-                <div style="text-align: center; margin: 1rem 0; color: var(--text-secondary);">
+                <div style="text-align: center; margin: 1rem 0; color: #94a3b8;">
                     ↓
                 </div>
                 
                 <div class="input-group">
-                    <div class="input-label">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.875rem; color: #94a3b8;">
                         <span>Receive</span>
-                        <span class="balance">Balance: 0 LOBSTER</span>
+                        <span>Balance: 0 LOBSTER</span>
                     </div>
                     <div class="input-wrapper">
                         <input type="text" placeholder="10,000" value="10,000" readonly>
@@ -132,19 +236,19 @@
                     </div>
                 </div>
                 
-                <button class="btn btn-primary" disabled style="margin-top: 1.5rem;">
+                <button class="btn" disabled>
                     Connect Wallet to Buy
                 </button>
             </div>
 
             <!-- Sell Panel -->
             <div class="trade-panel">
-                <h3 style="margin-bottom: 1.5rem; color: var(--danger);">Sell LOBSTER</h3>
+                <h3 style="margin-bottom: 1.5rem; color: #ef4444;">Sell LOBSTER</h3>
                 
                 <div class="input-group">
-                    <div class="input-label">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.875rem; color: #94a3b8;">
                         <span>Sell</span>
-                        <span class="balance">Balance: 0 LOBSTER</span>
+                        <span>Balance: 0 LOBSTER</span>
                     </div>
                     <div class="input-wrapper">
                         <input type="number" placeholder="0" value="10000" readonly>
@@ -152,14 +256,14 @@
                     </div>
                 </div>
                 
-                <div style="text-align: center; margin: 1rem 0; color: var(--text-secondary);">
+                <div style="text-align: center; margin: 1rem 0; color: #94a3b8;">
                     ↓
                 </div>
                 
                 <div class="input-group">
-                    <div class="input-label">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.875rem; color: #94a3b8;">
                         <span>Receive</span>
-                        <span class="balance">Balance: 0.00 USDC.e</span>
+                        <span>Balance: 0.00 USDC.e</span>
                     </div>
                     <div class="input-wrapper">
                         <input type="text" placeholder="0.01" value="0.01" readonly>
@@ -167,7 +271,7 @@
                     </div>
                 </div>
                 
-                <button class="btn btn-primary" disabled style="margin-top: 1.5rem; background: var(--danger);">
+                <button class="btn" disabled style="background: #ef4444;">
                     Connect Wallet to Sell
                 </button>
             </div>
@@ -175,103 +279,27 @@
 
         <!-- 市场数据 -->
         <section class="info-card">
-            <h3>Market Data</h3>
+            <h3 style="color: #00d4aa; margin-bottom: 1rem;">Market Data</h3>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
                 <div>
-                    <div style="color: var(--text-secondary); font-size: 0.875rem;">Total Supply</div>
-                    <div style="font-weight: bold; font-size: 1.25rem;">800,000,000</div>
+                    <div style="color: #94a3b8; font-size: 0.875rem;">Total Supply</div>
+                    <div style="font-weight: bold; font-size: 1.25rem;">1,000,000,000</div>
                 </div>
                 
                 <div>
-                    <div style="color: var(--text-secondary); font-size: 0.875rem;">Circulating Supply</div>
+                    <div style="color: #94a3b8; font-size: 0.875rem;">Circulating Supply</div>
                     <div style="font-weight: bold; font-size: 1.25rem;">120,000,000</div>
                 </div>
                 
                 <div>
-                    <div style="color: var(--text-secondary); font-size: 0.875rem;">Holders</div>
+                    <div style="color: #94a3b8; font-size: 0.875rem;">Holders</div>
                     <div style="font-weight: bold; font-size: 1.25rem;">1,234</div>
                 </div>
                 
                 <div>
-                    <div style="color: var(--text-secondary); font-size: 0.875rem;">Liquidity</div>
+                    <div style="color: #94a3b8; font-size: 0.875rem;">Liquidity</div>
                     <div style="font-weight: bold; font-size: 1.25rem;">$50,000</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 订单簿（模拟） -->
-        <section class="info-card" style="margin-top: 2rem;">
-            <h3>Order Book (Simulated)</h3>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem;">
-                <!-- Buy Orders -->
-                <div>
-                    <h4 style="color: var(--success); margin-bottom: 1rem;">Buy Orders</h4>
-                    <div style="background: rgba(16, 185, 129, 0.05); border-radius: 8px; padding: 1rem;">
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                            <span>Price</span>
-                            <span>Amount</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                            <span style="color: var(--success);">$0.0010</span>
-                            <span>50,000</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                            <span style="color: var(--success);">$0.0009</span>
-                            <span>25,000</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
-                            <span style="color: var(--success);">$0.0008</span>
-                            <span>10,000</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Sell Orders -->
-                <div>
-                    <h4 style="color: var(--danger); margin-bottom: 1rem;">Sell Orders</h4>
-                    <div style="background: rgba(239, 68, 68, 0.05); border-radius: 8px; padding: 1rem;">
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                            <span>Price</span>
-                            <span>Amount</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                            <span style="color: var(--danger);">$0.0011</span>
-                            <span>30,000</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                            <span style="color: var(--danger);">$0.0012</span>
-                            <span>20,000</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
-                            <span style="color: var(--danger);">$0.0013</span>
-                            <span>15,000</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 交易历史（模拟） -->
-        <section class="info-card" style="margin-top: 2rem;">
-            <h3>Recent Trades (Simulated)</h3>
-            
-            <div style="margin-top: 1rem;">
-                <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 0.5rem;">
-                    <span>10,000 LOBSTER</span>
-                    <span style="color: var(--success);">$0.0010</span>
-                    <span>2 min ago</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 0.5rem;">
-                    <span>5,000 LOBSTER</span>
-                    <span style="color: var(--danger);">$0.0011</span>
-                    <span>5 min ago</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: rgba(255,255,255,0.05); border-radius: 8px;">
-                    <span>20,000 LOBSTER</span>
-                    <span style="color: var(--success);">$0.0009</span>
-                    <span>10 min ago</span>
                 </div>
             </div>
         </section>
@@ -279,14 +307,14 @@
 
     <!-- 页脚 -->
     <footer style="
-        background: var(--darker);
+        background: #050811;
         border-top: 1px solid rgba(255, 255, 255, 0.05);
         padding: 2rem;
         margin-top: 4rem;
         text-align: center;
-        color: var(--text-secondary);
+        color: #94a3b8;
     ">
-        <p>© 2024 Lobster Token. All rights reserved.</p>
+        <p>© 2026 Lobster Token. All rights reserved.</p>
         <p style="margin-top: 0.5rem; font-size: 0.875rem;">
             Built on Tempo Network • Contract Verified • Community Driven
         </p>
@@ -304,7 +332,7 @@
                 }
                 
                 connectButton.disabled = true;
-                connectButton.innerHTML = '<span class="loading"></span> Connecting...';
+                connectButton.innerHTML = '<span style="display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.1); border-radius: 50%; border-top-color: #00d4aa; animation: spin 1s linear infinite; margin-right: 10px;"></span> Connecting...';
                 
                 const accounts = await window.ethereum.request({ 
                     method: 'eth_requestAccounts' 
@@ -316,7 +344,6 @@
                     connectButton.textContent = `Connected: ${shortAddress}`;
                     connectButton.disabled = true;
                     
-                    // 显示提示
                     alert('Wallet connected! Trading functionality coming soon.');
                 }
                 
@@ -328,44 +355,14 @@
             }
         });
 
-        // 监听账户变化
-        if (window.ethereum) {
-            window.ethereum.on('accountsChanged', (accounts) => {
-                if (accounts.length === 0) {
-                    connectButton.disabled = false;
-                    connectButton.textContent = 'Connect Wallet';
-                } else {
-                    const address = accounts[0];
-                    const shortAddress = address.substring(0, 6) + '...' + address.substring(address.length - 4);
-                    connectButton.textContent = `Connected: ${shortAddress}`;
-                    connectButton.disabled = true;
-                }
-            });
-        }
-
-        // 模拟价格更新
-        function updatePrice() {
-            const priceElement = document.querySelector('.info-card h3 + div div');
-            if (priceElement) {
-                const currentPrice = parseFloat(priceElement.textContent.replace('$', ''));
-                const change = (Math.random() - 0.5) * 0.0002; // 随机变化
-                const newPrice = Math.max(0.0008, Math.min(0.0012, currentPrice + change));
-                
-                priceElement.textContent = `$${newPrice.toFixed(4)}`;
-                
-                // 更新变化百分比
-                const changeElement = priceElement.nextElementSibling;
-                const percentChange = ((newPrice - 0.0010) / 0.0010 * 100).toFixed(2);
-                changeElement.textContent = `${percentChange >= 0 ? '+' : ''}${percentChange}%`;
-                changeElement.style.background = percentChange >= 0 ? 
-                    'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)';
-                changeElement.style.color = percentChange >= 0 ? 
-                    'var(--success)' : 'var(--danger)';
+        // 添加旋转动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                to { transform: rotate(360deg); }
             }
-        }
-
-        // 每10秒更新一次价格
-        setInterval(updatePrice, 10000);
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
