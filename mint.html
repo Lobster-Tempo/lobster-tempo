@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
 </head>
 <body>
     <!-- 导航栏 -->
@@ -21,7 +20,6 @@
         
         <div class="nav-links">
             <a href="index.html" class="nav-link">Home</a>
-            <a href="mint.html" class="nav-link active">Mint</a>
             <a href="trade.html" class="nav-link">Trade</a>
             <a href="airdrop.html" class="nav-link">Airdrop</a>
             <a href="about.html" class="nav-link">About</a>
@@ -32,58 +30,28 @@
     <!-- 主内容 -->
     <main class="container mint-container">
         <!-- Mint Header -->
-        <section class="mint-header">
-            <h1>Mint LOBSTER Tokens</h1>
-            <p class="mint-price">Fixed Price: 0.01 USDC.e = 10,000 LOBSTER</p>
-        </section>
-
-        <!-- 高级进度条 -->
-        <section class="progress-section">
-            <div class="progress-header">
-                <div class="progress-title">Minting Progress</div>
-                <div class="progress-percentage" id="progressPercentage">0%</div>
-            </div>
-            
-            <div class="progress-bar-container">
-                <div class="progress-bar" id="progressBar"></div>
-            </div>
-            
-            <div class="progress-stats">
-                <div>Minted: <span id="mintedCount">0</span> LOBSTER</div>
-                <div>Remaining: <span id="remainingCount">1,000,000,000</span> LOBSTER</div>
-            </div>
-        </section>
+        <header class="mint-header">
+            <h1 class="mint-title">Mint LOBSTER Tokens</h1>
+            <p class="mint-subtitle">
+                Get your LOBSTER tokens at a fixed price of 0.01 USDC.e per 10,000 LOBSTER
+            </p>
+        </header>
 
         <!-- Mint卡片 -->
         <section class="mint-card">
-            <div class="mint-amount">10,000</div>
-            <div class="mint-label">LOBSTER per Mint</div>
-            
-            <div class="mint-details">
-                <div class="detail-item">
-                    <div class="detail-label">Price per Mint</div>
-                    <div class="detail-value">0.01 USDC.e</div>
+            <div class="mint-info">
+                <div class="info-row">
+                    <div class="info-label">Token Price</div>
+                    <div class="info-value">0.01 USDC.e = 10,000 LOBSTER</div>
                 </div>
-                
-                <div class="detail-item">
-                    <div class="detail-label">Your USDC.e Balance</div>
-                    <div class="detail-value" id="userUsdcBalance">0.00</div>
-                </div>
-                
-                <div class="detail-item">
-                    <div class="detail-label">Available Mints</div>
-                    <div class="detail-value" id="availableMints">0</div>
-                </div>
-                
-                <div class="detail-item">
-                    <div class="detail-label">Network</div>
-                    <div class="detail-value">Tempo</div>
+                <div class="info-row">
+                    <div class="info-label">Network</div>
+                    <div class="info-value">Tempo</div>
                 </div>
             </div>
             
             <button class="mint-button" id="mintButton" disabled>
-                <span id="mintButtonText">Connect Wallet to Mint</span>
-                <span id="mintButtonCountdown" style="display: none;"></span>
+                Connect Wallet to Mint
             </button>
             
             <div style="color: var(--text-secondary); font-size: 0.875rem;">
@@ -91,118 +59,35 @@
             </div>
         </section>
 
-        <!-- 用户统计 -->
-        <section class="user-stats">
-            <h3>Your Statistics</h3>
-            
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-value" id="userMinted">0</div>
-                    <div class="stat-label">LOBSTER Minted</div>
-                </div>
-                
-                <div class="stat-item">
-                    <div class="stat-value" id="userMintCount">0</div>
-                    <div class="stat-label">Total Mints</div>
-                </div>
-                
-                <div class="stat-item">
-                    <div class="stat-value" id="userUsdcSpent">0.00</div>
-                    <div class="stat-label">USDC.e Spent</div>
-                </div>
-                
-                <div class="stat-item">
-                    <div class="stat-value" id="userLobsterBalance">0</div>
-                    <div class="stat-label">LOBSTER Balance</div>
-                </div>
+        <!-- 进度条 -->
+        <section class="progress-section">
+            <div class="progress-header">
+                <div class="progress-title">Minting Progress</div>
+                <div class="progress-percentage" id="progressPercentage">0%</div>
             </div>
-        </section>
-
-        <!-- 交易历史 -->
-        <section class="user-stats">
-            <h3>Recent Mints</h3>
-            <div id="recentMints" style="text-align: center; color: var(--text-secondary); padding: 2rem;">
-                No mint history yet. Connect your wallet and start minting!
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%;"></div>
+            </div>
+            
+            <div class="progress-stats">
+                <div class="stat">
+                    <div class="stat-label">Minted</div>
+                    <div class="stat-value" id="mintedCount">0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Remaining</div>
+                    <div class="stat-value" id="remainingCount">1,000,000,000</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Total Supply</div>
+                    <div class="stat-value">1,000,000,000</div>
+                </div>
             </div>
         </section>
     </main>
 
-    <!-- 页脚 -->
-    <footer style="
-        background: var(--darker);
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        padding: 2rem;
-        margin-top: 4rem;
-        text-align: center;
-        color: var(--text-secondary);
-    ">
-        <p>© 2024 Lobster Token. All rights reserved.</p>
-        <p style="margin-top: 0.5rem; font-size: 0.875rem;">
-            Built on Tempo Network • Contract Verified • Community Driven
-        </p>
-    </footer>
-
-    <!-- Web3.js -->
-    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
-    
     <script>
-        // 连接钱包功能（与index.html完全相同）
-        document.addEventListener('DOMContentLoaded', function() {
-            const connectButton = document.getElementById('connectButton');
-            if (connectButton) {
-                connectButton.addEventListener('click', async function() {
-                    if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
-                        try {
-                            const provider = window.okxwallet || window.ethereum;
-                            this.disabled = true;
-                            this.textContent = 'Connecting...';
-                            
-                            const accounts = await provider.request({ method: 'eth_requestAccounts' });
-                            
-                            if (accounts.length > 0) {
-                                const shortAddress = accounts[0].substring(0, 6) + '...' + accounts[0].substring(accounts[0].length - 4);
-                                this.textContent = shortAddress;
-                                this.disabled = true;
-                                
-                                // 触发Mint页面的连接逻辑
-                                if (window.mintPageConnected) {
-                                    window.mintPageConnected(accounts[0], provider);
-                                }
-                            }
-                        } catch (error) {
-                            console.error('Connection failed:', error);
-                            this.disabled = false;
-                            this.textContent = 'Connect Wallet';
-                            alert('Connection failed: ' + error.message);
-                        }
-                    } else {
-                        alert('Please install MetaMask or OKX Wallet!');
-                    }
-                });
-                
-                // 检查现有连接
-                if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
-                    try {
-                        const provider = window.okxwallet || window.ethereum;
-                        provider.request({ method: 'eth_accounts' }).then(accounts => {
-                            if (accounts.length > 0) {
-                                const shortAddress = accounts[0].substring(0, 6) + '...' + accounts[0].substring(accounts[0].length - 4);
-                                connectButton.textContent = shortAddress;
-                                connectButton.disabled = true;
-                                
-                                // 触发Mint页面的连接逻辑
-                                if (window.mintPageConnected) {
-                                    window.mintPageConnected(accounts[0], provider);
-                                }
-                            }
-                        });
-                    } catch (error) {
-                        console.log('No existing connection:', error);
-                    }
-                }
-            }
-        });
-        
         // 配置
         const CONFIG = {
             LOBSTER_ADDRESS: '0xb30139594b85aa0cfad2b4abe2328886fdbfe92b',
@@ -220,164 +105,6 @@
         let usdcContract = null;
         let isApproved = false;
         let mintedCount = 0;
-        
-        // 倒计时状态
-        let countdownEndTime = null;
-        let countdownInterval = null;
-        let isCountdownActive = true; // 初始为true，48小时倒计时
-        
-        // 全局函数：当导航栏连接钱包时调用
-        window.mintPageConnected = function(address, provider) {
-            console.log('Mint page connected via navbar:', address);
-            userAddress = address;
-            web3 = new Web3(provider);
-            
-            // 检查网络
-            web3.eth.getChainId().then(chainId => {
-                if (chainId.toString() !== '4217') {
-                    try {
-                        window.ethereum.request({
-                            method: 'wallet_switchEthereumChain',
-                            params: [{ chainId: CONFIG.CHAIN_ID }],
-                        }).then(() => {
-                            initContractsAndUpdate();
-                        }).catch(switchError => {
-                            window.ethereum.request({
-                                method: 'wallet_addEthereumChain',
-                                params: [{
-                                    chainId: CONFIG.CHAIN_ID,
-                                    chainName: 'Tempo Mainnet',
-                                    nativeCurrency: { name: 'pathUSD', symbol: 'pathUSD', decimals: 18 },
-                                    rpcUrls: ['https://rpc.tempo.xyz'],
-                                    blockExplorerUrls: ['https://explore.tempo.xyz']
-                                }]
-                            }).then(() => {
-                                initContractsAndUpdate();
-                            });
-                        });
-                    } catch (error) {
-                        console.error('Network switch failed:', error);
-                    }
-                } else {
-                    initContractsAndUpdate();
-                }
-            });
-        };
-        
-        // 初始化合约并更新UI
-        async function initContractsAndUpdate() {
-            try {
-                // 初始化合约
-                lobsterContract = new web3.eth.Contract(LOBSTER_ABI, CONFIG.LOBSTER_ADDRESS);
-                usdcContract = new web3.eth.Contract(USDC_ABI, CONFIG.USDC_ADDRESS);
-                
-                // 更新UI
-                updateProgress();
-                updateUserInfo();
-                checkApproval();
-                
-                console.log('Mint page fully initialized after navbar connection');
-            } catch (error) {
-                console.error('Failed to init contracts:', error);
-            }
-        }
-        
-        // 初始化倒计时
-        function initCountdown() {
-            // 设置48小时后的时间（从页面加载开始）
-            countdownEndTime = new Date().getTime() + (48 * 60 * 60 * 1000);
-            
-            // 检查本地存储是否有保存的结束时间
-            const savedEndTime = localStorage.getItem('lobster_countdown_end');
-            if (savedEndTime) {
-                const savedTime = parseInt(savedEndTime);
-                const now = new Date().getTime();
-                
-                if (savedTime > now) {
-                    // 使用保存的时间
-                    countdownEndTime = savedTime;
-                } else {
-                    // 倒计时已结束，保存当前时间
-                    countdownEndTime = now;
-                    localStorage.setItem('lobster_countdown_end', countdownEndTime.toString());
-                }
-            } else {
-                // 第一次访问，保存结束时间
-                localStorage.setItem('lobster_countdown_end', countdownEndTime.toString());
-            }
-            
-            // 开始倒计时
-            startCountdown();
-        }
-        
-        // 开始倒计时
-        function startCountdown() {
-            if (countdownInterval) {
-                clearInterval(countdownInterval);
-            }
-            
-            countdownInterval = setInterval(updateCountdown, 1000);
-            updateCountdown(); // 立即更新一次
-        }
-        
-        // 更新倒计时显示
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = countdownEndTime - now;
-            
-            if (distance <= 0) {
-                // 倒计时结束
-                clearInterval(countdownInterval);
-                countdownInterval = null;
-                isCountdownActive = false;
-                
-                // 更新Mint按钮状态
-                updateMintButtonState();
-                
-                console.log('Countdown ended, minting enabled');
-                return;
-            }
-            
-            // 计算时间
-            const hours = Math.floor(distance / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-            // 更新按钮上的倒计时（如果用户已连接并授权）
-            if (userAddress && isApproved && isCountdownActive) {
-                const buttonCountdown = document.getElementById('mintButtonCountdown');
-                buttonCountdown.textContent = `Mint in ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }
-        }
-        
-        // 检查Mint按钮状态
-        function updateMintButtonState() {
-            const mintButton = document.getElementById('mintButton');
-            const buttonText = document.getElementById('mintButtonText');
-            const buttonCountdown = document.getElementById('mintButtonCountdown');
-            
-            if (!userAddress) {
-                mintButton.disabled = true;
-                buttonText.textContent = 'Connect Wallet to Mint';
-                buttonText.style.display = 'block';
-                buttonCountdown.style.display = 'none';
-            } else if (!isApproved) {
-                mintButton.disabled = false;
-                buttonText.textContent = 'Approve USDC.e First';
-                buttonText.style.display = 'block';
-                buttonCountdown.style.display = 'none';
-            } else if (isCountdownActive) {
-                mintButton.disabled = true;
-                buttonText.style.display = 'none';
-                buttonCountdown.style.display = 'block';
-                // 倒计时会在updateCountdown中更新
-            } else {
-                mintButton.disabled = false;
-                buttonText.textContent = 'Mint 10,000 LOBSTER';
-                buttonText.style.display = 'block';
-                buttonCountdown.style.display = 'none';
-            }
-        }
 
         // 元素
         const connectButton = document.getElementById('connectButton');
@@ -404,90 +131,85 @@
             { "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }, { "internalType": "address", "name": "spender", "type": "address" }], "name": "allowance", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }
         ];
 
-        // 连接钱包
-
-
-        // 更新进度条（从合约读取真实数据）
-        async function updateProgress() {
-            try {
-                if (!lobsterContract) {
-                    // 未连接钱包，显示0%
-                    progressBar.style.width = '0%';
-                    progressPercentage.textContent = '0%';
-                    mintedCountEl.textContent = '0';
-                    remainingCountEl.textContent = CONFIG.TOTAL_SUPPLY.toLocaleString();
-                    return;
-                }
-
-                // 从合约获取真实数据
-                // 注意：需要合约有getInfo方法返回已Mint数量
-                let minted = 0;
+        // 连接钱包（与index.html完全相同）
+        connectButton.addEventListener('click', async function() {
+            if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
                 try {
-                    // 尝试从合约获取数据
-                    const info = await lobsterContract.methods.getInfo().call();
-                    // info[0] 应该是已Mint数量（根据合约结构）
-                    minted = parseInt(info[0]) / 1e18; // 转换为整数
+                    const provider = window.okxwallet || window.ethereum;
+                    this.disabled = true;
+                    this.textContent = 'Connecting...';
+                    
+                    const accounts = await provider.request({ method: 'eth_requestAccounts' });
+                    
+                    if (accounts.length > 0) {
+                        userAddress = accounts[0];
+                        web3 = new Web3(provider);
+                        
+                        // 检查网络
+                        const chainId = await web3.eth.getChainId();
+                        if (chainId.toString() !== '4217') {
+                            try {
+                                await window.ethereum.request({
+                                    method: 'wallet_switchEthereumChain',
+                                    params: [{ chainId: CONFIG.CHAIN_ID }],
+                                });
+                            } catch (switchError) {
+                                await window.ethereum.request({
+                                    method: 'wallet_addEthereumChain',
+                                    params: [{
+                                        chainId: CONFIG.CHAIN_ID,
+                                        chainName: 'Tempo Mainnet',
+                                        nativeCurrency: { name: 'pathUSD', symbol: 'pathUSD', decimals: 18 },
+                                        rpcUrls: ['https://rpc.tempo.xyz'],
+                                        blockExplorerUrls: ['https://explore.tempo.xyz']
+                                    }]
+                                });
+                            }
+                            return;
+                        }
+                        
+                        // 初始化合约
+                        lobsterContract = new web3.eth.Contract(LOBSTER_ABI, CONFIG.LOBSTER_ADDRESS);
+                        usdcContract = new web3.eth.Contract(USDC_ABI, CONFIG.USDC_ADDRESS);
+                        
+                        // 更新UI
+                        updateProgress();
+                        updateUserInfo();
+                        checkApproval();
+                        
+                        const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
+                        this.textContent = shortAddress;
+                        this.disabled = true;
+                    }
                 } catch (error) {
-                    // 如果合约没有getInfo方法，使用默认值
-                    console.log('Contract getInfo not available, using default');
-                    minted = 0; // 初始为0
+                    console.error('Connection failed:', error);
+                    this.disabled = false;
+                    this.textContent = 'Connect Wallet';
+                    alert('Connection failed: ' + error.message);
                 }
-                
-                mintedCount = minted;
-                const percentage = (minted / CONFIG.TOTAL_SUPPLY) * 100;
-                const remaining = CONFIG.TOTAL_SUPPLY - minted;
-                
-                // 更新进度条
-                progressBar.style.width = `${percentage}%`;
-                progressPercentage.textContent = `${percentage.toFixed(2)}%`;
-                mintedCountEl.textContent = minted.toLocaleString();
-                remainingCountEl.textContent = remaining.toLocaleString();
-                
-                console.log('Progress updated:', { minted, percentage, remaining });
-                
-            } catch (error) {
-                console.error('Failed to update progress:', error);
-                // 出错时显示0%
-                progressBar.style.width = '0%';
-                progressPercentage.textContent = '0%';
-                mintedCountEl.textContent = '0';
-                remainingCountEl.textContent = CONFIG.TOTAL_SUPPLY.toLocaleString();
+            } else {
+                alert('Please install MetaMask or OKX Wallet!');
             }
+        });
+
+        // 初始化合约
+        async function initContracts() {
+            if (!web3) return;
+            
+            lobsterContract = new web3.eth.Contract(LOBSTER_ABI, CONFIG.LOBSTER_ADDRESS);
+            usdcContract = new web3.eth.Contract(USDC_ABI, CONFIG.USDC_ADDRESS);
         }
 
         // 更新用户信息
         async function updateUserInfo() {
-            if (!userAddress || !web3) return;
-
+            if (!userAddress || !lobsterContract) return;
+            
             try {
-                // USDC.e余额
-                const usdcBal = await usdcContract.methods.balanceOf(userAddress).call();
-                const usdcBalance = (usdcBal / 1e6).toFixed(2);
-                document.getElementById('userUsdcBalance').textContent = usdcBalance;
-                
-                // 可用Mint次数
-                const availableMints = Math.floor(usdcBal / CONFIG.PRICE);
-                document.getElementById('availableMints').textContent = availableMints;
-                
-                // LOBSTER余额
-                const lobsterBal = await lobsterContract.methods.balanceOf(userAddress).call();
-                const lobsterBalance = (lobsterBal / 1e18).toLocaleString();
-                document.getElementById('userLobsterBalance').textContent = lobsterBalance;
-                
-                // 用户已Mint数量（从余额推算）
-                const userMinted = lobsterBal / 1e18;
-                document.getElementById('userMinted').textContent = userMinted.toLocaleString();
-                
-                // Mint次数
-                const mintCount = userMinted / 10000;
-                document.getElementById('userMintCount').textContent = mintCount.toLocaleString();
-                
-                // 花费的USDC.e
-                const usdcSpent = mintCount * 0.01;
-                document.getElementById('userUsdcSpent').textContent = usdcSpent.toFixed(2);
-                
+                const balance = await lobsterContract.methods.balanceOf(userAddress).call();
+                const userBalance = parseInt(balance) / 1e18;
+                console.log('User balance:', userBalance);
             } catch (error) {
-                console.error('Failed to update user info:', error);
+                console.error('Failed to get user balance:', error);
             }
         }
 
@@ -502,18 +224,13 @@
                 
                 isApproved = parseInt(allowance) >= parseInt(CONFIG.PRICE);
                 
-                // 更新Mint按钮状态
-                updateMintButtonState();
-                
-                // 如果已授权且倒计时进行中，立即更新按钮倒计时显示
-                if (isApproved && isCountdownActive) {
-                    updateCountdown();
-                }
-                
-                // 设置点击事件
                 if (isApproved) {
+                    mintButton.textContent = 'Mint 10,000 LOBSTER';
+                    mintButton.disabled = false;
                     mintButton.onclick = mintLobster;
                 } else {
+                    mintButton.textContent = 'Approve USDC.e First';
+                    mintButton.disabled = false;
                     mintButton.onclick = approveUsdc;
                 }
                 
@@ -535,8 +252,8 @@
                 console.log('Approval successful:', tx);
                 
                 isApproved = true;
-                // 更新Mint按钮状态
-                updateMintButtonState();
+                mintButton.textContent = 'Mint 10,000 LOBSTER';
+                mintButton.disabled = false;
                 mintButton.onclick = mintLobster;
 
                 alert('USDC.e approved successfully! You can now mint LOBSTER.');
@@ -544,7 +261,8 @@
             } catch (error) {
                 console.error('Approval failed:', error);
                 alert('Approval failed: ' + error.message);
-                updateMintButtonState();
+                mintButton.disabled = false;
+                mintButton.textContent = 'Approve USDC.e First';
             }
         }
 
@@ -573,7 +291,8 @@
                 console.error('Mint failed:', error);
                 alert('Mint failed: ' + error.message);
             } finally {
-                updateMintButtonState();
+                mintButton.disabled = false;
+                mintButton.textContent = 'Mint 10,000 LOBSTER';
             }
         }
 
@@ -587,19 +306,12 @@
                 background: #10b981;
                 color: white;
                 padding: 1rem 1.5rem;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                z-index: 10000;
+                border-radius: 12px;
+                font-weight: 600;
+                z-index: 1000;
                 animation: slideIn 0.3s ease;
             `;
-            
-            successDiv.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <span>✅</span>
-                    <span>${message}</span>
-                </div>
-            `;
-            
+            successDiv.textContent = message;
             document.body.appendChild(successDiv);
             
             setTimeout(() => {
@@ -610,65 +322,69 @@
             }, 3000);
         }
 
-        // 添加CSS动画
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
+        // 更新进度条
+        async function updateProgress() {
+            try {
+                if (!lobsterContract) {
+                    // 未连接钱包，显示0%
+                    progressBar.style.width = '0%';
+                    progressPercentage.textContent = '0%';
+                    mintedCountEl.textContent = '0';
+                    remainingCountEl.textContent = CONFIG.TOTAL_SUPPLY.toLocaleString();
+                    return;
+                }
 
-        // 设置Mint按钮点击事件
-        mintButton.onclick = function() {
-            if (!userAddress) {
-                connectButton.click();
-            } else if (!isApproved) {
-                approveUsdc();
-            } else {
-                mintLobster();
+                // 从合约获取真实数据
+                let minted = 0;
+                try {
+                    const info = await lobsterContract.methods.getInfo().call();
+                    minted = parseInt(info[0]) / 1e18;
+                } catch (error) {
+                    console.log('Contract getInfo not available, using default');
+                    minted = 0;
+                }
+                
+                mintedCount = minted;
+                const percentage = (minted / CONFIG.TOTAL_SUPPLY) * 100;
+                const remaining = CONFIG.TOTAL_SUPPLY - minted;
+                
+                // 更新进度条
+                progressBar.style.width = `${percentage}%`;
+                progressPercentage.textContent = `${percentage.toFixed(2)}%`;
+                mintedCountEl.textContent = minted.toLocaleString();
+                remainingCountEl.textContent = remaining.toLocaleString();
+                
+                console.log('Progress updated:', { minted, percentage, remaining });
+                
+            } catch (error) {
+                console.error('Failed to update progress:', error);
+                progressBar.style.width = '0%';
+                progressPercentage.textContent = '0%';
+                mintedCountEl.textContent = '0';
+                remainingCountEl.textContent = CONFIG.TOTAL_SUPPLY.toLocaleString();
             }
-        };
-
-        // 自动刷新数据
-        setInterval(() => {
-            if (userAddress) {
-                updateProgress();
-                updateUserInfo();
-            }
-        }, 10000); // 每10秒刷新一次
+        }
 
         // 监听账户变化
         if (window.ethereum) {
             window.ethereum.on('accountsChanged', (accounts) => {
                 if (accounts.length === 0) {
                     userAddress = null;
-                    if (connectButton) {
-                        connectButton.disabled = false;
-                        connectButton.textContent = 'Connect Wallet';
-                    }
-                    updateMintButtonState();
+                    connectButton.disabled = false;
+                    connectButton.textContent = 'Connect Wallet';
+                    mintButton.disabled = true;
+                    mintButton.textContent = 'Connect Wallet to Mint';
                 } else {
                     userAddress = accounts[0];
                     const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
-                    if (connectButton) {
-                        connectButton.textContent = `Connected: ${shortAddress}`;
-                        connectButton.disabled = true;
-                    }
+                    connectButton.textContent = `Connected: ${shortAddress}`;
+                    connectButton.disabled = true;
                     
                     // 重新初始化
                     if (web3) {
                         updateProgress();
                         updateUserInfo();
                         checkApproval();
-                    } else {
-                        updateMintButtonState();
                     }
                 }
             });
@@ -678,26 +394,32 @@
             });
         }
         
-
-        
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Mint page loaded');
             
-            // 初始化倒计时
-            initCountdown();
-            
-            // 检查现有连接（通过全局函数处理）
+            // 检查现有连接
             if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
                 try {
                     const provider = window.okxwallet || window.ethereum;
                     const accounts = await provider.request({ method: 'eth_accounts' });
                     
                     if (accounts.length > 0) {
-                        // 调用全局函数处理连接
-                        if (window.mintPageConnected) {
-                            window.mintPageConnected(accounts[0], provider);
-                        }
+                        userAddress = accounts[0];
+                        web3 = new Web3(provider);
+                        
+                        // 更新连接按钮
+                        const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
+                        connectButton.textContent = shortAddress;
+                        connectButton.disabled = true;
+                        
+                        // 初始化合约
+                        await initContracts();
+                        
+                        // 更新数据
+                        updateProgress();
+                        updateUserInfo();
+                        checkApproval();
                     }
                 } catch (error) {
                     console.log('No existing connection:', error);
@@ -706,7 +428,6 @@
             
             // 初始更新
             updateProgress();
-            updateMintButtonState();
         });
     </script>
 </body>
