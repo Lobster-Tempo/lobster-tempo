@@ -250,6 +250,16 @@
             color: #64748b;
             font-size: 0.75rem;
         }
+        
+        /* X任务特殊样式 */
+        .x-task {
+            border-left: 4px solid #1DA1F2;
+        }
+        
+        .x-icon {
+            color: #1DA1F2;
+            margin-right: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -296,57 +306,86 @@
         <section>
             <h2 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.5rem;">Airdrop Tasks</h2>
             <p style="color: #94a3b8; margin-bottom: 1.5rem; font-size: 0.875rem;">
-                Complete tasks to earn points. Each task can only be completed once per wallet.
+                Complete X (Twitter) tasks to earn points. Each task can only be completed once per wallet.
             </p>
 
-            <!-- 任务1: Follow Twitter -->
-            <div class="task-card" id="task1">
+            <!-- 任务1: Follow X Account -->
+            <div class="task-card x-task" id="task1">
                 <div class="task-header">
-                    <div class="task-title">Follow @LobsterTempo on Twitter</div>
+                    <div class="task-title">
+                        <span class="x-icon">𝕏</span> Follow @Lobster_Tempo on X
+                    </div>
                     <div class="task-points">+100 Points</div>
                 </div>
                 <div class="task-description">
-                    Follow our official Twitter account to stay updated with the latest news and announcements.
+                    Follow our official X account to stay updated with the latest news and announcements.
                 </div>
                 <div>
-                    <button class="btn-primary" onclick="openTask('twitter')" id="twitterOpenBtn">
-                        Open Twitter
+                    <button class="btn-primary" onclick="openTask('follow')" id="followOpenBtn">
+                        Open X Profile
                     </button>
-                    <button class="btn-secondary" onclick="verifyTask('twitter')" id="twitterVerifyBtn">
-                        Verify Task
+                    <button class="btn-secondary" onclick="verifyTask('follow')" id="followVerifyBtn">
+                        Verify Follow
                     </button>
-                    <button class="btn-secondary" onclick="reviewTask('twitter')" id="twitterReviewBtn">
+                    <button class="btn-secondary" onclick="reviewTask('follow')" id="followReviewBtn">
                         Review Task
                     </button>
-                    <span id="twitterStatus" style="margin-left: 1rem; font-size: 0.875rem;"></span>
+                    <span id="followStatus" style="margin-left: 1rem; font-size: 0.875rem;"></span>
                 </div>
             </div>
 
-            <!-- 任务2: Join Telegram -->
-            <div class="task-card" id="task2">
+            <!-- 任务2: Quote Tweet -->
+            <div class="task-card x-task" id="task2">
                 <div class="task-header">
-                    <div class="task-title">Join Lobster Telegram Group</div>
+                    <div class="task-title">
+                        <span class="x-icon">𝕏</span> Quote Our Tweet
+                    </div>
+                    <div class="task-points">+200 Points</div>
+                </div>
+                <div class="task-description">
+                    Quote our announcement tweet with your thoughts about Lobster Token.
+                </div>
+                <div>
+                    <button class="btn-primary" onclick="openTask('quote')" id="quoteOpenBtn">
+                        Open Tweet
+                    </button>
+                    <button class="btn-secondary" onclick="verifyTask('quote')" id="quoteVerifyBtn">
+                        Verify Quote
+                    </button>
+                    <button class="btn-secondary" onclick="reviewTask('quote')" id="quoteReviewBtn">
+                        Review Task
+                    </button>
+                    <span id="quoteStatus" style="margin-left: 1rem; font-size: 0.875rem;"></span>
+                </div>
+            </div>
+
+            <!-- 任务3: Like Tweet -->
+            <div class="task-card x-task" id="task3">
+                <div class="task-header">
+                    <div class="task-title">
+                        <span class="x-icon">𝕏</span> Like Our Tweet
+                    </div>
                     <div class="task-points">+150 Points</div>
                 </div>
                 <div class="task-description">
-                    Join our Telegram community to chat with other Lobster holders and get support.
+                    Like our announcement tweet to show your support for Lobster Token.
                 </div>
                 <div>
-                    <button class="btn-primary" onclick="openTask('telegram')" id="telegramOpenBtn">
-                        Open Telegram
+                    <button class="btn-primary" onclick="openTask('like')" id="likeOpenBtn">
+                        Open Tweet
                     </button>
-                    <button class="btn-secondary" onclick="verifyTask('telegram')" id="telegramVerifyBtn">
-                        Verify Task
+                    <button class="btn-secondary" onclick="verifyTask('like')" id="likeVerifyBtn">
+                        Verify Like
                     </button>
-                    <button class="btn-secondary" onclick="reviewTask('telegram')" id="telegramReviewBtn">
+                    <button class="btn-secondary" onclick="reviewTask('like')" id="likeReviewBtn">
                         Review Task
                     </button>
-                    <span id="telegramStatus" style="margin-left: 1rem; font-size: 0.875rem;"></span>
+                    <span id="likeStatus" style="margin-left: 1rem; font-size: 0.875rem;"></span>
                 </div>
             </div>
 
-            <!-- 任务3: Mint LOBSTER -->
-            <div class="task-card" id="task3">
+            <!-- 任务4: Mint LOBSTER -->
+            <div class="task-card" id="task4">
                 <div class="task-header">
                     <div class="task-title">Mint LOBSTER Tokens</div>
                     <div class="task-points">+500 Points</div>
@@ -365,28 +404,6 @@
                         Review Task
                     </button>
                     <span id="mintStatus" style="margin-left: 1rem; font-size: 0.875rem;"></span>
-                </div>
-            </div>
-
-            <!-- 任务4: Retweet Tweet -->
-            <div class="task-card" id="task4">
-                <div class="task-header">
-                    <div class="task-title">Retweet Announcement</div>
-                    <div class="task-points">+200 Points</div>
-                </div>
-                <div class="task-description">
-                    Retweet our latest announcement tweet with #LobsterToken hashtag.
-                </div>
-                <div>
-                    <button class="btn-primary" onclick="openTask('retweet')" id="retweetOpenBtn">
-                        Open Tweet
-                    </button>
-                    <button class="btn-secondary" onclick="verifyTask('retweet')" id="retweetVerifyBtn">
-                        Verify Retweet
-                    </button>
-                    <button class="btn-secondary" onclick="reviewTask('retweet')" id="retweetReviewBtn">
-                        Review Task
-                    </span>
                 </div>
             </div>
         </section>
@@ -425,13 +442,29 @@
 
     <!-- JavaScript -->
     <script>
-        // 配置
+        // 配置 - 更新为正确的X链接
         const CONFIG = {
             TASKS: {
-                twitter: { points: 100, name: 'Follow Twitter', url: 'https://twitter.com/LobsterTempo' },
-                telegram: { points: 150, name: 'Join Telegram', url: 'https://t.me/lobstertoken' },
-                mint: { points: 500, name: 'Mint LOBSTER', url: 'mint.html' },
-                retweet: { points: 200, name: 'Retweet', url: 'https://twitter.com/LobsterTempo/status/1234567890' }
+                follow: { 
+                    points: 100, 
+                    name: 'Follow X Account', 
+                    url: 'https://x.com/Lobster_Tempo' 
+                },
+                quote: { 
+                    points: 200, 
+                    name: 'Quote Tweet', 
+                    url: 'https://x.com/Lobster_Tempo/status/2040564694776479999?s=20' 
+                },
+                like: { 
+                    points: 150, 
+                    name: 'Like Tweet', 
+                    url: 'https://x.com/Lobster_Tempo/status/2040564694776479999?s=20' 
+                },
+                mint: { 
+                    points: 500, 
+                    name: 'Mint LOBSTER', 
+                    url: 'mint.html' 
+                }
             },
             STORAGE_KEY: 'lobster_airdrop_points'
         };
@@ -556,7 +589,7 @@
                     statusElement.textContent = '⏳ Not completed';
                     statusElement.style.color = '#f59e0b';
                     verifyBtn.disabled = false;
-                    verifyBtn.textContent = 'Verify Task';
+                    verifyBtn.textContent = taskId === 'mint' ? 'Verify Mint' : `Verify ${task.name.split(' ')[0]}`;
                     reviewBtn.disabled = false;
                 }
             }
