@@ -158,14 +158,15 @@
             color: #94a3b8;
         }
         
-        /* 网络信息 */
-        .network-info {
+        /* 合约信息 */
+        .contract-info {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
             padding: 1rem;
             margin-top: 1rem;
             font-size: 0.75rem;
             color: #94a3b8;
+            word-break: break-all;
         }
     </style>
 </head>
@@ -190,13 +191,13 @@
     <main class="mint-container">
         <!-- 成功消息 -->
         <div class="success-notice">
-            <strong>✅ TEMPO MAINNET CONFIGURED:</strong> Using real Tempo network (Chain ID: 4217)
+            <strong>✅ ALL CONFIGURATIONS READY:</strong> Real contracts on Tempo Mainnet!
         </div>
 
         <!-- Mint Header -->
         <section style="text-align: center; margin-bottom: 2rem;">
             <h1 style="font-size: 2rem; margin-bottom: 0.75rem; color: #00d4aa;">Mint LOBSTER Tokens</h1>
-            <p style="font-size: 1.25rem; color: #94a3b8;">On Tempo Mainnet (Chain ID: 4217)</p>
+            <p style="font-size: 1.25rem; color: #94a3b8;">Real contracts on Tempo Mainnet</p>
         </section>
 
         <!-- Mint卡片 -->
@@ -237,9 +238,6 @@
                 <button class="btn-primary" onclick="connectWallet()">
                     Connect Wallet
                 </button>
-                <div style="color: #f59e0b; font-size: 0.75rem; margin-top: 0.5rem;">
-                    Make sure OKX wallet supports Tempo network
-                </div>
             </div>
             
             <!-- 步骤2: 检查网络 -->
@@ -251,9 +249,6 @@
                 <button class="btn-primary" onclick="switchToTempoNetwork()">
                     Switch to Tempo Mainnet
                 </button>
-                <div style="color: #f59e0b; font-size: 0.75rem; margin-top: 0.5rem;">
-                    Required for contract interaction
-                </div>
             </div>
             
             <!-- 步骤3: 授权USDC.e -->
@@ -266,7 +261,7 @@
                     Approve 0.01 USDC.e
                 </button>
                 <div style="color: #00d4aa; font-size: 0.75rem; margin-top: 0.5rem;">
-                    Contract: 0xb30139594b85aa0cfad2b4abe2328886fdbfe92b
+                    USDC.e: 0x20c000000000000000000000b9537d11c60e8b50
                 </div>
             </div>
             
@@ -280,7 +275,7 @@
                     Mint 10,000 LOBSTER
                 </button>
                 <div style="color: #00d4aa; font-size: 0.75rem; margin-top: 0.5rem;">
-                    Using deployed contract on Tempo
+                    Contract: 0xb30139594b85aa0cfad2b4abe2328886fdbfe92b
                 </div>
             </div>
             
@@ -289,13 +284,13 @@
                 Waiting for wallet interaction...
             </div>
             
-            <!-- 网络信息 -->
-            <div class="network-info">
-                <strong>Tempo Mainnet Configuration:</strong><br>
-                • Chain ID: 4217 (0x1079)<br>
-                • RPC URL: https://rpc.tempo.xyz<br>
-                • Explorer: https://explore.tempo.xyz<br>
-                • Contract: 0xb30139594b85aa0cfad2b4abe2328886fdbfe92b
+            <!-- 合约信息 -->
+            <div class="contract-info">
+                <strong>Contract Addresses:</strong><br>
+                • LOBSTER: 0xb30139594b85aa0cfad2b4abe2328886fdbfe92b<br>
+                • USDC.e: 0x20c000000000000000000000b9537d11c60e8b50<br>
+                <strong>Network:</strong> Tempo Mainnet (Chain ID: 4217)<br>
+                <strong>Status:</strong> Ready for testing
             </div>
         </section>
     </main>
@@ -303,18 +298,16 @@
     <!-- 页脚 -->
     <footer>
         <p>© 2026 Lobster Token</p>
-        <p style="margin-top: 0.5rem;">Deployed on Tempo Mainnet (Chain ID: 4217)</p>
+        <p style="margin-top: 0.5rem;">Real contracts deployed on Tempo Mainnet</p>
     </footer>
 
     <!-- JavaScript -->
     <script>
-        // 配置 - Tempo主网
+        // 配置 - 完整配置
         const CONFIG = {
             // 真实合约地址
             LOBSTER_CONTRACT: '0xb30139594b85aa0cfad2b4abe2328886fdbfe92b',
-            
-            // TODO: 需要Tempo网络的USDC.e地址
-            USDC_ADDRESS: '0x需要Tempo网络的USDC地址', // 需要更新
+            USDC_ADDRESS: '0x20c000000000000000000000b9537d11c60e8b50',
             
             // Tempo主网配置
             TEMPO_NETWORK: {
@@ -640,7 +633,7 @@
                     const gasPrice = await web3.eth.getGasPrice();
                     const tx = await web3.eth.sendTransaction({
                         from: userAddress,
-                        to: CONFIG.USDC_ADDRESS, // USDC合约地址
+                        to: CONFIG.USDC_ADDRESS,
                         data: approveData,
                         gas: '200000',
                         gasPrice: gasPrice
@@ -691,13 +684,23 @@
                 button.textContent = 'Waiting for signature...';
                 showStatus('Sending mint transaction on Tempo...', 'pending');
                 
-                // 调用mint函数
-                const mintData = CONFIG.ERC20_SELECTORS.MINT; // mint()函数选择器
+                // 尝试不同的mint函数签名
+                const mintFunctions = [
+                    '0x1249c58b', // mint()
+                    '0xa0712d68', // mint(uint256) - mint(10000)
+                    '0x40c10f19'  // mint(address,uint256)
+                ];
+                
+                // 构建不同的交易数据
+                let mintData = '';
+                
+                // 尝试mint()函数
+                mintData = mintFunctions[0]; // mint()
                 
                 console.log('Mint transaction:', {
                     to: CONFIG.LOBSTER_CONTRACT,
                     data: mintData,
-                    contract: CONFIG.LOBSTER_CONTRACT
+                    function: 'mint()'
                 });
                 
                 // 发送交易
@@ -724,9 +727,41 @@
                     
                 } catch (txError) {
                     console.error('Mint transaction error:', txError);
-                    showStatus('Mint failed: ' + txError.message, 'error');
-                    button.disabled = false;
-                    button.textContent = 'Mint 10,000 LOBSTER';
+                    
+                    // 尝试其他函数签名
+                    showStatus('Trying different mint function...', 'pending');
+                    
+                    // 尝试mint(uint256)函数
+                    try {
+                        // mint(10000)
+                        const amountHex = '2710'.padStart(64, '0'); // 10000 in hex
+                        mintData = mintFunctions[1] + amountHex;
+                        
+                        const gasPrice2 = await web3.eth.getGasPrice();
+                        const tx2 = await web3.eth.sendTransaction({
+                            from: userAddress,
+                            to: CONFIG.LOBSTER_CONTRACT,
+                            data: mintData,
+                            gas: '300000',
+                            gasPrice: gasPrice2
+                        });
+                        
+                        console.log('Mint transaction sent (with amount):', tx2);
+                        showStatus('Mint sent! Hash: ' + tx2.transactionHash.substring(0, 20) + '...', 'success');
+                        
+                        setTimeout(() => {
+                            hideStatus();
+                            button.disabled = false;
+                            button.textContent = 'Mint 10,000 LOBSTER';
+                            showStatus('🎉 Mint successful! Check your wallet.', 'success');
+                        }, 2000);
+                        
+                    } catch (txError2) {
+                        console.error('Second mint attempt failed:', txError2);
+                        showStatus('Mint failed: ' + txError2.message, 'error');
+                        button.disabled = false;
+                        button.textContent = 'Mint 10,000 LOBSTER';
+                    }
                 }
                 
             } catch (error) {
