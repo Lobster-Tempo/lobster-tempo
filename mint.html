@@ -233,7 +233,8 @@
             </div>
             
             <button class="mint-button" id="mintButton" disabled>
-                Connect Wallet to Mint
+                <span id="mintButtonText">Connect Wallet to Mint</span>
+                <span id="mintButtonCountdown" style="display: none;"></span>
             </button>
             
             <div style="color: var(--text-secondary); font-size: 0.875rem;">
@@ -385,12 +386,8 @@
                 const title = banner.querySelector('.countdown-title');
                 title.textContent = 'Minting is LIVE!';
                 
-                // 如果已连接钱包，启用Mint按钮
-                if (userAddress && isApproved) {
-                    const mintButton = document.getElementById('mintButton');
-                    mintButton.disabled = false;
-                    mintButton.textContent = 'Mint 10,000 LOBSTER';
-                }
+                // 更新Mint按钮状态
+                updateMintButtonState();
                 
                 console.log('Countdown ended, minting enabled');
                 return;
@@ -401,28 +398,44 @@
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
             
-            // 更新显示
+            // 更新横幅显示
             document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
             document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
             document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            
+            // 更新按钮上的倒计时（如果用户已连接并授权）
+            if (userAddress && isApproved && isCountdownActive) {
+                const buttonCountdown = document.getElementById('mintButtonCountdown');
+                buttonCountdown.textContent = `Mint in ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
         }
         
         // 检查Mint按钮状态
         function updateMintButtonState() {
             const mintButton = document.getElementById('mintButton');
+            const buttonText = document.getElementById('mintButtonText');
+            const buttonCountdown = document.getElementById('mintButtonCountdown');
             
             if (!userAddress) {
                 mintButton.disabled = true;
-                mintButton.textContent = 'Connect Wallet to Mint';
+                buttonText.textContent = 'Connect Wallet to Mint';
+                buttonText.style.display = 'block';
+                buttonCountdown.style.display = 'none';
             } else if (!isApproved) {
                 mintButton.disabled = false;
-                mintButton.textContent = 'Approve USDC.e First';
+                buttonText.textContent = 'Approve USDC.e First';
+                buttonText.style.display = 'block';
+                buttonCountdown.style.display = 'none';
             } else if (isCountdownActive) {
                 mintButton.disabled = true;
-                mintButton.textContent = 'Waiting for Countdown...';
+                buttonText.style.display = 'none';
+                buttonCountdown.style.display = 'block';
+                // 倒计时会在updateCountdown中更新
             } else {
                 mintButton.disabled = false;
-                mintButton.textContent = 'Mint 10,000 LOBSTER';
+                buttonText.textContent = 'Mint 10,000 LOBSTER';
+                buttonText.style.display = 'block';
+                buttonCountdown.style.display = 'none';
             }
         }
 
@@ -612,6 +625,11 @@
                 // 更新Mint按钮状态
                 updateMintButtonState();
                 
+                // 如果已授权且倒计时进行中，立即更新按钮倒计时显示
+                if (isApproved && isCountdownActive) {
+                    updateCountdown();
+                }
+                
                 // 设置点击事件
                 if (isApproved) {
                     mintButton.onclick = mintLobster;
@@ -646,8 +664,7 @@
             } catch (error) {
                 console.error('Approval failed:', error);
                 alert('Approval failed: ' + error.message);
-                mintButton.disabled = false;
-                mintButton.textContent = 'Approve USDC.e First';
+                updateMintButtonState();
             }
         }
 
@@ -676,8 +693,7 @@
                 console.error('Mint failed:', error);
                 alert('Mint failed: ' + error.message);
             } finally {
-                mintButton.disabled = false;
-                mintButton.textContent = 'Mint 10,000 LOBSTER';
+                updateMintButtonState();
             }
         }
 
@@ -755,8 +771,7 @@
                     userAddress = null;
                     connectButton.disabled = false;
                     connectButton.textContent = 'Connect Wallet';
-                    mintButton.disabled = true;
-                    mintButton.textContent = 'Connect Wallet to Mint';
+                    updateMintButtonState();
                 } else {
                     userAddress = accounts[0];
                     const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
@@ -768,6 +783,8 @@
                         updateProgress();
                         updateUserInfo();
                         checkApproval();
+                    } else {
+                        updateMintButtonState();
                     }
                 }
             });
