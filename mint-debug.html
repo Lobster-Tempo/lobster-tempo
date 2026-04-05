@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦞 Lobster Token | Debug Mint</title>
+    <!-- Web3.js for real transactions -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0e17 0%, #050811 50%, #1a2236 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 0;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background: rgba(5, 8, 17, 0.98);
+            border-bottom: 1px solid rgba(0, 212, 170, 0.2);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #00d4aa;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+        
+        .nav-link.active {
+            color: #00d4aa;
+            background: rgba(0, 212, 170, 0.1);
+        }
+        
+        .connect-wallet {
+            background: #00d4aa;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* 主容器 */
+        .mint-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        /* 调试面板 */
+        .debug-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* 按钮 */
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4aa 0%, #0088cc 100%);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+            width: 100%;
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            margin: 0.25rem;
+        }
+        
+        .btn-primary:disabled, .btn-secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* 状态指示器 */
+        .status-indicator {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            display: none;
+        }
+        
+        .status-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .status-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .status-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        /* 调试信息 */
+        .debug-info {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-family: monospace;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        /* 函数测试区域 */
+        .function-test {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span>🦞</span>
+            <span>Lobster Debug</span>
+        </a>
+        
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="mint.html" class="nav-link">Normal Mint</a>
+            <a href="mint-debug.html" class="nav-link active">Debug</a>
+            <button class="connect-wallet" id="connectButton">Connect Wallet</button>
+        </div>
+    </nav>
+
+    <!-- 主内容 -->
+    <main class="mint-container">
+        <!-- 调试标题 -->
+        <section style="text-align: center; margin-bottom: 2rem;">
+            <h1 style="font-size: 2rem; margin-bottom: 0.75rem; color: #00d4aa;">🛠️ Debug Mint Function</h1>
+            <p style="font-size: 1.25rem; color: #94a3b8;">Test different function signatures</p>
+        </section>
+
+        <!-- 调试面板 -->
+        <section class="debug-panel">
+            <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Step 1: Connect & Check</h3>
+            
+            <!-- 钱包状态 -->
+            <div id="walletStatus" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                <div style="color: #94a3b8; font-size: 0.875rem;">Wallet: <span id="walletStatusText" style="color: #ef4444;">Not connected</span></div>
+                <div style="color: #94a3b8; font-size: 0.75rem; margin-top: 0.25rem;" id="walletAddress"></div>
+            </div>
+            
+            <!-- 网络状态 -->
+            <div id="networkStatus" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px; display: none;">
+                <div style="color: #94a3b8; font-size: 0.875rem;">Network: <span id="networkStatusText" style="color: #ef4444;"></span></div>
+                <div style="color: #94a3b8; font-size: 0.75rem; margin-top: 0.25rem;" id="chainId"></div>
+            </div>
+            
+            <!-- 连接按钮 -->
+            <div style="text-align: center;">
+                <button class="btn-primary" onclick="connectWallet()" id="connectBtn">
+                    Connect Wallet
+                </button>
+                <button class="btn-secondary" onclick="checkNetwork()" id="checkNetworkBtn">
+                    Check Network
+                </button>
+                <button class="btn-secondary" onclick="getContractCode()" id="checkContractBtn">
+                    Check Contract
+                </button>
+            </div>
+        </section>
+
+        <!-- 函数测试 -->
+        <section class="debug-panel">
+            <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Step 2: Test Mint Functions</h3>
+            <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.875rem;">
+                Try different function signatures to find the correct one
+            </p>
+            
+            <div class="function-test">
+                <h4 style="color: #f59e0b; margin-bottom: 0.75rem;">Test 1: Simple mint()</h4>
+                <p style="color: #94a3b8; font-size: 0.75rem; margin-bottom: 0.5rem;">
+                    Function: <code>mint()</code> - No parameters
+                </p>
+                <button class="btn-secondary" onclick="testMintFunction('mint()', '0x1249c58b')">
+                    Test mint()
+                </button>
+            </div>
+            
+            <div class="function-test">
+                <h4 style="color: #f59e0b; margin-bottom: 0.75rem;">Test 2: mint with amount</h4>
+                <p style="color: #94a3b8; font-size: 0.75rem; margin-bottom: 0.5rem;">
+                    Function: <code>mint(uint256 amount)</code> - Amount = 10000
+                </p>
+                <button class="btn-secondary" onclick="testMintFunction('mint(uint256)', '0xa0712d68', '2710')">
+                    Test mint(10000)
+                </button>
+            </div>
+            
+            <div class="function-test">
+                <h4 style="color: #f59e0b; margin-bottom: 0.75rem;">Test 3: mint to address</h4>
+                <p style="color: #94a3b8; font-size: 0.75rem; margin-bottom: 0.5rem;">
+                    Function: <code>mint(address to, uint256 amount)</code>
+                </p>
+                <button class="btn-secondary" onclick="testMintFunction('mint(address,uint256)', '0x40c10f19', 'user', '2710')">
+                    Test mint(address, 10000)
+                </button>
+            </div>
+            
+            <div class="function-test">
+                <h4 style="color: #f59e0b; margin-bottom: 0.75rem;">Test 4: Common mint functions</h4>
+                <p style="color: #94a3b8; font-size: 0.75rem; margin-bottom: 0.5rem;">
+                    Other common function signatures
+                </p>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <button class="btn-secondary" onclick="testFunction('0x6a627842')">mint() - 2</button>
+                    <button class="btn-secondary" onclick="testFunction('0x9dc29fac')">burn()</button>
+                    <button class="btn-secondary" onclick="testFunction('0x18160ddd')">totalSupply()</button>
+                    <button class="btn-secondary" onclick="testFunction('0x70a08231')">balanceOf()</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 直接调用 -->
+        <section class="debug-panel">
+            <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Step 3: Direct Call</h3>
+            <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.875rem;">
+                Enter custom function data
+            </p>
+            
+            <div style="margin-bottom: 1rem;">
+                <input type="text" id="customFunction" placeholder="Function selector (e.g., 0x1249c58b)" 
+                       style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; margin-bottom: 0.5rem;">
+                <input type="text" id="customParams" placeholder="Parameters (hex, e.g., 2710 for 10000)" 
+                       style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; margin-bottom: 0.5rem;">
+                <button class="btn-primary" onclick="callCustomFunction()">
+                    Call Custom Function
+                </button>
+            </div>
+        </section>
+
+        <!-- 状态指示器 -->
+        <div id="statusIndicator" class="status-indicator">
+            Waiting for wallet interaction...
+        </div>
+
+        <!-- 调试信息 -->
+        <div class="debug-panel">
+            <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Debug Log</h3>
+            <div id="debugLog" class="debug-info">
+                Ready for debugging...
+            </div>
+            <button class="btn-secondary" onclick="clearLog()" style="margin-top: 0.5rem;">
+                Clear Log
+            </button>
+        </div>
+
+        <!-- 合约信息 -->
+        <div class="debug-panel">
+            <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Contract Information</h3>
+            <div style="color: #94a3b8; font-size: 0.75rem;">
+                <strong>LOBSTER Contract:</strong> 0xb30139594b85aa0cfad2b4abe2328886fdbfe92b<br>
+                <strong>USDC.e Contract:</strong> 0x20c000000000000000000000b9537d11c60e8b50<br>
+                <strong>Network:</strong> Tempo Mainnet (Chain ID: 4217)<br>
+                <strong>RPC:</strong> https://rpc.tempo.xyz<br>
+                <strong>Explorer:</strong> https://explore.tempo.xyz
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // 配置
+        const CONFIG = {
+            LOBSTER_CONTRACT: '0xb30139594b85aa0cfad2b4abe2328886fdbfe92b',
+            USDC_ADDRESS: '0x20c000000000000000000000b9537d11c60e8b50',
+            TEMPO_NETWORK: {
+                chainId: '0x1079',
+                chainName: 'Tempo Mainnet',
+                nativeCurrency: { name: 'Tempo', symbol: 'TEMPO', decimals: 18 },
+                rpcUrls: ['https://rpc.tempo.xyz'],
+                blockExplorerUrls: ['https://explore.tempo.xyz']
+            }
+        };
+
+        // 状态
+        let web3 = null;
+        let userAddress = null;
+        let isConnected = false;
+        let isOnTempoNetwork = false;
+
+        // 元素
+        const connectButton = document.getElementById('connectButton');
+        const connectBtn = document.getElementById('connectBtn');
+        const walletStatusText = document.getElementById('walletStatusText');
+        const walletAddress = document.getElementById('walletAddress');
+        const networkStatus = document.getElementById('networkStatus');
+        const networkStatusText = document.getElementById('networkStatusText');
+        const chainId = document.getElementById('chainId');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const debugLog = document.getElementById('debugLog');
+
+        // 日志函数
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            debugLog.innerHTML = `[${timestamp}] ${message}\n` + debugLog.innerHTML;
+            console.log(message);
+        }
+
+        function clearLog() {
+            debugLog.innerHTML = 'Log cleared...';
+        }
+
+        // 显示状态
+        function showStatus(message, type) {
+            statusIndicator.textContent = message;
+            statusIndicator.className = 'status-indicator status-' + type;
+            statusIndicator.style.display = 'block';
+            log(`STATUS: ${message}`);
+        }
+
+        function hideStatus() {
+            statusIndicator.style.display = 'none';
+        }
+
+        // 初始化
+        async function init() {
+            await checkExistingConnection();
+            updateConnectButton();
+        }
+
+        // 检查现有连接
+        async function checkExistingConnection() {
+            if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
+                try {
+                    const provider = window.okxwallet || window.ethereum;
+                    const accounts = await provider.request({ method: 'eth_accounts' });
+                    
+                    if (accounts.length > 0) {
+                        userAddress = accounts[0];
+                        web3 = new Web3(provider);
+                        isConnected = true;
+                        
+                        await checkNetwork();
+                        updateWalletStatus();
+                        updateNetworkStatus();
+                        log(`Connected: ${userAddress}`);
+                    }
+                } catch (error) {
+                    log(`Connection check error: ${error.message}`);
+                }
+            }
+        }
+
+        // 检查网络
+        async function checkNetwork() {
+            if (!web3) {
+                showStatus('Please connect wallet first!', 'error');
+                return false;
+            }
+            
+            try {
+                const chainIdHex = await web3.eth.getChainId();
+                const chainIdDecimal = parseInt(chainIdHex);
+                
+                log(`Current chain ID: ${chainIdDecimal}`);
+                
+                isOnTempoNetwork = (chainIdDecimal === 4217);
+                updateNetworkStatus();
+                
+                if (isOnTempoNetwork) {
+                    log('✓ On Tempo Mainnet');
+                } else {
+                    log(`✗ Not on Tempo (expected 4217, got ${chainIdDecimal})`);
+                }
+                
+                return isOnTempoNetwork;
+            } catch (error) {
+                log(`Network check error: ${error.message}`);
+                return false;
+            }
+        }
+
+        // 更新连接按钮
+        function updateConnectButton() {
+            if (isConnected && userAddress) {
+                const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
+                connectButton.textContent = shortAddress;
+                connectButton.disabled = true;
+                connectBtn.textContent = 'Connected';
+                connectBtn.disabled = true;
+            }
+        }
+
+        // 更新钱包状态
+        function updateWalletStatus() {
+            if (isConnected && userAddress) {
+                walletStatusText.textContent = 'Connected';
+                walletStatusText.style.color = '#00d4aa';
+                walletAddress.textContent = `Address: ${userAddress.substring(0, 10)}...`;
+            }
+        }
+
+        // 更新网络状态
+        function updateNetworkStatus() {
+            if (isConnected) {
+                networkStatus.style.display = 'block';
+                if (isOnTempoNetwork) {
+                    networkStatusText.textContent = 'Tempo Mainnet ✓';
+                    networkStatusText.style.color = '#00d4aa';
+                    chainId.textContent = 'Chain ID: 4217';
+                } else {
+                    networkStatusText.textContent = 'Wrong Network ✗';
+                    networkStatusText.style.color = '#ef4444';
+                    chainId.textContent = 'Please switch to Tempo (Chain ID: 4217)';
+                }
+            }
+        }
+
+        // 连接钱包
+        async function connectWallet() {
+            try {
+                let provider = null;
+                
+                if (typeof window.okxwallet !== 'undefined') {
+                    provider = window.okxwallet;
+                    log('Using OKX wallet');
+                } else if (typeof window.ethereum !== 'undefined') {
+                    provider = window.ethereum;
+                    log('Using MetaMask');
+                } else {
+                    showStatus('Please install OKX Wallet or MetaMask!', 'error');
+                    return;
+                }
+                
+                connectBtn.disabled = true;
+                connectBtn.textContent = 'Connecting...';
+                showStatus('Connecting wallet...', 'pending');
+                
+                const accounts = await provider.request({ method: 'eth_requestAccounts' });
+                
+                if (accounts.length > 0) {
+                    userAddress = accounts[0];
+                    web3 = new Web3(provider);
+                    isConnected = true;
+                    
+                    await checkNetwork();
+                    updateConnectButton();
+                    updateWalletStatus();
+                    updateNetworkStatus();
+                    
+                    showStatus('Wallet connected!', 'success');
+                    log(`✓ Wallet connected: ${userAddress}`);
+                }
+                
+            } catch (error) {
+                log(`Connection failed: ${error.message}`);
+                connectBtn.disabled = false;
+                connectBtn.textContent = 'Connect Wallet';
+                showStatus('Connection failed: ' + error.message, 'error');
+            }
+        }
+
+        // 获取合约代码
+        async function getContractCode() {
+            if (!web3) {
+                showStatus('Please connect wallet first!', 'error');
+                return;
+            }
+            
+            try {
+                showStatus('Checking contract code...', 'pending');
+                
+                const code = await web3.eth.getCode(CONFIG.LOBSTER_CONTRACT);
+                log(`Contract code length: ${code.length} bytes`);
+                
+                if (code === '0x' || code.length <= 2) {
+                    log('✗ Contract does not exist or is empty');
+                    showStatus('Contract not found!', 'error');
+                } else {
+                    log('✓ Contract exists');
+                    showStatus('Contract exists on chain', 'success');
+                    
+                    // 检查是否是代理合约
+                    if (code.includes('363d3d373d3d3d363d73') || code.includes('360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc')) {
+                        log('⚠️ Contract appears to be a proxy contract');
+                    }
+                }
+                
+            } catch (error) {
+                log(`Contract check error: ${error.message}`);
+                showStatus('Error checking contract: ' + error.message, 'error');
+            }
+        }
+
+        // 测试mint函数
+        async function testMintFunction(name, selector, ...params) {
+            if (!web3 || !userAddress) {
+                showStatus('Please connect wallet first!', 'error');
+                return;
+            }
+            
+            if (!isOnTempoNetwork) {
+                showStatus('Please switch to Tempo Mainnet first!', 'error');
+                return;
+            }
+            
+            try {
+                showStatus(`Testing ${name}...`, 'pending');
+                log(`Testing function: ${name} (${selector})`);
+                
+                // 构建交易数据
+                let data = selector;
+                
+                if (params && params.length > 0) {
+                    for (let param of params) {
+                        if (param === 'user') {
+                            // 用户地址
+                            data += userAddress.substring(2).padStart(64, '0');
+                        } else if (param === '2710') {
+                            // 10000 in hex
+                            data += '2710'.padStart(64, '0');
+                        } else {
+                            // 直接使用参数
+                            data += param.padStart(64, '0');
+                        }
+                    }
+                }
+                
+                log(`Transaction data: ${data}`);
+                log(`To contract: ${CONFIG.LOBSTER_CONTRACT}`);
+                
+                // 发送交易
+                const gasPrice = await web3.eth.getGasPrice();
+                log(`Gas price: ${gasPrice}`);
+                
+                const tx = await web3.eth.sendTransaction({
+                    from: userAddress,
+                    to: CONFIG.LOBSTER_CONTRACT,
+                    data: data,
+                    gas: '300000',
+                    gasPrice: gasPrice
+                });
+                
+                log(`✓ Transaction sent: ${tx.transactionHash}`);
+                showStatus(`Transaction sent! Hash: ${tx.transactionHash.substring(0, 20)}...`, 'success');
+                
+                // 等待确认
+                log('Waiting for transaction confirmation...');
+                const receipt = await web3.eth.getTransactionReceipt(tx.transactionHash);
+                
+                if (receipt && receipt.status) {
+                    log('✓ Transaction successful!');
+                    showStatus('Transaction successful!', 'success');
+                } else {
+                    log('⚠️ Transaction may have failed');
+                    showStatus('Transaction completed but may have failed', 'pending');
+                }
+                
+            } catch (error) {
+                log(`✗ Transaction failed: ${error.message}`);
+                showStatus(`Failed: ${error.message}`, 'error');
+            }
+        }
+
+        // 测试单个函数
+        async function testFunction(selector) {
+            await testMintFunction(`0x${selector}`, selector);
+        }
+
+        // 调用自定义函数
+        async function callCustomFunction() {
+            const selector = document.getElementById('customFunction').value.trim();
+            const params = document.getElementById('customParams').value.trim();
+            
+            if (!selector) {
+                showStatus('Please enter function selector', 'error');
+                return;
+            }
+            
+            let data = selector;
+            if (params) {
+                data += params;
+            }
+            
+            await testMintFunction(`Custom: ${selector}`, selector);
+        }
+
+        // 页面加载时初始化
+        window.onload = init;
+    </script>
+</body>
+</html>
