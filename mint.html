@@ -348,6 +348,7 @@
                 if (isApproved) {
                     mintButton.textContent = 'Mint 10,000 LOBSTER';
                     mintButton.disabled = false;
+                    mintButton.onclick = mintLobster;
                 } else {
                     mintButton.textContent = 'Approve USDC.e First';
                     mintButton.disabled = false;
@@ -468,6 +469,10 @@
         mintButton.onclick = function() {
             if (!userAddress) {
                 connectButton.click();
+            } else if (!isApproved) {
+                approveUsdc();
+            } else {
+                mintLobster();
             }
         };
 
