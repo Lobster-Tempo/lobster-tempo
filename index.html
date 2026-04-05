@@ -8,12 +8,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* 强制背景 - 内联确保生效 */
+        /* 强制背景 - 终极修复 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
         }
         
         body {
@@ -25,12 +30,25 @@
             position: relative !important;
         }
         
+        /* 强制背景覆盖 */
+        body::before {
+            content: '' !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            background: linear-gradient(135deg, #0a0e17 0%, #050811 50%, #1a2236 100%) !important;
+            z-index: -1000 !important;
+            pointer-events: none !important;
+        }
+        
         /* 龙虾装饰 */
         .lobster-float {
             position: fixed !important;
             font-size: 6rem !important;
             opacity: 0.04 !important;
-            z-index: -1 !important;
+            z-index: -999 !important;
             pointer-events: none !important;
             animation: float 20s ease-in-out infinite !important;
         }
@@ -46,23 +64,7 @@
             75% { transform: translate(-15px, -10px) rotate(5deg) scale(1.05); }
         }
         
-        /* 网格纹理 */
-        body::before {
-            content: '' !important;
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px) !important;
-            background-size: 50px 50px !important;
-            z-index: -2 !important;
-            pointer-events: none !important;
-        }
-        
-        /* 导航栏 */
+        /* 导航栏 - 删除About */
         .navbar {
             background: rgba(5, 8, 17, 0.95) !important;
             backdrop-filter: blur(10px) !important;
@@ -255,7 +257,7 @@
     <div class="lobster-float lobster-2">🦞</div>
     <div class="lobster-float lobster-3">🦞</div>
 
-    <!-- 导航栏 -->
+    <!-- 导航栏 - 已删除About -->
     <nav class="navbar">
         <a href="index.html" class="logo">
             <span>🦞</span>
@@ -267,7 +269,7 @@
             <a href="mint.html" class="nav-link">Mint</a>
             <a href="trade.html" class="nav-link">Trade</a>
             <a href="airdrop.html" class="nav-link">Airdrop</a>
-            <a href="about.html" class="nav-link">About</a>
+            <!-- About已删除 -->
             <button class="connect-wallet" id="connectButton">Connect Wallet</button>
         </div>
     </nav>
@@ -345,7 +347,7 @@
             </div>
         </div>
 
-        <!-- 统计信息 -->
+        <!-- 真实统计数据 - 初始为0 -->
         <section class="info-card" style="margin-top: 2rem;">
             <h2 style="color: #00d4aa; margin-bottom: 1.5rem;">Live Statistics</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
@@ -355,18 +357,24 @@
                 </div>
                 
                 <div style="text-align: center;">
-                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;" id="totalHolders">1,234</div>
+                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;" id="totalHolders">0</div>
                     <div style="color: #94a3b8; font-size: 0.875rem;">Holders</div>
                 </div>
                 
                 <div style="text-align: center;">
-                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;" id="marketCap">$800,000</div>
+                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;" id="marketCap">$0</div>
                     <div style="color: #94a3b8; font-size: 0.875rem;">Market Cap</div>
                 </div>
                 
                 <div style="text-align: center;">
                     <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;" id="price">$0.0010</div>
                     <div style="color: #94a3b8; font-size: 0.875rem;">Current Price</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                <div style="color: #94a3b8; font-size: 0.875rem; text-align: center;">
+                    <i class="fas fa-info-circle"></i> Statistics will update when real mints occur
                 </div>
             </div>
         </section>
@@ -415,11 +423,13 @@
             }
         });
 
-        // 更新统计
+        // 真实统计数据 - 初始为0，不自动更新
         function updateStats() {
-            // 模拟数据
-            const totalMinted = Math.floor(Math.random() * 100000000);
-            document.getElementById('totalMinted').textContent = totalMinted.toLocaleString();
+            // 保持为0，直到真实mint发生
+            document.getElementById('totalMinted').textContent = '0';
+            document.getElementById('totalHolders').textContent = '0';
+            document.getElementById('marketCap').textContent = '$0';
+            document.getElementById('price').textContent = '$0.0010';
         }
 
         // 添加旋转动画
@@ -433,7 +443,6 @@
 
         // 初始化
         updateStats();
-        setInterval(updateStats, 10000); // 每10秒更新
     </script>
 </body>
 </html>
