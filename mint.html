@@ -153,7 +153,7 @@
             <div class="countdown-content">
                 <div class="countdown-icon">⏰</div>
                 <div class="countdown-text">
-                    <div class="countdown-title">Minting Event Ends In</div>
+                    <div class="countdown-title">Minting Event Ends In (Test: 2 minutes)</div>
                     <div class="countdown-timer" id="countdownTimer">
                         <span class="countdown-unit">
                             <span class="countdown-value" id="countdownHours">48</span>
@@ -260,7 +260,7 @@
     <script>
         // 配置
         const CONFIG = {
-            COUNTDOWN_DURATION: 48 * 60 * 60 * 1000, // 48小时（毫秒）
+            COUNTDOWN_DURATION: 2 * 60 * 1000, // 2分钟（毫秒）- 测试用
             LOBSTER_ADDRESS: '0xb30139594b85aa0cfad2b4abe2328886fdbfe92b',
             USDC_ADDRESS: '0x20c000000000000000000000b9537d11c60e8b50',
             PRICE: '10000', // 0.01 USDC.e (6 decimals)
@@ -384,7 +384,7 @@
 
         // 倒计时功能
         function initCountdown() {
-            // 设置倒计时结束时间（从现在开始48小时）
+            // 设置倒计时结束时间（从现在开始2分钟）
             countdownEndTime = Date.now() + CONFIG.COUNTDOWN_DURATION;
             isCountdownActive = true;
             
@@ -394,7 +394,9 @@
             // 开始倒计时
             startCountdown();
             
-            console.log('Countdown initialized, ends at:', new Date(countdownEndTime).toLocaleString());
+            console.log('🚀 2分钟倒计时已初始化');
+            console.log('倒计时结束时间:', new Date(countdownEndTime).toLocaleString());
+            console.log('倒计时时长:', CONFIG.COUNTDOWN_DURATION / 1000, '秒');
         }
         
         function startCountdown() {
