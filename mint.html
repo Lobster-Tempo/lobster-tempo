@@ -9,6 +9,126 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* 倒计时样式 */
+        .countdown-banner {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border: 2px solid rgba(245, 158, 11, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            animation: pulseWarning 2s infinite alternate;
+        }
+        
+        @keyframes pulseWarning {
+            0% { border-color: rgba(245, 158, 11, 0.3); box-shadow: 0 0 10px rgba(245, 158, 11, 0.1); }
+            100% { border-color: rgba(245, 158, 11, 0.5); box-shadow: 0 0 20px rgba(245, 158, 11, 0.2); }
+        }
+        
+        .countdown-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .countdown-icon {
+            font-size: 2rem;
+        }
+        
+        .countdown-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #f59e0b;
+        }
+        
+        .countdown-timer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .time-unit {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            min-width: 100px;
+        }
+        
+        .time-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #f59e0b;
+            font-family: monospace;
+            line-height: 1;
+        }
+        
+        .time-label {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .time-separator {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #f59e0b;
+            margin-top: -1rem;
+        }
+        
+        .countdown-message {
+            color: #f59e0b;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        /* 倒计时结束后的样式 */
+        .countdown-banner.ended {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border-color: rgba(16, 185, 129, 0.3);
+            animation: pulseSuccess 2s infinite alternate;
+        }
+        
+        @keyframes pulseSuccess {
+            0% { border-color: rgba(16, 185, 129, 0.3); box-shadow: 0 0 10px rgba(16, 185, 129, 0.1); }
+            100% { border-color: rgba(16, 185, 129, 0.5); box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+        }
+        
+        .countdown-banner.ended .countdown-title,
+        .countdown-banner.ended .time-value,
+        .countdown-banner.ended .time-separator {
+            color: #10b981;
+        }
+        
+        .countdown-banner.ended .countdown-message {
+            color: #10b981;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .countdown-timer {
+                gap: 0.5rem;
+            }
+            
+            .time-unit {
+                padding: 0.75rem 1rem;
+                min-width: 80px;
+            }
+            
+            .time-value {
+                font-size: 2rem;
+            }
+            
+            .time-separator {
+                font-size: 1.5rem;
+                margin-top: -0.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- 导航栏 -->
@@ -50,6 +170,38 @@
             <div class="progress-stats">
                 <div>Minted: <span id="mintedCount">0</span> LOBSTER</div>
                 <div>Remaining: <span id="remainingCount">1,000,000,000</span> LOBSTER</div>
+            </div>
+        </section>
+
+        <!-- 倒计时横幅 -->
+        <section class="countdown-banner" id="countdownBanner">
+            <div class="countdown-header">
+                <div class="countdown-icon">⏰</div>
+                <div class="countdown-title">Minting Starts In</div>
+            </div>
+            
+            <div class="countdown-timer" id="countdownTimer">
+                <div class="time-unit">
+                    <div class="time-value" id="hours">48</div>
+                    <div class="time-label">Hours</div>
+                </div>
+                <div class="time-separator">:</div>
+                <div class="time-unit">
+                    <div class="time-value" id="minutes">00</div>
+                    <div class="time-label">Minutes</div>
+                </div>
+                <div class="time-separator">:</div>
+                <div class="time-unit">
+                    <div class="time-value" id="seconds">00</div>
+                    <div class="time-label">Seconds</div>
+                </div>
+            </div>
+            
+            <div class="countdown-message">
+                🔒 Minting will be enabled after the countdown ends
+                <div style="font-size: 0.875rem; margin-top: 0.5rem; color: var(--text-secondary);">
+                    Connect your wallet now to be ready!
+                </div>
             </div>
         </section>
 
@@ -161,6 +313,118 @@
         let usdcContract = null;
         let isApproved = false;
         let mintedCount = 0;
+        
+        // 倒计时状态
+        let countdownEndTime = null;
+        let countdownInterval = null;
+        let isCountdownActive = true; // 初始为true，48小时倒计时
+        
+        // 初始化倒计时
+        function initCountdown() {
+            // 设置48小时后的时间（从页面加载开始）
+            countdownEndTime = new Date().getTime() + (48 * 60 * 60 * 1000);
+            
+            // 检查本地存储是否有保存的结束时间
+            const savedEndTime = localStorage.getItem('lobster_countdown_end');
+            if (savedEndTime) {
+                const savedTime = parseInt(savedEndTime);
+                const now = new Date().getTime();
+                
+                if (savedTime > now) {
+                    // 使用保存的时间
+                    countdownEndTime = savedTime;
+                } else {
+                    // 倒计时已结束，保存当前时间
+                    countdownEndTime = now;
+                    localStorage.setItem('lobster_countdown_end', countdownEndTime.toString());
+                }
+            } else {
+                // 第一次访问，保存结束时间
+                localStorage.setItem('lobster_countdown_end', countdownEndTime.toString());
+            }
+            
+            // 开始倒计时
+            startCountdown();
+        }
+        
+        // 开始倒计时
+        function startCountdown() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            
+            countdownInterval = setInterval(updateCountdown, 1000);
+            updateCountdown(); // 立即更新一次
+        }
+        
+        // 更新倒计时显示
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = countdownEndTime - now;
+            
+            if (distance <= 0) {
+                // 倒计时结束
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+                isCountdownActive = false;
+                
+                // 更新UI
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                
+                // 更新横幅样式
+                const banner = document.getElementById('countdownBanner');
+                banner.classList.add('ended');
+                
+                // 更新消息
+                const message = banner.querySelector('.countdown-message');
+                message.innerHTML = '✅ Minting is now enabled!<div style="font-size: 0.875rem; margin-top: 0.5rem; color: #10b981;">Connect your wallet and start minting!</div>';
+                
+                // 更新标题
+                const title = banner.querySelector('.countdown-title');
+                title.textContent = 'Minting is LIVE!';
+                
+                // 如果已连接钱包，启用Mint按钮
+                if (userAddress && isApproved) {
+                    const mintButton = document.getElementById('mintButton');
+                    mintButton.disabled = false;
+                    mintButton.textContent = 'Mint 10,000 LOBSTER';
+                }
+                
+                console.log('Countdown ended, minting enabled');
+                return;
+            }
+            
+            // 计算时间
+            const hours = Math.floor(distance / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            // 更新显示
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+        
+        // 检查Mint按钮状态
+        function updateMintButtonState() {
+            const mintButton = document.getElementById('mintButton');
+            
+            if (!userAddress) {
+                mintButton.disabled = true;
+                mintButton.textContent = 'Connect Wallet to Mint';
+            } else if (!isApproved) {
+                mintButton.disabled = false;
+                mintButton.textContent = 'Approve USDC.e First';
+            } else if (isCountdownActive) {
+                mintButton.disabled = true;
+                mintButton.textContent = 'Waiting for Countdown...';
+            } else {
+                mintButton.disabled = false;
+                mintButton.textContent = 'Mint 10,000 LOBSTER';
+            }
+        }
 
         // 元素
         const connectButton = document.getElementById('connectButton');
@@ -345,13 +609,13 @@
                 
                 isApproved = parseInt(allowance) >= parseInt(CONFIG.PRICE);
                 
+                // 更新Mint按钮状态
+                updateMintButtonState();
+                
+                // 设置点击事件
                 if (isApproved) {
-                    mintButton.textContent = 'Mint 10,000 LOBSTER';
-                    mintButton.disabled = false;
                     mintButton.onclick = mintLobster;
                 } else {
-                    mintButton.textContent = 'Approve USDC.e First';
-                    mintButton.disabled = false;
                     mintButton.onclick = approveUsdc;
                 }
                 
@@ -373,8 +637,8 @@
                 console.log('Approval successful:', tx);
                 
                 isApproved = true;
-                mintButton.textContent = 'Mint 10,000 LOBSTER';
-                mintButton.disabled = false;
+                // 更新Mint按钮状态
+                updateMintButtonState();
                 mintButton.onclick = mintLobster;
 
                 alert('USDC.e approved successfully! You can now mint LOBSTER.');
@@ -512,6 +776,46 @@
                 window.location.reload();
             });
         }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Mint page loaded');
+            
+            // 初始化倒计时
+            initCountdown();
+            
+            // 检查现有连接
+            if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
+                try {
+                    const provider = window.okxwallet || window.ethereum;
+                    const accounts = await provider.request({ method: 'eth_accounts' });
+                    
+                    if (accounts.length > 0) {
+                        userAddress = accounts[0];
+                        web3 = new Web3(provider);
+                        
+                        // 更新连接按钮
+                        const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
+                        connectButton.textContent = shortAddress;
+                        connectButton.disabled = true;
+                        
+                        // 初始化合约
+                        await initContracts();
+                        
+                        // 更新数据
+                        updateProgress();
+                        updateUserInfo();
+                        checkApproval();
+                    }
+                } catch (error) {
+                    console.log('No existing connection:', error);
+                }
+            }
+            
+            // 初始更新
+            updateProgress();
+            updateMintButtonState();
+        });
     </script>
 </body>
 </html>
