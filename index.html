@@ -4,26 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🦞 Lobster Token | Home</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* 简单背景 */
+        /* 手机优化样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
         body {
             background: linear-gradient(135deg, #0a0e17 0%, #050811 50%, #1a2236 100%);
             color: #e2e8f0;
             min-height: 100vh;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
             padding: 0;
         }
         
-        /* 导航栏 */
+        /* 手机导航栏 */
         .navbar {
-            background: rgba(5, 8, 17, 0.95);
-            border-bottom: 1px solid rgba(0, 212, 170, 0.15);
-            padding: 1rem 2rem;
+            background: rgba(5, 8, 17, 0.98);
+            border-bottom: 1px solid rgba(0, 212, 170, 0.2);
+            padding: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -35,8 +36,8 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            font-size: 1.5rem;
+            gap: 0.5rem;
+            font-size: 1.25rem;
             font-weight: bold;
             color: #00d4aa;
             text-decoration: none;
@@ -44,16 +45,18 @@
         
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 0.5rem;
             align-items: center;
+            flex-wrap: wrap;
         }
         
         .nav-link {
             color: #94a3b8;
             text-decoration: none;
             font-weight: 500;
-            padding: 0.5rem 1rem;
+            padding: 0.5rem;
             border-radius: 8px;
+            font-size: 0.875rem;
             transition: all 0.3s;
         }
         
@@ -71,118 +74,134 @@
             background: #00d4aa;
             color: white;
             border: none;
-            padding: 0.5rem 1.5rem;
+            padding: 0.5rem 1rem;
             border-radius: 8px;
             font-weight: 600;
+            font-size: 0.875rem;
             cursor: pointer;
             transition: all 0.3s;
         }
         
         .connect-wallet:hover {
             background: #00b894;
-            transform: translateY(-2px);
         }
         
-        /* 主容器 */
+        /* 手机主容器 */
         .container {
-            max-width: 1200px;
+            max-width: 100%;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1rem;
         }
         
-        /* Hero Section */
+        /* Hero Section - 手机优化 */
         .hero {
             text-align: center;
-            padding: 4rem 2rem;
-            margin-bottom: 2rem;
+            padding: 2rem 1rem;
+            margin-bottom: 1.5rem;
         }
         
         .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
             color: #00d4aa;
         }
         
         .hero-subtitle {
-            font-size: 1.5rem;
+            font-size: 1.125rem;
             color: #94a3b8;
-            max-width: 800px;
-            margin: 0 auto;
-            line-height: 1.6;
+            line-height: 1.5;
         }
         
-        /* 卡片样式 */
+        /* 卡片样式 - 手机优化 */
         .info-card {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
         }
         
-        /* 代币分配 */
+        /* 代币分配 - 手机优化 */
         .token-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
         }
         
         .token-item {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1rem;
             text-align: center;
         }
         
         .token-amount {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #00d4aa;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
         
         .token-label {
             color: #94a3b8;
-            font-size: 0.875rem;
+            font-size: 0.75rem;
         }
         
-        /* 按钮 */
+        /* 按钮 - 手机大按钮 */
         .btn-primary {
             background: linear-gradient(135deg, #00d4aa 0%, #0088cc 100%);
             color: white;
             border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
+            font-size: 1rem;
+            text-align: center;
         }
         
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 212, 170, 0.3);
+        .btn-primary:active {
+            transform: scale(0.98);
+            background: linear-gradient(135deg, #00b894 0%, #0077aa 100%);
+        }
+        
+        /* 功能卡片 - 手机优化 */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
         }
         
         /* 页脚 */
         footer {
             background: #050811;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 2rem;
-            margin-top: 4rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
             text-align: center;
             color: #94a3b8;
+            font-size: 0.875rem;
         }
     </style>
 </head>
 <body>
-    <!-- 导航栏 - 已删除About -->
+    <!-- 导航栏 - 手机优化 -->
     <nav class="navbar">
         <a href="index.html" class="logo">
             <span>🦞</span>
-            <span>Lobster Token</span>
+            <span>Lobster</span>
         </a>
         
         <div class="nav-links">
@@ -190,106 +209,104 @@
             <a href="mint.html" class="nav-link">Mint</a>
             <a href="trade.html" class="nav-link">Trade</a>
             <a href="airdrop.html" class="nav-link">Airdrop</a>
-            <!-- About已删除 -->
-            <button class="connect-wallet" id="connectButton">Connect Wallet</button>
+            <button class="connect-wallet" id="connectButton">Connect</button>
         </div>
     </nav>
 
-    <!-- 主内容 -->
+    <!-- 主内容 - 手机优化 -->
     <main class="container">
         <!-- Hero Section -->
         <section class="hero">
-            <h1>Welcome to Lobster Token 🦞</h1>
+            <h1>Lobster Token 🦞</h1>
             <p class="hero-subtitle">
-                The next-generation meme token on Tempo Network. 
-                1 billion total supply with fair distribution and community-driven growth.
+                Next-gen meme token on Tempo Network
             </p>
-            <div style="margin-top: 2rem;">
-                <a href="mint.html" class="btn-primary" style="margin-right: 1rem;">Start Minting</a>
+            <div style="margin-top: 1.5rem;">
+                <a href="mint.html" class="btn-primary" style="margin-right: 0.5rem; margin-bottom: 0.5rem;">Mint Now</a>
                 <a href="airdrop.html" class="btn-primary">Join Airdrop</a>
             </div>
         </section>
 
         <!-- 代币分配 -->
         <section class="info-card">
-            <h2 style="color: #00d4aa; margin-bottom: 1rem;">Token Distribution</h2>
-            <p style="color: #94a3b8; margin-bottom: 1.5rem;">
-                Total Supply: <strong style="color: #00d4aa;">1,000,000,000 LOBSTER</strong> (10亿)
+            <h2 style="color: #00d4aa; margin-bottom: 0.75rem; font-size: 1.25rem;">Token Supply</h2>
+            <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.875rem;">
+                Total: <strong style="color: #00d4aa;">1B LOBSTER</strong>
             </p>
             
             <div class="token-grid">
                 <div class="token-item">
                     <div class="token-amount">800M</div>
-                    <div class="token-label">Public Mint (80%)</div>
+                    <div class="token-label">Public Mint</div>
                 </div>
                 
                 <div class="token-item">
                     <div class="token-amount">100M</div>
-                    <div class="token-label">Liquidity (10%)</div>
+                    <div class="token-label">Liquidity</div>
                 </div>
                 
                 <div class="token-item">
                     <div class="token-amount">100M</div>
-                    <div class="token-label">Community Airdrop (10%)</div>
+                    <div class="token-label">Airdrop</div>
                 </div>
             </div>
         </section>
 
         <!-- 功能卡片 -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+        <div class="feature-grid">
             <!-- Mint Card -->
-            <div class="info-card">
-                <div style="font-size: 2rem; margin-bottom: 1rem;">💰</div>
-                <h3 style="color: #00d4aa; margin-bottom: 0.5rem;">Mint LOBSTER</h3>
-                <p style="color: #94a3b8; margin-bottom: 1rem;">
-                    Fixed price: 0.01 USDC.e = 10,000 LOBSTER
+            <div class="feature-card">
+                <div style="font-size: 2rem; margin-bottom: 0.75rem;">💰</div>
+                <h3 style="color: #00d4aa; margin-bottom: 0.5rem; font-size: 1.125rem;">Mint LOBSTER</h3>
+                <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.875rem;">
+                    0.01 USDC.e = 10,000 LOBSTER
                 </p>
-                <a href="mint.html" class="btn-primary">Start Minting</a>
+                <a href="mint.html" class="btn-primary" style="width: 100%;">Start Minting</a>
             </div>
             
             <!-- Trade Card -->
-            <div class="info-card">
-                <div style="font-size: 2rem; margin-bottom: 1rem;">📈</div>
-                <h3 style="color: #00d4aa; margin-bottom: 0.5rem;">Trade LOBSTER</h3>
-                <p style="color: #94a3b8; margin-bottom: 1rem;">
-                    Trade LOBSTER/USDC.e on Tempo Network
+            <div class="feature-card">
+                <div style="font-size: 2rem; margin-bottom: 0.75rem;">📈</div>
+                <h3 style="color: #00d4aa; margin-bottom: 0.5rem; font-size: 1.125rem;">Trade</h3>
+                <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.875rem;">
+                    LOBSTER/USDC.e on Tempo
                 </p>
-                <a href="trade.html" class="btn-primary">View Trading</a>
+                <a href="trade.html" class="btn-primary" style="width: 100%;">View Trading</a>
             </div>
             
             <!-- Airdrop Card -->
-            <div class="info-card">
-                <div style="font-size: 2rem; margin-bottom: 1rem;">🪂</div>
-                <h3 style="color: #00d4aa; margin-bottom: 0.5rem;">Join Airdrop</h3>
-                <p style="color: #94a3b8; margin-bottom: 1rem;">
-                    Complete tasks and earn 100M LOBSTER airdrop
+            <div class="feature-card">
+                <div style="font-size: 2rem; margin-bottom: 0.75rem;">🪂</div>
+                <h3 style="color: #00d4aa; margin-bottom: 0.5rem; font-size: 1.125rem;">Airdrop</h3>
+                <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.875rem;">
+                    Earn 100M LOBSTER
                 </p>
-                <a href="airdrop.html" class="btn-primary">Start Earning</a>
+                <a href="airdrop.html" class="btn-primary" style="width: 100%;">Start Earning</a>
             </div>
         </div>
 
-        <!-- 简单统计数据 -->
-        <section class="info-card" style="margin-top: 2rem;">
-            <h2 style="color: #00d4aa; margin-bottom: 1.5rem;">Statistics</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+        <!-- 统计数据 -->
+        <section class="info-card" style="margin-top: 1.5rem;">
+            <h2 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Stats</h2>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
                 <div style="text-align: center;">
-                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;" id="totalMinted">0</div>
-                    <div style="color: #94a3b8; font-size: 0.875rem;">Total Minted</div>
+                    <div style="font-size: 1.5rem; font-weight: bold; color: #00d4aa;" id="totalMinted">0</div>
+                    <div style="color: #94a3b8; font-size: 0.75rem;">Total Minted</div>
                 </div>
                 
                 <div style="text-align: center;">
-                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;">1,234</div>
-                    <div style="color: #94a3b8; font-size: 0.875rem;">Holders</div>
+                    <div style="font-size: 1.5rem; font-weight: bold; color: #00d4aa;">1,234</div>
+                    <div style="color: #94a3b8; font-size: 0.75rem;">Holders</div>
                 </div>
                 
                 <div style="text-align: center;">
-                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;">$800,000</div>
-                    <div style="color: #94a3b8; font-size: 0.875rem;">Market Cap</div>
+                    <div style="font-size: 1.5rem; font-weight: bold; color: #00d4aa;">$800K</div>
+                    <div style="color: #94a3b8; font-size: 0.75rem;">Market Cap</div>
                 </div>
                 
                 <div style="text-align: center;">
-                    <div style="font-size: 2rem; font-weight: bold; color: #00d4aa;">$0.0010</div>
-                    <div style="color: #94a3b8; font-size: 0.875rem;">Current Price</div>
+                    <div style="font-size: 1.5rem; font-weight: bold; color: #00d4aa;">$0.001</div>
+                    <div style="color: #94a3b8; font-size: 0.75rem;">Price</div>
                 </div>
             </div>
         </section>
@@ -297,10 +314,8 @@
 
     <!-- 页脚 -->
     <footer>
-        <p>© 2026 Lobster Token. All rights reserved.</p>
-        <p style="margin-top: 0.5rem; font-size: 0.875rem;">
-            Built on Tempo Network • Contract Verified • Community Driven
-        </p>
+        <p>© 2026 Lobster Token</p>
+        <p style="margin-top: 0.5rem;">Tempo Network • Community Driven</p>
     </footer>
 
     <script>
@@ -309,32 +324,41 @@
         
         connectButton.addEventListener('click', async () => {
             try {
-                if (typeof window.ethereum === 'undefined') {
-                    alert('Please install OKX Wallet or MetaMask');
+                // 检查各种钱包
+                let walletProvider = null;
+                
+                if (typeof window.okxwallet !== 'undefined') {
+                    walletProvider = window.okxwallet;
+                    console.log('Using OKX wallet');
+                } else if (typeof window.ethereum !== 'undefined') {
+                    walletProvider = window.ethereum;
+                    console.log('Using standard ethereum');
+                } else {
+                    alert('Please install OKX wallet app!');
                     return;
                 }
                 
                 connectButton.disabled = true;
                 connectButton.textContent = 'Connecting...';
                 
-                const accounts = await window.ethereum.request({ 
+                const accounts = await walletProvider.request({ 
                     method: 'eth_requestAccounts' 
                 });
                 
                 if (accounts.length > 0) {
                     const address = accounts[0];
                     const shortAddress = address.substring(0, 6) + '...' + address.substring(address.length - 4);
-                    connectButton.textContent = `Connected: ${shortAddress}`;
+                    connectButton.textContent = shortAddress;
                     connectButton.disabled = true;
                     
-                    alert('Wallet connected successfully!');
+                    showMobileAlert('Wallet connected!');
                 }
                 
             } catch (error) {
                 console.error('Connection failed:', error);
-                alert('Failed to connect wallet: ' + error.message);
+                alert('Connection failed. Try again.');
                 connectButton.disabled = false;
-                connectButton.textContent = 'Connect Wallet';
+                connectButton.textContent = 'Connect';
             }
         });
 
@@ -343,6 +367,57 @@
             // 从localStorage获取总Mint数量
             const totalMinted = parseInt(localStorage.getItem('totalMinted')) || 0;
             document.getElementById('totalMinted').textContent = totalMinted.toLocaleString();
+        }
+
+        // 显示手机提示
+        function showMobileAlert(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #00d4aa;
+                color: white;
+                padding: 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                z-index: 10000;
+                text-align: center;
+                max-width: 90%;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            alertDiv.innerHTML = `
+                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">✅</div>
+                <div style="font-size: 1.125rem;">${message}</div>
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(alertDiv)) {
+                        document.body.removeChild(alertDiv);
+                    }
+                }, 300);
+            }, 2000);
+            
+            // 添加动画样式
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translate(-50%, -60%); }
+                    to { opacity: 1; transform: translate(-50%, -50%); }
+                }
+                
+                @keyframes fadeOut {
+                    from { opacity: 1; transform: translate(-50%, -50%); }
+                    to { opacity: 0; transform: translate(-50%, -60%); }
+                }
+            `;
+            document.head.appendChild(style);
         }
 
         // 初始化
