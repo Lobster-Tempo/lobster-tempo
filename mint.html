@@ -9,126 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* 倒计时样式 */
-        .countdown-banner {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
-            border: 2px solid rgba(245, 158, 11, 0.3);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            text-align: center;
-            animation: pulseWarning 2s infinite alternate;
-        }
-        
-        @keyframes pulseWarning {
-            0% { border-color: rgba(245, 158, 11, 0.3); box-shadow: 0 0 10px rgba(245, 158, 11, 0.1); }
-            100% { border-color: rgba(245, 158, 11, 0.5); box-shadow: 0 0 20px rgba(245, 158, 11, 0.2); }
-        }
-        
-        .countdown-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-        
-        .countdown-icon {
-            font-size: 2rem;
-        }
-        
-        .countdown-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #f59e0b;
-        }
-        
-        .countdown-timer {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-        
-        .time-unit {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            min-width: 100px;
-        }
-        
-        .time-value {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #f59e0b;
-            font-family: monospace;
-            line-height: 1;
-        }
-        
-        .time-label {
-            color: #94a3b8;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-        }
-        
-        .time-separator {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #f59e0b;
-            margin-top: -1rem;
-        }
-        
-        .countdown-message {
-            color: #f59e0b;
-            font-size: 1rem;
-            font-weight: 500;
-        }
-        
-        /* 倒计时结束后的样式 */
-        .countdown-banner.ended {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
-            border-color: rgba(16, 185, 129, 0.3);
-            animation: pulseSuccess 2s infinite alternate;
-        }
-        
-        @keyframes pulseSuccess {
-            0% { border-color: rgba(16, 185, 129, 0.3); box-shadow: 0 0 10px rgba(16, 185, 129, 0.1); }
-            100% { border-color: rgba(16, 185, 129, 0.5); box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
-        }
-        
-        .countdown-banner.ended .countdown-title,
-        .countdown-banner.ended .time-value,
-        .countdown-banner.ended .time-separator {
-            color: #10b981;
-        }
-        
-        .countdown-banner.ended .countdown-message {
-            color: #10b981;
-        }
-        
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .countdown-timer {
-                gap: 0.5rem;
-            }
-            
-            .time-unit {
-                padding: 0.75rem 1rem;
-                min-width: 80px;
-            }
-            
-            .time-value {
-                font-size: 2rem;
-            }
-            
-            .time-separator {
-                font-size: 1.5rem;
-                margin-top: -0.5rem;
-            }
-        }
-    </style>
+
 </head>
 <body>
     <!-- 导航栏 -->
@@ -170,38 +51,6 @@
             <div class="progress-stats">
                 <div>Minted: <span id="mintedCount">0</span> LOBSTER</div>
                 <div>Remaining: <span id="remainingCount">1,000,000,000</span> LOBSTER</div>
-            </div>
-        </section>
-
-        <!-- 倒计时横幅 -->
-        <section class="countdown-banner" id="countdownBanner">
-            <div class="countdown-header">
-                <div class="countdown-icon">⏰</div>
-                <div class="countdown-title">Minting Starts In</div>
-            </div>
-            
-            <div class="countdown-timer" id="countdownTimer">
-                <div class="time-unit">
-                    <div class="time-value" id="hours">48</div>
-                    <div class="time-label">Hours</div>
-                </div>
-                <div class="time-separator">:</div>
-                <div class="time-unit">
-                    <div class="time-value" id="minutes">00</div>
-                    <div class="time-label">Minutes</div>
-                </div>
-                <div class="time-separator">:</div>
-                <div class="time-unit">
-                    <div class="time-value" id="seconds">00</div>
-                    <div class="time-label">Seconds</div>
-                </div>
-            </div>
-            
-            <div class="countdown-message">
-                🔒 Minting will be enabled after the countdown ends
-                <div style="font-size: 0.875rem; margin-top: 0.5rem; color: var(--text-secondary);">
-                    Connect your wallet now to be ready!
-                </div>
             </div>
         </section>
 
@@ -369,23 +218,6 @@
                 countdownInterval = null;
                 isCountdownActive = false;
                 
-                // 更新UI
-                document.getElementById('hours').textContent = '00';
-                document.getElementById('minutes').textContent = '00';
-                document.getElementById('seconds').textContent = '00';
-                
-                // 更新横幅样式
-                const banner = document.getElementById('countdownBanner');
-                banner.classList.add('ended');
-                
-                // 更新消息
-                const message = banner.querySelector('.countdown-message');
-                message.innerHTML = '✅ Minting is now enabled!<div style="font-size: 0.875rem; margin-top: 0.5rem; color: #10b981;">Connect your wallet and start minting!</div>';
-                
-                // 更新标题
-                const title = banner.querySelector('.countdown-title');
-                title.textContent = 'Minting is LIVE!';
-                
                 // 更新Mint按钮状态
                 updateMintButtonState();
                 
@@ -397,11 +229,6 @@
             const hours = Math.floor(distance / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-            // 更新横幅显示
-            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
             
             // 更新按钮上的倒计时（如果用户已连接并授权）
             if (userAddress && isApproved && isCountdownActive) {
