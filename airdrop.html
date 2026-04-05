@@ -301,7 +301,6 @@
             </div>
             <button class="btn" onclick="openXProfile()">Open X Profile</button>
             <button class="btn-secondary" onclick="verifyTask('follow', 100)">Verify Follow</button>
-            <button class="btn-secondary" onclick="reviewTask('follow')">Review Task</button>
             <span id="followStatus"></span>
         </div>
         
@@ -316,7 +315,6 @@
             </div>
             <button class="btn" onclick="openTweet()">Open Tweet</button>
             <button class="btn-secondary" onclick="verifyTask('quote', 200)">Verify Quote</button>
-            <button class="btn-secondary" onclick="reviewTask('quote')">Review Task</button>
             <span id="quoteStatus"></span>
         </div>
         
@@ -331,7 +329,6 @@
             </div>
             <button class="btn" onclick="openTweet()">Open Tweet</button>
             <button class="btn-secondary" onclick="verifyTask('like', 150)">Verify Like</button>
-            <button class="btn-secondary" onclick="reviewTask('like')">Review Task</button>
             <span id="likeStatus"></span>
         </div>
         
@@ -346,7 +343,6 @@
             </div>
             <button class="btn" onclick="openMintPage()">Open Mint Page</button>
             <button class="btn-secondary" onclick="verifyTask('mint', 500)">Verify Mint</button>
-            <button class="btn-secondary" onclick="reviewTask('mint')">Review Task</button>
             <span id="mintStatus"></span>
         </div>
         
@@ -668,12 +664,24 @@
         }
         
         function verifyTask(taskId, points) {
+            console.log('Verifying task:', taskId, 'points:', points);
+            
+            // 如果没有连接钱包，先连接钱包
             if (!userAddress) {
+                console.log('No wallet connected, connecting...');
+                connectWallet();
                 showStatus('Please connect wallet first!', 'error');
                 return;
             }
 
             showStatus(`Verifying ${taskId} task...`, 'pending');
+            
+            // 立即更新按钮状态，给用户反馈
+            const verifyBtn = document.querySelector(`[onclick*="verifyTask('${taskId}'"], [onclick*='verifyTask(\"${taskId}\"']`);
+            if (verifyBtn) {
+                verifyBtn.disabled = true;
+                verifyBtn.textContent = 'Verifying...';
+            }
             
             setTimeout(() => {
                 // 标记任务为完成
@@ -693,30 +701,18 @@
                 updatePointsDisplay();
                 updateTaskStatus();
                 
+                // 恢复按钮状态
+                if (verifyBtn) {
+                    verifyBtn.disabled = false;
+                    verifyBtn.textContent = taskId === 'follow' ? 'Verify Follow' : 
+                                          taskId === 'quote' ? 'Verify Quote' :
+                                          taskId === 'like' ? 'Verify Like' :
+                                          'Verify Mint';
+                }
+                
                 showStatus(`✅ Task verified! +${points} points`, 'success');
+                console.log('Task verified:', taskId, 'Total points:', totalPoints);
             }, 1500);
-        }
-        
-        function reviewTask(taskId) {
-            const taskNames = {
-                follow: 'Follow @Lobster_Tempo on X',
-                quote: 'Quote Our Tweet',
-                like: 'Like Our Tweet',
-                mint: 'Mint LOBSTER Tokens'
-            };
-            
-            const taskPoints = {
-                follow: 100,
-                quote: 200,
-                like: 150,
-                mint: 500
-            };
-            
-            const status = userHistory[taskId] ? 'Completed' : 'Not completed';
-            const points = taskPoints[taskId] || 0;
-            const message = `Task: ${taskNames[taskId]}\nStatus: ${status}\nPoints: ${points}`;
-            
-            alert(message);
         }
         
         function copyReferralLink() {
