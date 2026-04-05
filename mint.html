@@ -157,43 +157,66 @@
             { "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }, { "internalType": "address", "name": "spender", "type": "address" }], "name": "allowance", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }
         ];
 
-        // 连接钱包功能（与index.html完全相同）
-        connectButton.addEventListener('click', async function() {
-            if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
-                try {
-                    const provider = window.okxwallet || window.ethereum;
-                    this.disabled = true;
-                    this.textContent = 'Connecting...';
-                    
-                    const accounts = await provider.request({ method: 'eth_requestAccounts' });
-                    
-                    if (accounts.length > 0) {
-                        userAddress = accounts[0];
-                        web3 = new Web3(provider);
-                        
-                        // 初始化合约
-                        lobsterContract = new web3.eth.Contract(LOBSTER_ABI, CONFIG.LOBSTER_ADDRESS);
-                        usdcContract = new web3.eth.Contract(USDC_ABI, CONFIG.USDC_ADDRESS);
-                        
-                        // 更新UI
-                        updateProgress();
-                        updateUserInfo();
-                        checkApproval();
-                        
-                        const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
-                        this.textContent = shortAddress;
-                        this.disabled = true;
-                    }
-                } catch (error) {
-                    console.error('Connection failed:', error);
-                    this.disabled = false;
-                    this.textContent = 'Connect Wallet';
-                    alert('Connection failed: ' + error.message);
-                }
-            } else {
-                alert('Please install MetaMask or OKX Wallet!');
+        // 连接钱包功能 - 使用最简单可靠的方法
+        function setupConnectButton() {
+            const connectButton = document.getElementById('connectButton');
+            if (!connectButton) {
+                console.error('Connect button not found!');
+                return;
             }
-        });
+            
+            console.log('Setting up connect button...');
+            
+            // 移除所有现有的事件监听器（避免重复绑定）
+            const newButton = connectButton.cloneNode(true);
+            connectButton.parentNode.replaceChild(newButton, connectButton);
+            
+            // 重新获取按钮引用
+            const freshButton = document.getElementById('connectButton');
+            
+            freshButton.addEventListener('click', async function() {
+                console.log('Connect Wallet clicked in Mint page');
+                
+                if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
+                    try {
+                        const provider = window.okxwallet || window.ethereum;
+                        this.disabled = true;
+                        this.textContent = 'Connecting...';
+                        
+                        const accounts = await provider.request({ method: 'eth_requestAccounts' });
+                        
+                        if (accounts.length > 0) {
+                            userAddress = accounts[0];
+                            web3 = new Web3(provider);
+                            
+                            // 初始化合约
+                            lobsterContract = new web3.eth.Contract(LOBSTER_ABI, CONFIG.LOBSTER_ADDRESS);
+                            usdcContract = new web3.eth.Contract(USDC_ABI, CONFIG.USDC_ADDRESS);
+                            
+                            // 更新UI
+                            updateProgress();
+                            updateUserInfo();
+                            checkApproval();
+                            
+                            const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
+                            this.textContent = shortAddress;
+                            this.disabled = true;
+                            
+                            console.log('Connected successfully:', shortAddress);
+                        }
+                    } catch (error) {
+                        console.error('Connection failed:', error);
+                        this.disabled = false;
+                        this.textContent = 'Connect Wallet';
+                        alert('Connection failed: ' + error.message);
+                    }
+                } else {
+                    alert('Please install MetaMask or OKX Wallet!');
+                }
+            });
+            
+            console.log('Connect button setup complete');
+        }
 
         // 初始化合约
         async function initContracts() {
@@ -424,11 +447,16 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Mint page loaded');
             
-            // 检查现有连接
+            // 设置连接按钮
+            setupConnectButton();
+            
+            // 检查现有连接（使用eth_accounts，不会弹出请求）
             if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
                 try {
                     const provider = window.okxwallet || window.ethereum;
+                    console.log('Checking existing connection...');
                     const accounts = await provider.request({ method: 'eth_accounts' });
+                    console.log('Existing accounts:', accounts);
                     
                     if (accounts.length > 0) {
                         userAddress = accounts[0];
@@ -436,6 +464,7 @@
                         
                         // 更新连接按钮
                         const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
+                        console.log('Updating connect button to:', shortAddress);
                         connectButton.textContent = shortAddress;
                         connectButton.disabled = true;
                         
@@ -446,10 +475,14 @@
                         updateProgress();
                         updateUserInfo();
                         checkApproval();
+                    } else {
+                        console.log('No existing accounts found');
                     }
                 } catch (error) {
                     console.log('No existing connection:', error);
                 }
+            } else {
+                console.log('No wallet provider found');
             }
             
             // 初始更新
