@@ -948,14 +948,6 @@
 
         // 打开任务
         function openTask(taskId) {
-            console.log('Opening task:', taskId);
-            const task = CONFIG.TASKS[taskId];
-            if (task && task.url) {
-                window.open(task.url, '_blank');
-                showStatus(`Opened ${task.name}`, 'success');
-            }
-        }
-
         // 验证任务
         function verifyTask(taskId) {
             console.log('Verifying task:', taskId);
@@ -964,4 +956,89 @@
                 return;
             }
 
-            const task
+            const task = CONFIG.TASKS[taskId];
+            if (!task) return;
+
+            // 模拟验证过程
+            showStatus(`Verifying ${task.name}...`, 'pending');
+            
+            setTimeout(() => {
+                // 标记任务为完成
+                userHistory[taskId] = {
+                    completed: true,
+                    timestamp: new Date().toISOString(),
+                    points: task.points
+                };
+                
+                // 增加积分
+                userPoints += task.points;
+                
+                // 保存数据
+                saveUserData();
+                
+                // 更新显示
+                updatePointsDisplay();
+                updateTaskStatus();
+                
+                showStatus(`✅ ${task.name} verified! +${task.points} points`, 'success');
+            }, 1500);
+        }
+
+        // 查看任务详情
+        function reviewTask(taskId) {
+            const task = CONFIG.TASKS[taskId];
+            if (!task) return;
+            
+            const status = userHistory[taskId] ? 'Completed' : 'Not completed';
+            const points = task.points;
+            const message = `Task: ${task.name}\nStatus: ${status}\nPoints: ${points}\nURL: ${task.url}`;
+            
+            alert(message);
+        }
+
+        // 复制邀请链接
+        function copyReferralLink() {
+            const linkInput = document.getElementById('referralLink');
+            linkInput.select();
+            linkInput.setSelectionRange(0, 99999);
+            
+            try {
+                navigator.clipboard.writeText(linkInput.value);
+                showStatus('Referral link copied!', 'success');
+            } catch (error) {
+                document.execCommand('copy');
+                showStatus('Referral link copied!', 'success');
+            }
+        }
+
+        // 分享功能
+        function shareOnTwitter() {
+            const text = `Join the Lobster Token airdrop and earn points! 🦞\n\nUse my referral link: ${referralLink.value}`;
+            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        function shareOnTelegram() {
+            const text = `Join the Lobster Token airdrop and earn points! 🦞\n\nUse my referral link: ${referralLink.value}`;
+            const url = `https://t.me/share/url?url=${encodeURIComponent(referralLink.value)}&text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        function shareOnWhatsApp() {
+            const text = `Join the Lobster Token airdrop and earn points! 🦞\n\nUse my referral link: ${referralLink.value}`;
+            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        function shareViaEmail() {
+            const subject = 'Join Lobster Token Airdrop';
+            const body = `Hey! Join the Lobster Token airdrop and earn points! 🦞\n\nUse my referral link: ${referralLink.value}\n\nLet's earn points together!`;
+            const url = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.open(url, '_blank');
+        }
+
+        // 页面加载完成
+        window.onload = function() {
+            console.log('Airdrop page fully loaded');
+            init();
+        };</script></body></html>
