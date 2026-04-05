@@ -231,6 +231,25 @@
             <div style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 1rem;">
                 ⚡ Each mint gives you exactly 10,000 LOBSTER tokens
             </div>
+            
+            <!-- 测试按钮（仅开发时显示） -->
+            <div style="margin-top: 1rem; text-align: center;">
+                <button id="testResetCountdown" style="
+                    background: #f59e0b;
+                    color: white;
+                    border: none;
+                    padding: 0.5rem 1rem;
+                    border-radius: 8px;
+                    font-size: 0.875rem;
+                    cursor: pointer;
+                    opacity: 0.8;
+                ">
+                    🔄 重置为2分钟倒计时（测试）
+                </button>
+                <div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">
+                    点击此按钮强制开始新的2分钟倒计时
+                </div>
+            </div>
         </section>
 
         <!-- 用户信息 -->
@@ -418,11 +437,18 @@
             const now = Date.now();
             const remaining = countdownEndTime - now;
             
+            // 调试信息：每10秒显示一次剩余时间
+            if (Math.floor(now / 1000) % 10 === 0) {
+                console.log('⏱️ 倒计时剩余:', Math.floor(remaining / 1000), '秒');
+            }
+            
             if (remaining <= 0) {
                 // 倒计时结束
                 clearInterval(countdownInterval);
                 countdownInterval = null;
                 isCountdownActive = false;
+                
+                console.log('✅ 倒计时结束！');
                 
                 // 显示结束状态
                 showCountdownEnded();
@@ -469,26 +495,12 @@
         function checkSavedCountdown() {
             const savedEndTime = localStorage.getItem('countdownEndTime');
             
-            if (savedEndTime) {
-                const endTime = parseInt(savedEndTime);
-                const now = Date.now();
-                
-                if (endTime > now) {
-                    // 倒计时尚未结束，恢复倒计时
-                    countdownEndTime = endTime;
-                    isCountdownActive = true;
-                    startCountdown();
-                    console.log('Countdown restored from localStorage');
-                } else {
-                    // 倒计时已结束
-                    showCountdownEnded();
-                    localStorage.removeItem('countdownEndTime');
-                    console.log('Countdown already ended');
-                }
-            } else {
-                // 没有保存的倒计时，开始新的
-                initCountdown();
-            }
+            // 强制清除旧的倒计时数据，开始新的2分钟倒计时
+            console.log('🔄 强制开始新的2分钟倒计时（清除旧数据）');
+            localStorage.removeItem('countdownEndTime');
+            
+            // 开始新的2分钟倒计时
+            initCountdown();
         }
         
         // 根据倒计时状态更新Mint按钮
@@ -780,12 +792,44 @@
             });
         }
         
+        // 测试：重置倒计时按钮
+        function setupTestButton() {
+            const testButton = document.getElementById('testResetCountdown');
+            if (!testButton) return;
+            
+            testButton.addEventListener('click', function() {
+                console.log('🔄 手动重置倒计时...');
+                
+                // 清除现有的倒计时
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                }
+                
+                // 清除localStorage
+                localStorage.removeItem('countdownEndTime');
+                
+                // 开始新的2分钟倒计时
+                initCountdown();
+                
+                // 更新Mint按钮状态
+                updateMintButtonForCountdown();
+                
+                alert('✅ 已重置为2分钟倒计时！');
+            });
+            
+            console.log('测试按钮已设置');
+        }
+
         // 页面加载完成后检查现有连接
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Mint page DOM loaded');
             
             // 初始化倒计时
             checkSavedCountdown();
+            
+            // 设置测试按钮
+            setupTestButton();
             
             // 初始设置Mint按钮状态（根据倒计时）
             updateMintButtonForCountdown();
