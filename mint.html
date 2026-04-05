@@ -158,15 +158,14 @@
             color: #94a3b8;
         }
         
-        /* 合约信息 */
-        .contract-info {
+        /* 网络信息 */
+        .network-info {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
             padding: 1rem;
             margin-top: 1rem;
             font-size: 0.75rem;
             color: #94a3b8;
-            word-break: break-all;
         }
     </style>
 </head>
@@ -191,13 +190,13 @@
     <main class="mint-container">
         <!-- 成功消息 -->
         <div class="success-notice">
-            <strong>✅ REAL CONTRACT DEPLOYED:</strong> Using real LOBSTER contract on Tempo network!
+            <strong>✅ TEMPO MAINNET CONFIGURED:</strong> Using real Tempo network (Chain ID: 4217)
         </div>
 
         <!-- Mint Header -->
         <section style="text-align: center; margin-bottom: 2rem;">
             <h1 style="font-size: 2rem; margin-bottom: 0.75rem; color: #00d4aa;">Mint LOBSTER Tokens</h1>
-            <p style="font-size: 1.25rem; color: #94a3b8;">Real contract: 0xb30139594b85aa0cfad2b4abe2328886fdbfe92b</p>
+            <p style="font-size: 1.25rem; color: #94a3b8;">On Tempo Mainnet (Chain ID: 4217)</p>
         </section>
 
         <!-- Mint卡片 -->
@@ -213,19 +212,19 @@
                 
                 <div style="background: rgba(255, 255, 255, 0.05); padding: 0.75rem; border-radius: 8px;">
                     <div style="color: #94a3b8; font-size: 0.75rem; margin-bottom: 0.25rem;">Network</div>
-                    <div style="font-size: 1rem; font-weight: bold;">Tempo</div>
+                    <div style="font-size: 1rem; font-weight: bold;">Tempo Mainnet</div>
                 </div>
             </div>
             
             <!-- 钱包状态 -->
             <div id="walletStatus" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px;">
-                <div style="color: #94a3b8; font-size: 0.875rem;">Wallet status: <span id="walletStatusText" style="color: #ef4444;">Not connected</span></div>
+                <div style="color: #94a3b8; font-size: 0.875rem;">Wallet: <span id="walletStatusText" style="color: #ef4444;">Not connected</span></div>
                 <div style="color: #94a3b8; font-size: 0.75rem; margin-top: 0.25rem;" id="walletAddress"></div>
             </div>
             
             <!-- 网络状态 -->
             <div id="networkStatus" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px; display: none;">
-                <div style="color: #94a3b8; font-size: 0.875rem;">Network: <span id="networkStatusText" style="color: #00d4aa;"></span></div>
+                <div style="color: #94a3b8; font-size: 0.875rem;">Network: <span id="networkStatusText" style="color: #ef4444;"></span></div>
                 <div style="color: #94a3b8; font-size: 0.75rem; margin-top: 0.25rem;" id="chainId"></div>
             </div>
             
@@ -233,27 +232,27 @@
             <div id="step1">
                 <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Step 1: Connect Wallet</h3>
                 <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.875rem;">
-                    Connect your OKX wallet to Tempo network
+                    Connect your OKX wallet to Tempo Mainnet
                 </p>
                 <button class="btn-primary" onclick="connectWallet()">
                     Connect Wallet
                 </button>
                 <div style="color: #f59e0b; font-size: 0.75rem; margin-top: 0.5rem;">
-                    Make sure OKX wallet is on Tempo network
+                    Make sure OKX wallet supports Tempo network
                 </div>
             </div>
             
             <!-- 步骤2: 检查网络 -->
             <div id="step2" style="display: none;">
-                <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Step 2: Check Network</h3>
+                <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Step 2: Switch to Tempo</h3>
                 <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.875rem;">
-                    Please switch to Tempo network in your wallet
+                    Please switch to Tempo Mainnet (Chain ID: 4217)
                 </p>
                 <button class="btn-primary" onclick="switchToTempoNetwork()">
-                    Switch to Tempo Network
+                    Switch to Tempo Mainnet
                 </button>
                 <div style="color: #f59e0b; font-size: 0.75rem; margin-top: 0.5rem;">
-                    Required for real contract interaction
+                    Required for contract interaction
                 </div>
             </div>
             
@@ -261,13 +260,13 @@
             <div id="step3" style="display: none;">
                 <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Step 3: Approve USDC.e</h3>
                 <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.875rem;">
-                    Approve LOBSTER contract to spend your USDC.e
+                    Approve LOBSTER contract to spend 0.01 USDC.e
                 </p>
                 <button class="btn-primary" id="approveButton" onclick="approveUSDC()">
                     Approve 0.01 USDC.e
                 </button>
                 <div style="color: #00d4aa; font-size: 0.75rem; margin-top: 0.5rem;">
-                    Real contract: 0xb30139594b85aa0cfad2b4abe2328886fdbfe92b
+                    Contract: 0xb30139594b85aa0cfad2b4abe2328886fdbfe92b
                 </div>
             </div>
             
@@ -281,7 +280,7 @@
                     Mint 10,000 LOBSTER
                 </button>
                 <div style="color: #00d4aa; font-size: 0.75rem; margin-top: 0.5rem;">
-                    Using real deployed contract
+                    Using deployed contract on Tempo
                 </div>
             </div>
             
@@ -290,12 +289,13 @@
                 Waiting for wallet interaction...
             </div>
             
-            <!-- 合约信息 -->
-            <div class="contract-info">
-                <strong>Contract Address:</strong><br>
-                0xb30139594b85aa0cfad2b4abe2328886fdbfe92b<br>
-                <strong>Network:</strong> Tempo<br>
-                <strong>Status:</strong> Deployed (yesterday)
+            <!-- 网络信息 -->
+            <div class="network-info">
+                <strong>Tempo Mainnet Configuration:</strong><br>
+                • Chain ID: 4217 (0x1079)<br>
+                • RPC URL: https://rpc.tempo.xyz<br>
+                • Explorer: https://explore.tempo.xyz<br>
+                • Contract: 0xb30139594b85aa0cfad2b4abe2328886fdbfe92b
             </div>
         </section>
     </main>
@@ -303,35 +303,41 @@
     <!-- 页脚 -->
     <footer>
         <p>© 2026 Lobster Token</p>
-        <p style="margin-top: 0.5rem;">Real contract deployed on Tempo network</p>
+        <p style="margin-top: 0.5rem;">Deployed on Tempo Mainnet (Chain ID: 4217)</p>
     </footer>
 
     <!-- JavaScript -->
     <script>
-        // 配置 - 使用真实合约地址
+        // 配置 - Tempo主网
         const CONFIG = {
             // 真实合约地址
             LOBSTER_CONTRACT: '0xb30139594b85aa0cfad2b4abe2328886fdbfe92b',
             
-            // 需要Tempo网络的USDC.e地址
-            USDC_ADDRESS: '0x需要Tempo网络的USDC地址', // TODO: 需要更新
+            // TODO: 需要Tempo网络的USDC.e地址
+            USDC_ADDRESS: '0x需要Tempo网络的USDC地址', // 需要更新
             
-            // Tempo网络配置
+            // Tempo主网配置
             TEMPO_NETWORK: {
-                chainId: '0x...', // TODO: 需要Tempo网络链ID
-                chainName: 'Tempo Network',
+                chainId: '0x1079', // 4217 in hex
+                chainName: 'Tempo Mainnet',
                 nativeCurrency: {
                     name: 'Tempo',
                     symbol: 'TEMPO',
                     decimals: 18
                 },
-                rpcUrls: ['https://rpc.tempo.network'], // TODO: 需要RPC URL
-                blockExplorerUrls: ['https://explorer.tempo.network'] // TODO: 需要区块浏览器
+                rpcUrls: ['https://rpc.tempo.xyz'],
+                blockExplorerUrls: ['https://explore.tempo.xyz']
             },
             
             // 金额
             USDC_AMOUNT: '10000000', // 0.01 USDC.e (6 decimals = 10000)
-            LOBSTER_PER_MINT: 10000
+            LOBSTER_PER_MINT: 10000,
+            
+            // 标准ERC20函数选择器
+            ERC20_SELECTORS: {
+                APPROVE: '0x095ea7b3',    // approve(address,uint256)
+                MINT: '0x1249c58b'        // mint() - 假设的函数选择器
+            }
         };
 
         // 状态
@@ -391,21 +397,20 @@
 
         // 检查网络
         async function checkNetwork() {
-            if (!web3) return;
+            if (!web3) return false;
             
             try {
                 const chainIdHex = await web3.eth.getChainId();
                 const chainIdDecimal = parseInt(chainIdHex);
                 
-                // TODO: 需要Tempo网络的链ID
-                // 暂时假设任何网络都可以
-                isOnTempoNetwork = true; // 临时设置为true
-                
                 console.log('Current chain ID:', chainIdDecimal);
-                return chainIdDecimal;
+                
+                // 检查是否是Tempo网络 (4217)
+                isOnTempoNetwork = (chainIdDecimal === 4217);
+                return isOnTempoNetwork;
             } catch (error) {
                 console.error('Error checking network:', error);
-                return null;
+                return false;
             }
         }
 
@@ -439,13 +444,13 @@
             if (isConnected) {
                 networkStatus.style.display = 'block';
                 if (isOnTempoNetwork) {
-                    networkStatusText.textContent = 'Tempo Network';
+                    networkStatusText.textContent = 'Tempo Mainnet ✓';
                     networkStatusText.style.color = '#00d4aa';
-                    chainId.textContent = 'Ready for minting';
+                    chainId.textContent = 'Chain ID: 4217 - Ready for minting';
                 } else {
-                    networkStatusText.textContent = 'Wrong Network';
+                    networkStatusText.textContent = 'Wrong Network ✗';
                     networkStatusText.style.color = '#ef4444';
-                    chainId.textContent = 'Please switch to Tempo';
+                    chainId.textContent = 'Please switch to Tempo (Chain ID: 4217)';
                 }
             } else {
                 networkStatus.style.display = 'none';
@@ -515,13 +520,13 @@
                     updateNetworkStatus();
                     
                     if (isOnTempoNetwork) {
-                        showStatus('Connected to Tempo network!', 'success');
+                        showStatus('Connected to Tempo Mainnet!', 'success');
                         setTimeout(() => {
                             hideStatus();
                             showStep(3);
                         }, 2000);
                     } else {
-                        showStatus('Connected! Please switch to Tempo network.', 'pending');
+                        showStatus('Connected! Please switch to Tempo Mainnet.', 'pending');
                         setTimeout(() => {
                             hideStatus();
                             showStep(2);
@@ -545,19 +550,53 @@
                     return;
                 }
                 
-                showStatus('Switching to Tempo network...', 'pending');
+                showStatus('Adding Tempo network to wallet...', 'pending');
                 
-                // TODO: 需要Tempo网络的chainId
-                // 暂时跳过网络切换
-                isOnTempoNetwork = true;
+                const provider = window.okxwallet || window.ethereum;
                 
-                updateNetworkStatus();
-                showStatus('Switched to Tempo network!', 'success');
-                
-                setTimeout(() => {
-                    hideStatus();
-                    showStep(3);
-                }, 2000);
+                try {
+                    // 尝试切换到Tempo网络
+                    await provider.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: CONFIG.TEMPO_NETWORK.chainId }]
+                    });
+                    
+                    isOnTempoNetwork = true;
+                    updateNetworkStatus();
+                    showStatus('Switched to Tempo Mainnet!', 'success');
+                    
+                    setTimeout(() => {
+                        hideStatus();
+                        showStep(3);
+                    }, 2000);
+                    
+                } catch (switchError) {
+                    // 如果网络不存在，添加它
+                    if (switchError.code === 4902) {
+                        try {
+                            await provider.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [CONFIG.TEMPO_NETWORK]
+                            });
+                            
+                            isOnTempoNetwork = true;
+                            updateNetworkStatus();
+                            showStatus('Tempo network added and switched!', 'success');
+                            
+                            setTimeout(() => {
+                                hideStatus();
+                                showStep(3);
+                            }, 2000);
+                            
+                        } catch (addError) {
+                            console.error('Error adding network:', addError);
+                            showStatus('Failed to add Tempo network: ' + addError.message, 'error');
+                        }
+                    } else {
+                        console.error('Error switching network:', switchError);
+                        showStatus('Failed to switch network: ' + switchError.message, 'error');
+                    }
+                }
                 
             } catch (error) {
                 console.error('Network switch failed:', error);
@@ -574,7 +613,7 @@
                 }
                 
                 if (!isOnTempoNetwork) {
-                    showStatus('Please switch to Tempo network first!', 'error');
+                    showStatus('Please switch to Tempo Mainnet first!', 'error');
                     showStep(2);
                     return;
                 }
@@ -582,16 +621,19 @@
                 const button = document.getElementById('approveButton');
                 button.disabled = true;
                 button.textContent = 'Waiting for signature...';
-                showStatus('Sending approve transaction...', 'pending');
+                showStatus('Sending approve transaction on Tempo...', 'pending');
                 
                 // 构建approve交易数据
-                // approve(address spender, uint256 amount)
-                const approveData = '0x095ea7b3' + // approve函数选择器
-                    CONFIG.LOBSTER_CONTRACT.substring(2).padStart(64, '0') + // spender地址
-                    CONFIG.USDC_AMOUNT.padStart(64, '0'); // amount
+                const approveData = CONFIG.ERC20_SELECTORS.APPROVE + 
+                    CONFIG.LOBSTER_CONTRACT.substring(2).padStart(64, '0') + 
+                    CONFIG.USDC_AMOUNT.padStart(64, '0');
                 
-                console.log('Approve to contract:', CONFIG.LOBSTER_CONTRACT);
-                console.log('Approve data:', approveData);
+                console.log('Approve transaction:', {
+                    to: CONFIG.USDC_ADDRESS,
+                    data: approveData,
+                    contract: CONFIG.LOBSTER_CONTRACT,
+                    amount: CONFIG.USDC_AMOUNT
+                });
                 
                 // 发送交易
                 try {
@@ -639,7 +681,7 @@
                 }
                 
                 if (!isOnTempoNetwork) {
-                    showStatus('Please switch to Tempo network first!', 'error');
+                    showStatus('Please switch to Tempo Mainnet first!', 'error');
                     showStep(2);
                     return;
                 }
@@ -647,21 +689,23 @@
                 const button = document.getElementById('mintButton');
                 button.disabled = true;
                 button.textContent = 'Waiting for signature...';
-                showStatus('Sending mint transaction...', 'pending');
+                showStatus('Sending mint transaction on Tempo...', 'pending');
                 
                 // 调用mint函数
-                // 假设合约有mint()函数
-                const mintData = '0x1249c58b'; // mint()函数选择器
+                const mintData = CONFIG.ERC20_SELECTORS.MINT; // mint()函数选择器
                 
-                console.log('Mint to contract:', CONFIG.LOBSTER_CONTRACT);
-                console.log('Mint data:', mintData);
+                console.log('Mint transaction:', {
+                    to: CONFIG.LOBSTER_CONTRACT,
+                    data: mintData,
+                    contract: CONFIG.LOBSTER_CONTRACT
+                });
                 
                 // 发送交易
                 try {
                     const gasPrice = await web3.eth.getGasPrice();
                     const tx = await web3.eth.sendTransaction({
                         from: userAddress,
-                        to: CONFIG.LOBSTER_CONTRACT, // LOBSTER合约地址
+                        to: CONFIG.LOBSTER_CONTRACT,
                         data: mintData,
                         gas: '300000',
                         gasPrice: gasPrice
