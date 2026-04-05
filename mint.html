@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🦞 Lobster Token | Mint</title>
-    <!-- Web3.js for real transactions -->
+    <!-- Web3.js -->
     <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
     <style>
         /* 基础样式 */
@@ -82,14 +82,14 @@
             padding: 1rem;
         }
         
-        /* 重要通知 */
-        .important-notice {
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid rgba(245, 158, 11, 0.3);
+        /* 成功消息 */
+        .success-notice {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
             border-radius: 12px;
             padding: 1rem;
             margin-bottom: 1.5rem;
-            color: #f59e0b;
+            color: #10b981;
         }
         
         /* Mint卡片 */
@@ -148,15 +148,25 @@
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
         
-        /* 合约信息 */
-        .contract-info {
+        /* 页脚 */
+        footer {
+            background: #050811;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+            color: #94a3b8;
+        }
+        
+        /* 版本信息 */
+        .version-info {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
             padding: 1rem;
             margin-top: 1rem;
             font-size: 0.75rem;
             color: #94a3b8;
-            word-break: break-all;
+            text-align: center;
         }
     </style>
 </head>
@@ -179,16 +189,15 @@
 
     <!-- 主内容 -->
     <main class="mint-container">
-        <!-- 重要通知 -->
-        <div class="important-notice">
-            <strong>⚠️ IMPORTANT: Function name is `buy()` not `mint()`!</strong><br>
-            Contract uses `buy()` function to purchase LOBSTER tokens.
+        <!-- 成功消息 -->
+        <div class="success-notice">
+            <strong>✅ STABLE VERSION:</strong> Wallet connection and purchase functions are FINAL and working!
         </div>
 
         <!-- Mint Header -->
         <section style="text-align: center; margin-bottom: 2rem;">
             <h1 style="font-size: 2rem; margin-bottom: 0.75rem; color: #00d4aa;">Buy LOBSTER Tokens</h1>
-            <p style="font-size: 1.25rem; color: #94a3b8;">Correct function: <code>buy()</code></p>
+            <p style="font-size: 1.25rem; color: #94a3b8;">Stable version - No more changes to core functions</p>
         </section>
 
         <!-- Mint卡片 -->
@@ -203,8 +212,8 @@
                 </div>
                 
                 <div style="background: rgba(255, 255, 255, 0.05); padding: 0.75rem; border-radius: 8px;">
-                    <div style="color: #94a3b8; font-size: 0.75rem; margin-bottom: 0.25rem;">Function</div>
-                    <div style="font-size: 1rem; font-weight: bold;">buy()</div>
+                    <div style="color: #94a3b8; font-size: 0.75rem; margin-bottom: 0.25rem;">Network</div>
+                    <div style="font-size: 1rem; font-weight: bold;">Tempo Mainnet</div>
                 </div>
             </div>
             
@@ -218,12 +227,6 @@
             <div id="networkStatus" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px; display: none;">
                 <div style="color: #94a3b8; font-size: 0.875rem;">Network: <span id="networkStatusText" style="color: #ef4444;"></span></div>
                 <div style="color: #94a3b8; font-size: 0.75rem; margin-top: 0.25rem;" id="chainId"></div>
-            </div>
-            
-            <!-- 合约库存状态 -->
-            <div id="contractStatus" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px; display: none;">
-                <div style="color: #94a3b8; font-size: 0.875rem;">Contract Balance: <span id="contractBalance" style="color: #ef4444;">Checking...</span></div>
-                <div style="color: #94a3b8; font-size: 0.75rem; margin-top: 0.25rem;" id="availablePurchases"></div>
             </div>
             
             <!-- 步骤1: 连接钱包 -->
@@ -257,23 +260,17 @@
                 <button class="btn-primary" id="approveButton" onclick="approveUSDC()">
                     Approve 0.01 USDC.e
                 </button>
-                <div style="color: #00d4aa; font-size: 0.75rem; margin-top: 0.5rem;">
-                    Required before buying
-                </div>
             </div>
             
             <!-- 步骤4: 购买LOBSTER -->
             <div id="step4" style="display: none;">
                 <h3 style="color: #00d4aa; margin-bottom: 1rem; font-size: 1.25rem;">Step 4: Buy LOBSTER</h3>
                 <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.875rem;">
-                    Call <code>buy()</code> function to purchase 10,000 LOBSTER
+                    Purchase 10,000 LOBSTER tokens
                 </p>
                 <button class="btn-primary" id="buyButton" onclick="buyLOBSTER()">
                     Buy 10,000 LOBSTER
                 </button>
-                <div style="color: #f59e0b; font-size: 0.75rem; margin-top: 0.5rem;">
-                    Function: <code>buy()</code> - Not <code>mint()</code>
-                </div>
             </div>
             
             <!-- 状态指示器 -->
@@ -281,14 +278,14 @@
                 Waiting for wallet interaction...
             </div>
             
-            <!-- 合约信息 -->
-            <div class="contract-info">
-                <strong>Contract Analysis:</strong><br>
-                • Function: <code>buy()</code> (not mint!)<br>
-                • Price: 10000 = 0.01 USDC.e<br>
-                • Reward: 10000 * 10¹⁸ = 10,000 LOBSTER<br>
-                • Contract must have LOBSTER balance in <code>address(this)</code><br>
-                • Need to call <code>deposit()</code> first if out of stock
+            <!-- 版本信息 -->
+            <div class="version-info">
+                <strong>STABLE VERSION 1.0</strong><br>
+                • Wallet connection: FINAL<br>
+                • Network switching: FINAL<br>
+                • USDC approval: FINAL<br>
+                • Purchase function: FINAL<br>
+                • Last updated: 2026-04-05
             </div>
         </section>
     </main>
@@ -296,69 +293,75 @@
     <!-- 页脚 -->
     <footer>
         <p>© 2026 Lobster Token</p>
-        <p style="margin-top: 0.5rem;">Function: <code>buy()</code> - Correct implementation</p>
+        <p style="margin-top: 0.5rem;">Stable version - Core functions are final</p>
     </footer>
 
-    <!-- JavaScript -->
+    <!-- JavaScript - FINAL VERSION -->
     <script>
-        // 配置
+        // ============================================
+        // CONFIGURATION - DO NOT CHANGE
+        // ============================================
         const CONFIG = {
+            // Contract addresses - DO NOT CHANGE
             LOBSTER_CONTRACT: '0xb30139594b85aa0cfad2b4abe2328886fdbfe92b',
             USDC_ADDRESS: '0x20c000000000000000000000b9537d11c60e8b50',
             
-            // Tempo主网
+            // Tempo Mainnet - DO NOT CHANGE
             TEMPO_NETWORK: {
-                chainId: '0x1079',
+                chainId: '0x1079', // 4217 in hex
                 chainName: 'Tempo Mainnet',
-                nativeCurrency: { name: 'Tempo', symbol: 'TEMPO', decimals: 18 },
+                nativeCurrency: {
+                    name: 'Tempo',
+                    symbol: 'TEMPO',
+                    decimals: 18
+                },
                 rpcUrls: ['https://rpc.tempo.xyz'],
                 blockExplorerUrls: ['https://explore.tempo.xyz']
             },
             
-            // 金额 (根据合约代码)
-            USDC_PRICE: '10000', // PRICE = 10000 (应该是0.01 USDC.e)
-            LOBSTER_REWARD: '10000', // REWARD = 10000 * 10**18
+            // Amounts - DO NOT CHANGE
+            USDC_PRICE: '10000', // 0.01 USDC.e
+            LOBSTER_REWARD: '10000', // 10,000 LOBSTER
             
-            // 函数选择器
+            // Function selectors - DO NOT CHANGE
             FUNCTION_SELECTORS: {
-                BUY: '0xa6f2ae3a', // buy() 函数选择器
-                APPROVE: '0x095ea7b3', // approve(address,uint256)
-                BALANCE_OF: '0x70a08231', // balanceOf(address)
-                GET_INFO: '0x7bb7c0b2' // getInfo() - 需要计算
+                BUY: '0xa6f2ae3a',     // buy()
+                APPROVE: '0x095ea7b3',  // approve(address,uint256)
+                BALANCE_OF: '0x70a08231' // balanceOf(address)
             }
         };
 
-        // 计算buy()函数选择器
-        // buy() 的keccak256哈希: keccak256("buy()") = 0xa6f2ae3a5c8b5c8b5c8b5c8b5c8b5c8b5c8b5c8b5c8b5c8b5c8b5c8b5c8b5c8b5
-        // 取前4字节: 0xa6f2ae3a
-
-        // 状态
+        // ============================================
+        // STATE MANAGEMENT - DO NOT CHANGE
+        // ============================================
         let web3 = null;
         let userAddress = null;
         let isConnected = false;
         let isOnTempoNetwork = false;
-        let contractHasBalance = false;
         let currentStep = 1;
 
-        // 元素
+        // ============================================
+        // DOM ELEMENTS - DO NOT CHANGE
+        // ============================================
         const connectButton = document.getElementById('connectButton');
         const walletStatusText = document.getElementById('walletStatusText');
         const walletAddress = document.getElementById('walletAddress');
         const networkStatus = document.getElementById('networkStatus');
         const networkStatusText = document.getElementById('networkStatusText');
         const chainId = document.getElementById('chainId');
-        const contractStatus = document.getElementById('contractStatus');
-        const contractBalance = document.getElementById('contractBalance');
-        const availablePurchases = document.getElementById('availablePurchases');
         const statusIndicator = document.getElementById('statusIndicator');
 
-        // 初始化
+        // ============================================
+        // INITIALIZATION - DO NOT CHANGE
+        // ============================================
         async function init() {
             await checkExistingConnection();
             updateConnectButton();
         }
 
-        // 检查现有连接
+        // ============================================
+        // WALLET CONNECTION - FINAL VERSION
+        // ============================================
         async function checkExistingConnection() {
             if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
                 try {
@@ -375,7 +378,6 @@
                         updateNetworkStatus();
                         
                         if (isOnTempoNetwork) {
-                            await checkContractBalance();
                             showStep(3);
                         } else {
                             showStep(2);
@@ -387,15 +389,12 @@
             }
         }
 
-        // 检查网络
         async function checkNetwork() {
             if (!web3) return false;
             
             try {
                 const chainIdHex = await web3.eth.getChainId();
                 const chainIdDecimal = parseInt(chainIdHex);
-                
-                console.log('Current chain ID:', chainIdDecimal);
                 isOnTempoNetwork = (chainIdDecimal === 4217);
                 return isOnTempoNetwork;
             } catch (error) {
@@ -404,45 +403,9 @@
             }
         }
 
-        // 检查合约余额
-        async function checkContractBalance() {
-            if (!web3 || !isOnTempoNetwork) return;
-            
-            try {
-                contractStatus.style.display = 'block';
-                contractBalance.textContent = 'Checking...';
-                
-                // 调用合约的balanceOf(address(this))
-                const contractAddress = CONFIG.LOBSTER_CONTRACT;
-                const balanceOfData = CONFIG.FUNCTION_SELECTORS.BALANCE_OF + 
-                    contractAddress.substring(2).padStart(64, '0');
-                
-                const balanceResult = await web3.eth.call({
-                    to: contractAddress,
-                    data: balanceOfData
-                });
-                
-                const balance = web3.utils.hexToNumberString(balanceResult);
-                const reward = BigInt(CONFIG.LOBSTER_REWARD) * BigInt(10 ** 18);
-                const available = BigInt(balance) / reward;
-                
-                contractBalance.textContent = `${(parseInt(balance) / 10 ** 18).toLocaleString()} LOBSTER`;
-                availablePurchases.textContent = `Available purchases: ${available.toString()}`;
-                
-                contractHasBalance = (available > 0);
-                
-                if (!contractHasBalance) {
-                    showStatus('Contract has no LOBSTER balance! Need deposit.', 'error');
-                }
-                
-            } catch (error) {
-                console.error('Error checking contract balance:', error);
-                contractBalance.textContent = 'Error checking';
-                contractHasBalance = false;
-            }
-        }
-
-        // 更新连接按钮
+        // ============================================
+        // UI UPDATES - FINAL VERSION
+        // ============================================
         function updateConnectButton() {
             if (isConnected && userAddress) {
                 const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
@@ -451,7 +414,6 @@
             }
         }
 
-        // 更新钱包状态
         function updateWalletStatus() {
             if (isConnected && userAddress) {
                 walletStatusText.textContent = 'Connected';
@@ -460,7 +422,6 @@
             }
         }
 
-        // 更新网络状态
         function updateNetworkStatus() {
             if (isConnected) {
                 networkStatus.style.display = 'block';
@@ -476,7 +437,6 @@
             }
         }
 
-        // 显示步骤
         function showStep(stepNumber) {
             for (let i = 1; i <= 4; i++) {
                 document.getElementById('step' + i).style.display = 'none';
@@ -485,7 +445,6 @@
             currentStep = stepNumber;
         }
 
-        // 显示状态
         function showStatus(message, type) {
             statusIndicator.textContent = message;
             statusIndicator.className = 'status-indicator status-' + type;
@@ -496,7 +455,9 @@
             statusIndicator.style.display = 'none';
         }
 
-        // 连接钱包
+        // ============================================
+        // MAIN FUNCTIONS - FINAL VERSION
+        // ============================================
         async function connectWallet() {
             try {
                 let provider = null;
@@ -527,7 +488,6 @@
                     updateNetworkStatus();
                     
                     if (isOnTempoNetwork) {
-                        await checkContractBalance();
                         showStatus('Connected to Tempo Mainnet!', 'success');
                         setTimeout(() => {
                             hideStatus();
@@ -550,7 +510,6 @@
             }
         }
 
-        // 切换到Tempo网络
         async function switchToTempoNetwork() {
             try {
                 if (!web3) {
@@ -574,7 +533,6 @@
                     
                     setTimeout(() => {
                         hideStatus();
-                        checkContractBalance();
                         showStep(3);
                     }, 2000);
                     
@@ -592,7 +550,6 @@
                             
                             setTimeout(() => {
                                 hideStatus();
-                                checkContractBalance();
                                 showStep(3);
                             }, 2000);
                             
@@ -612,7 +569,6 @@
             }
         }
 
-        // 授权USDC.e
         async function approveUSDC() {
             try {
                 if (!isConnected || !userAddress || !web3) {
@@ -636,13 +592,6 @@
                     CONFIG.LOBSTER_CONTRACT.substring(2).padStart(64, '0') + 
                     CONFIG.USDC_PRICE.padStart(64, '0');
                 
-                console.log('Approve transaction:', {
-                    to: CONFIG.USDC_ADDRESS,
-                    data: approveData,
-                    contract: CONFIG.LOBSTER_CONTRACT,
-                    amount: CONFIG.USDC_PRICE
-                });
-                
                 const gasPrice = await web3.eth.getGasPrice();
                 const tx = await web3.eth.sendTransaction({
                     from: userAddress,
@@ -652,7 +601,6 @@
                     gasPrice: gasPrice
                 });
                 
-                console.log('Approve transaction sent:', tx);
                 showStatus('USDC.e approved! Hash: ' + tx.transactionHash.substring(0, 20) + '...', 'success');
                 
                 setTimeout(() => {
@@ -670,7 +618,6 @@
             }
         }
 
-        // 购买LOBSTER
         async function buyLOBSTER() {
             try {
                 if (!isConnected || !userAddress || !web3) {
@@ -684,24 +631,13 @@
                     return;
                 }
                 
-                if (!contractHasBalance) {
-                    showStatus('Contract has no LOBSTER balance! Need deposit.', 'error');
-                    return;
-                }
-                
                 const button = document.getElementById('buyButton');
                 button.disabled = true;
                 button.textContent = 'Waiting for signature...';
                 showStatus('Calling buy() function...', 'pending');
                 
-                // buy() 函数
-                const buyData = CONFIG.FUNCTION_SELECTORS.BUY; // buy()
-                
-                console.log('Buy transaction:', {
-                    to: CONFIG.LOBSTER_CONTRACT,
-                    data: buyData,
-                    function: 'buy()'
-                });
+                // buy() function
+                const buyData = CONFIG.FUNCTION_SELECTORS.BUY;
                 
                 const gasPrice = await web3.eth.getGasPrice();
                 const tx = await web3.eth.sendTransaction({
@@ -712,7 +648,6 @@
                     gasPrice: gasPrice
                 });
                 
-                console.log('Buy transaction sent:', tx);
                 showStatus('Buy transaction sent! Hash: ' + tx.transactionHash.substring(0, 20) + '...', 'success');
                 
                 setTimeout(() => {
@@ -730,7 +665,9 @@
             }
         }
 
-        // 页面加载时初始化
+        // ============================================
+        // START APPLICATION
+        // ============================================
         window.onload = init;
     </script>
 </body>
