@@ -341,7 +341,17 @@
                             // 更新UI
                             updateProgress();
                             updateUserInfo();
-                            checkApproval();
+                            
+                            // 根据倒计时状态更新Mint按钮
+                            if (!isCountdownActive) {
+                                // 倒计时已结束，检查授权状态
+                                checkApproval();
+                            } else {
+                                // 倒计时未结束，显示等待
+                                mintButton.textContent = 'Waiting for Countdown...';
+                                mintButton.disabled = true;
+                                mintButton.onclick = null;
+                            }
                             
                             const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
                             this.textContent = shortAddress;
@@ -442,6 +452,15 @@
                 timer.innerHTML = 'Thank you for participating!'; // 修改为英文
                 
                 console.log('Countdown ended');
+                
+                // 倒计时结束后更新Mint按钮状态
+                if (userAddress && usdcContract) {
+                    checkApproval();
+                } else if (mintButton) {
+                    // 未连接钱包，但倒计时已结束
+                    mintButton.textContent = 'Connect Wallet to Mint';
+                    mintButton.disabled = true;
+                }
             }
         }
         
@@ -467,6 +486,28 @@
             } else {
                 // 没有保存的倒计时，开始新的
                 initCountdown();
+            }
+        }
+        
+        // 根据倒计时状态更新Mint按钮
+        function updateMintButtonForCountdown() {
+            if (!mintButton) return;
+            
+            if (!isCountdownActive) {
+                // 倒计时已结束
+                if (userAddress && usdcContract) {
+                    // 已连接钱包，等待checkApproval更新具体状态
+                    return;
+                } else {
+                    // 未连接钱包
+                    mintButton.textContent = 'Connect Wallet to Mint';
+                    mintButton.disabled = true;
+                }
+            } else {
+                // 倒计时未结束
+                mintButton.textContent = 'Waiting for Countdown...';
+                mintButton.disabled = true;
+                mintButton.onclick = null;
             }
         }
 
@@ -514,7 +555,7 @@
             }
         }
 
-        // 检查授权
+        // 检查授权和倒计时状态
         async function checkApproval() {
             if (!userAddress || !usdcContract) return;
 
@@ -525,14 +566,35 @@
                 
                 isApproved = parseInt(allowance) >= parseInt(CONFIG.PRICE);
                 
+                // 检查倒计时是否已结束
+                const isCountdownEnded = !isCountdownActive;
+                
                 if (isApproved) {
-                    mintButton.textContent = 'Mint 10,000 LOBSTER';
-                    mintButton.disabled = false;
-                    mintButton.onclick = mintLobster;
+                    // 已授权
+                    if (isCountdownEnded) {
+                        // 倒计时结束，可以Mint
+                        mintButton.textContent = 'Mint 10,000 LOBSTER';
+                        mintButton.disabled = false;
+                        mintButton.onclick = mintLobster;
+                    } else {
+                        // 倒计时未结束，显示等待
+                        mintButton.textContent = 'Waiting for Countdown...';
+                        mintButton.disabled = true;
+                        mintButton.onclick = null;
+                    }
                 } else {
-                    mintButton.textContent = 'Approve USDC.e First';
-                    mintButton.disabled = false;
-                    mintButton.onclick = approveUsdc;
+                    // 未授权
+                    if (isCountdownEnded) {
+                        // 倒计时结束，可以授权
+                        mintButton.textContent = 'Approve USDC.e First';
+                        mintButton.disabled = false;
+                        mintButton.onclick = approveUsdc;
+                    } else {
+                        // 倒计时未结束，显示等待
+                        mintButton.textContent = 'Waiting for Countdown...';
+                        mintButton.disabled = true;
+                        mintButton.onclick = null;
+                    }
                 }
                 
             } catch (error) {
@@ -675,8 +737,17 @@
                     userAddress = null;
                     connectButton.disabled = false;
                     connectButton.textContent = 'Connect Wallet';
+                    
+                    // 根据倒计时状态更新Mint按钮
+                    if (!isCountdownActive) {
+                        // 倒计时已结束
+                        mintButton.textContent = 'Connect Wallet to Mint';
+                    } else {
+                        // 倒计时未结束
+                        mintButton.textContent = 'Waiting for Countdown...';
+                    }
                     mintButton.disabled = true;
-                    mintButton.textContent = 'Connect Wallet to Mint';
+                    mintButton.onclick = null;
                 } else {
                     userAddress = accounts[0];
                     const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(userAddress.length - 4);
@@ -687,7 +758,17 @@
                     if (web3) {
                         updateProgress();
                         updateUserInfo();
-                        checkApproval();
+                        
+                        // 根据倒计时状态更新Mint按钮
+                        if (!isCountdownActive) {
+                            // 倒计时已结束，检查授权状态
+                            checkApproval();
+                        } else {
+                            // 倒计时未结束，显示等待
+                            mintButton.textContent = 'Waiting for Countdown...';
+                            mintButton.disabled = true;
+                            mintButton.onclick = null;
+                        }
                     }
                 }
             });
@@ -703,6 +784,9 @@
             
             // 初始化倒计时
             checkSavedCountdown();
+            
+            // 初始设置Mint按钮状态（根据倒计时）
+            updateMintButtonForCountdown();
             
             // 检查现有连接
             if (typeof window.ethereum !== 'undefined' || typeof window.okxwallet !== 'undefined') {
@@ -729,11 +813,18 @@
                                 updateUserInfo();
                                 checkApproval();
                             });
+                        } else {
+                            // 没有连接，但需要根据倒计时更新Mint按钮
+                            updateMintButtonForCountdown();
                         }
                     });
                 } catch (error) {
                     console.log('No existing connection:', error);
+                    updateMintButtonForCountdown();
                 }
+            } else {
+                // 没有钱包提供者
+                updateMintButtonForCountdown();
             }
             
             // 初始更新
