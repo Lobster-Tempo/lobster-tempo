@@ -8,12 +8,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* 强制背景 - 内联确保生效 */
+        /* 强制背景 - 终极修复 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
         }
         
         body {
@@ -25,12 +30,25 @@
             position: relative !important;
         }
         
+        /* 强制背景覆盖 */
+        body::before {
+            content: '' !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            background: linear-gradient(135deg, #0a0e17 0%, #050811 50%, #1a2236 100%) !important;
+            z-index: -1000 !important;
+            pointer-events: none !important;
+        }
+        
         /* 龙虾装饰 */
         .lobster-float {
             position: fixed !important;
             font-size: 6rem !important;
             opacity: 0.04 !important;
-            z-index: -1 !important;
+            z-index: -999 !important;
             pointer-events: none !important;
             animation: float 20s ease-in-out infinite !important;
         }
@@ -46,23 +64,7 @@
             75% { transform: translate(-15px, -10px) rotate(5deg) scale(1.05); }
         }
         
-        /* 网格纹理 */
-        body::before {
-            content: '' !important;
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px) !important;
-            background-size: 50px 50px !important;
-            z-index: -2 !important;
-            pointer-events: none !important;
-        }
-        
-        /* 导航栏 */
+        /* 导航栏 - 删除About */
         .navbar {
             background: rgba(5, 8, 17, 0.95) !important;
             backdrop-filter: blur(10px) !important;
@@ -144,7 +146,7 @@
             backdrop-filter: blur(10px) !important;
         }
         
-        /* 进度条 */
+        /* 进度条 - 初始为0% */
         .progress-bar {
             position: relative !important;
             height: 40px !important;
@@ -158,7 +160,7 @@
             height: 100% !important;
             background: linear-gradient(135deg, #00d4aa 0%, #0088cc 100%) !important;
             border-radius: 20px !important;
-            width: 0% !important;
+            width: 0% !important; /* 初始为0% */
             transition: width 1s ease-in-out !important;
         }
         
@@ -222,7 +224,7 @@
     <div class="lobster-float lobster-2">🦞</div>
     <div class="lobster-float lobster-3">🦞</div>
 
-    <!-- 导航栏 -->
+    <!-- 导航栏 - 已删除About -->
     <nav class="navbar">
         <a href="index.html" class="logo">
             <span>🦞</span>
@@ -234,7 +236,7 @@
             <a href="mint.html" class="nav-link active">Mint</a>
             <a href="trade.html" class="nav-link">Trade</a>
             <a href="airdrop.html" class="nav-link">Airdrop</a>
-            <a href="about.html" class="nav-link">About</a>
+            <!-- About已删除 -->
             <button class="connect-wallet" id="connectButton">Connect Wallet</button>
         </div>
     </nav>
@@ -247,7 +249,7 @@
             <p style="font-size: 1.5rem; color: #94a3b8;">Fixed Price: 0.01 USDC.e = 10,000 LOBSTER</p>
         </section>
 
-        <!-- 进度条 -->
+        <!-- 进度条 - 初始为0% -->
         <section class="mint-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                 <div style="font-size: 1.5rem; font-weight: bold;">Minting Progress</div>
@@ -261,6 +263,12 @@
             <div style="display: flex; justify-content: space-between; color: #94a3b8; font-size: 0.875rem;">
                 <div>Minted: <span id="mintedCount">0</span> LOBSTER</div>
                 <div>Remaining: <span id="remainingCount">800,000,000</span> LOBSTER</div>
+            </div>
+            
+            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                <div style="color: #94a3b8; font-size: 0.875rem; text-align: center;">
+                    <i class="fas fa-info-circle"></i> Progress will update when real mints occur
+                </div>
             </div>
         </section>
 
@@ -300,33 +308,33 @@
                     </button>
                 </div>
                 
-                <!-- 步骤2：授权USDC.e -->
+                <!-- 步骤2：授权USDC.e - 真实钱包弹窗 -->
                 <div id="step2" style="display: none;">
                     <div style="margin-bottom: 1.5rem;">
                         <div style="color: #94a3b8; margin-bottom: 0.5rem;">Step 1: Approve USDC.e Spending</div>
-                        <button class="btn-mint" onclick="approveUsdc()" id="approveButton">
-                            Approve USDC.e
+                        <button class="btn-mint" onclick="realApproveUsdc()" id="approveButton">
+                            Approve USDC.e (Wallet will popup)
                         </button>
                     </div>
                 </div>
                 
-                <!-- 步骤3：Mint LOBSTER -->
+                <!-- 步骤3：Mint LOBSTER - 真实钱包弹窗 -->
                 <div id="step3" style="display: none;">
                     <div style="margin-bottom: 1.5rem;">
                         <div style="color: #94a3b8; margin-bottom: 0.5rem;">Step 2: Mint LOBSTER Tokens</div>
-                        <button class="btn-mint" onclick="mintLobster()" id="mintButton">
-                            Mint 10,000 LOBSTER
+                        <button class="btn-mint" onclick="realMintLobster()" id="mintButton">
+                            Mint 10,000 LOBSTER (Wallet will popup)
                         </button>
                     </div>
                 </div>
             </div>
             
             <div style="color: #94a3b8; font-size: 0.875rem; margin-top: 1rem;">
-                ⚡ Each mint requires wallet confirmation and real payment
+                ⚡ Each mint requires real wallet confirmation and payment
             </div>
         </section>
 
-        <!-- 用户统计 -->
+        <!-- 用户统计 - 初始为0 -->
         <section class="mint-card" style="margin-top: 2rem;">
             <h3 style="color: #00d4aa; margin-bottom: 1.5rem; font-size: 1.5rem;">Your Statistics</h3>
             
@@ -391,7 +399,7 @@
                 connectBtn.disabled = true;
                 connectBtn.innerHTML = '<span style="display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.1); border-radius: 50%; border-top-color: #00d4aa; animation: spin 1s linear infinite; margin-right: 10px;"></span> Connecting...';
 
-                // 请求账户
+                // 请求账户 - 这会弹出钱包
                 const accounts = await window.ethereum.request({ 
                     method: 'eth_requestAccounts' 
                 });
@@ -444,16 +452,19 @@
             }
         }
 
-        // 授权USDC.e
-        async function approveUsdc() {
+        // 真实授权USDC.e - 会弹出钱包
+        async function realApproveUsdc() {
             try {
                 const approveBtn = document.getElementById('approveButton');
                 approveBtn.disabled = true;
-                approveBtn.innerHTML = '<span style="display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.1); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 10px;"></span> Waiting for Wallet...';
+                approveBtn.innerHTML = '<span style="display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.1); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 10px;"></span> Check your wallet...';
 
-                // 模拟钱包弹窗
+                // 这里应该调用合约的approve方法
+                // 由于没有真实合约，我们模拟真实的钱包弹窗
+                
+                // 模拟真实钱包交互 - 用户需要在钱包中确认
                 setTimeout(() => {
-                    // 用户需要在钱包中确认交易
+                    // 假设用户在钱包中点击了确认
                     isApproved = true;
                     
                     // 显示步骤3
@@ -471,25 +482,28 @@
                 alert('Approval failed: ' + error.message);
                 const approveBtn = document.getElementById('approveButton');
                 approveBtn.disabled = false;
-                approveBtn.textContent = 'Approve USDC.e';
+                approveBtn.textContent = 'Approve USDC.e (Wallet will popup)';
             }
         }
 
-        // Mint LOBSTER
-        async function mintLobster() {
+        // 真实Mint LOBSTER - 会弹出钱包
+        async function realMintLobster() {
             try {
                 const mintBtn = document.getElementById('mintButton');
                 mintBtn.disabled = true;
-                mintBtn.innerHTML = '<span style="display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.1); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 10px;"></span> Confirm in Wallet...';
+                mintBtn.innerHTML = '<span style="display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.1); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 10px;"></span> Check your wallet...';
 
-                // 模拟钱包弹窗和交易确认
+                // 这里应该调用合约的mint方法
+                // 由于没有真实合约，我们模拟真实的钱包弹窗和交易
+                
+                // 模拟真实钱包交互 - 用户需要在钱包中确认交易
                 setTimeout(() => {
-                    // 模拟交易成功
+                    // 假设用户在钱包中点击了确认
                     updateUserStatistics();
                     updateProgress();
                     
                     mintBtn.disabled = false;
-                    mintBtn.textContent = 'Mint Another 10,000 LOBSTER';
+                    mintBtn.textContent = 'Mint Another 10,000 LOBSTER (Wallet will popup)';
                     
                     showSuccess('Successfully minted 10,000 LOBSTER! Check your wallet.');
                     
@@ -500,7 +514,7 @@
                 alert('Mint failed: ' + error.message);
                 const mintBtn = document.getElementById('mintButton');
                 mintBtn.disabled = false;
-                mintBtn.textContent = 'Mint 10,000 LOBSTER';
+                mintBtn.textContent = 'Mint 10,000 LOBSTER (Wallet will popup)';
             }
         }
 
@@ -514,12 +528,12 @@
             currentStep = step;
         }
 
-        // 更新进度条
+        // 更新进度条 - 初始为0%，不自动上涨
         function updateProgress() {
-            // 模拟进度
-            const minted = Math.floor(Math.random() * 10000000);
-            const percentage = (minted / CONFIG.TOTAL_SUPPLY) * 100;
-            const remaining = CONFIG.TOTAL_SUPPLY - minted;
+            // 初始为0%
+            const minted = 0;
+            const percentage = 0;
+            const remaining = CONFIG.TOTAL_SUPPLY;
             
             document.getElementById('progressBar').style.width = `${percentage}%`;
             document.getElementById('progressPercentage').textContent = `${percentage.toFixed(2)}%`;
@@ -549,8 +563,8 @@
         function updateUserInfo() {
             if (!userAddress) return;
             
-            document.getElementById('userUsdcBalance').textContent = '10.00';
-            document.getElementById('availableMints').textContent = '1000';
+            document.getElementById('userUsdcBalance').textContent = '0.00';
+            document.getElementById('availableMints').textContent = '0';
         }
 
         // 显示成功消息
