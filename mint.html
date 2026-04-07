@@ -437,20 +437,8 @@
                 // 更新内容
                 title.textContent = '🎉 Minting Started!'; // 修改为英文
                 
-                // 显示结束时间
-                const endTimeUTC = new Date(CONFIG.COUNTDOWN_END_TIME);
-                const endTimeBeijing = new Date(endTimeUTC.getTime() + 8 * 60 * 60 * 1000); // UTC+8
-                const beijingTimeStr = endTimeBeijing.toLocaleString('zh-CN', {
-                    timeZone: 'Asia/Shanghai',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false
-                });
-                
-                timer.innerHTML = `Ended at: ${beijingTimeStr}`;
+                // 不显示具体时间，只显示庆祝消息
+                timer.innerHTML = 'Public minting is now open!';
                 
                 console.log('Unified countdown ended at Beijing time:', beijingTimeStr);
                 
